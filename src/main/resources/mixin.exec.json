@@ -1,0 +1,11 @@
+{
+    "package": "net.llvg.exec.mixin",
+    "required": true,
+    "refmap": "${refmap}",
+    "minVersion": "0.7",
+    "compatibilityLevel": "JAVA_8",
+    "verbose": true,
+    "client": [
+        "MixinMain"
+    ]
+}
