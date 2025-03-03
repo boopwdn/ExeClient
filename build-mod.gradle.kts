@@ -107,7 +107,7 @@ dependencies {
         modRuntimeOnly("me.djtheredstoner:$artifactDevAuth:" + properties["version_DevAuth"])
         
         implementation("com.github.boopwdn:YqlossClientMixin:v0.7.0:dev")
-        shade("net.llvg:loli-utils:1.0")
+        shade("com.github.Water-OR:llvg-utils:1.0")
         
         if (platform.isLegacyForge) {
                 compileOnly("org.spongepowered:mixin:0.7.11-SNAPSHOT")
