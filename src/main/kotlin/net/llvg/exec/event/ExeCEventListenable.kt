@@ -21,4 +21,8 @@ package net.llvg.exec.event
 
 interface ExeCEventListenable {
         val active: Boolean get() = true
+        
+        companion object {
+                @JvmField val Default = object : ExeCEventListenable {}
+        }
 }
