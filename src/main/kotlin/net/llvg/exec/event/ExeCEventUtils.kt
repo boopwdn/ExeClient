@@ -26,8 +26,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import net.llvg.loliutils.exception.cast
 
-val DEFAULT_LISTENABLE = object : ExeCEventListenable {}
-
 inline fun <reified E : ExeCEvent> ExeCEventListenable.onEvent(
         forced: Boolean = false,
         always: Boolean = true,
