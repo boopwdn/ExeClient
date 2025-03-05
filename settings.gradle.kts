@@ -33,14 +33,48 @@ rootProject.name = mod_name
 val version_kotlin: String by settings
 val version_shadow: String by settings
 val version_idea_ext: String by settings
+val version_kotlinx_coroutines: String by settings
+val version_kotlinx_serialization: String by settings
 
+@Suppress("Unused")
 val libz by dependencyResolutionManagement.versionCatalogs.registering {
         version("kotlin", version_kotlin)
         version("shadow", version_shadow)
         version("idea-ext", version_idea_ext)
+        version("kotlinx-coroutines", version_kotlinx_coroutines)
+        version("kotlinx-serialization", version_kotlinx_serialization)
         
         plugin("idea-ext", "org.jetbrains.gradle.plugin.idea-ext").versionRef("idea-ext")
         plugin("shadow", "com.github.johnrengelman.shadow").versionRef("shadow")
+        
+        val kotlin = "org.jetbrains.kotlin"
+        library("kotlin-stdlib", kotlin, "kotlin-stdlib").versionRef("kotlin")
+        library("kotlin-reflect", kotlin, "kotlin-reflect").versionRef("kotlin")
+        library("kotlin-stdlib-jdk7", kotlin, "kotlin-stdlib-jdk7").versionRef("kotlin")
+        library("kotlin-stdlib-jdk8", kotlin, "kotlin-stdlib-jdk8").versionRef("kotlin")
+        bundle("kotlin", listOf(
+                "kotlin-stdlib",
+                "kotlin-reflect",
+                "kotlin-stdlib-jdk7",
+                "kotlin-stdlib-jdk8",
+        ))
+        
+        val kotlinx = "org.jetbrains.kotlinx"
+        library("kotlinx-coroutines-core", kotlinx, "kotlinx-coroutines-core").versionRef("kotlinx-coroutines")
+        library("kotlinx-coroutines-test", kotlinx, "kotlinx-coroutines-test").versionRef("kotlinx-coroutines")
+        library("kotlinx-serialization-cbor-jvm", kotlinx, "kotlinx-serialization-cbor-jvm")
+        .versionRef("kotlinx-serialization")
+        library("kotlinx-serialization-core-jvm", kotlinx, "kotlinx-serialization-core-jvm")
+        .versionRef("kotlinx-serialization")
+        library("kotlinx-serialization-json-jvm", kotlinx, "kotlinx-serialization-json-jvm")
+        .versionRef("kotlinx-serialization")
+        bundle("kotlinx", listOf(
+                "kotlinx-coroutines-core",
+                "kotlinx-coroutines-test",
+                "kotlinx-serialization-cbor-jvm",
+                "kotlinx-serialization-core-jvm",
+                "kotlinx-serialization-json-jvm"
+        ))
 }
 
 arrayOf(

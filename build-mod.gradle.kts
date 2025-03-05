@@ -57,6 +57,7 @@ loom {
 val shade by configurations.registering
 val modShade by configurations.registering
 
+@Suppress("UnstableApiUsage")
 configurations {
         implementation.extendsFrom(shade)
         modImplementation.extendsFrom(modShade)
@@ -94,7 +95,14 @@ repositories {
 
 @Suppress("UnstableApiUsage")
 dependencies {
-        modCompileOnly("cc.polyfrost:oneconfig-$platform:" + properties["version_OneConfig"])
+        modCompileOnly("cc.polyfrost:oneconfig-$platform:" + properties["version_OneConfig"]) {
+                exclude(group = "org.jetbrains.kotlin")
+                exclude(group = "org.jetbrains.kotlinx")
+                exclude(group = "me.djtheredstoner")
+        }
+        
+        compileOnly(libz.bundles.kotlin)
+        compileOnly(libz.bundles.kotlinx)
         
         val artifactDevAuth = "DevAuth-" + when {
                 platform.isModernFabric -> "fabric"
@@ -106,8 +114,8 @@ dependencies {
         
         modRuntimeOnly("me.djtheredstoner:$artifactDevAuth:" + properties["version_DevAuth"])
         
-        implementation("com.github.boopwdn:YqlossClientMixin:v0.7.0:dev")
-        shade("com.github.Water-OR:llvg-utils:1.0")
+        runtimeOnly("com.github.boopwdn:YqlossClientMixin:v0.7.0:dev")
+        shade("com.github.Water-OR:llvg-utils:1.1")
         
         if (platform.isLegacyForge) {
                 compileOnly("org.spongepowered:mixin:0.7.11-SNAPSHOT")

@@ -17,16 +17,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.llvg.exec
+package net.llvg.exec.event
 
-import org.apache.logging.log4j.LogManager
-import org.apache.logging.log4j.Logger
-
-object ExeClient {
-        @JvmField
-        val logger: Logger = LogManager.getLogger(ExeClient::class.java.simpleName)
-        
-        @JvmStatic
-        fun initialize() {
-        }
+interface ExeCEventListenable {
+        val active: Boolean get() = true
 }
