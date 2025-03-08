@@ -17,17 +17,22 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.llvg.exec
+package net.llvg.exec.config
 
-import net.llvg.exec.config.ExeClientConfig
+import cc.polyfrost.oneconfig.config.Config
+import cc.polyfrost.oneconfig.config.data.Mod
+import cc.polyfrost.oneconfig.config.data.ModType
 import net.llvg.exec.utils.loggerTypeNamed
 
-object ExeClient {
-        @JvmField
-        val logger = loggerTypeNamed<ExeClient>()
+object ExeClientConfig : Config(Mod("Exe Client", ModType.SKYBLOCK), "exec-config.json", false) {
+        @Transient
+        val logger = loggerTypeNamed<ExeClientConfig>()
         
-        @JvmStatic
-        fun initialize() {
-                ExeClientConfig
+        init {
+                logger.info("Begin initializing config")
+                initialize()
+                logger.info("Finish initializing config")
         }
+        
+        fun active() = enabled
 }
