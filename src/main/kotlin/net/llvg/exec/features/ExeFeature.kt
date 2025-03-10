@@ -3,7 +3,7 @@ package net.llvg.exec.features
 import net.llvg.exec.config.ExeFeatureConfig
 import net.llvg.exec.event.ExeCEventListenable
 
-internal interface ExeFeature : ExeCEventListenable {
+interface ExeFeature : ExeCEventListenable {
         fun initialize()
         
         fun reactive()

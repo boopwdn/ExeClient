@@ -1,6 +1,6 @@
 package net.llvg.exec.features
 
-internal object FeatureManager {
+object FeatureManager {
         init {
         }
 }
