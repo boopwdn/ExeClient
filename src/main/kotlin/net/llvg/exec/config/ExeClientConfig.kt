@@ -24,7 +24,7 @@ import cc.polyfrost.oneconfig.config.data.Mod
 import cc.polyfrost.oneconfig.config.data.ModType
 import net.llvg.exec.utils.loggerTypeNamed
 
-object ExeClientConfig : Config(Mod("Exe Client", ModType.SKYBLOCK), "exec-config.json", false) {
+internal object ExeClientConfig : Config(Mod("Exe Client", ModType.SKYBLOCK), "exec-config.json", false) {
         @Transient
         val logger = loggerTypeNamed<ExeClientConfig>()
         
@@ -34,5 +34,6 @@ object ExeClientConfig : Config(Mod("Exe Client", ModType.SKYBLOCK), "exec-confi
                 logger.info("Finish initializing config")
         }
         
-        fun active() = enabled
+        fun active(
+        ) = enabled
 }
