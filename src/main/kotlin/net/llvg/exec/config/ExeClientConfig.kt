@@ -20,13 +20,19 @@
 package net.llvg.exec.config
 
 import cc.polyfrost.oneconfig.config.Config
+import cc.polyfrost.oneconfig.config.annotations.SubConfig
 import cc.polyfrost.oneconfig.config.data.Mod
 import cc.polyfrost.oneconfig.config.data.ModType
+import net.llvg.exec.config.freecam.FreeCamConfig
 import net.llvg.exec.utils.loggerTypeNamed
 
 object ExeClientConfig : Config(Mod("Exe Client", ModType.SKYBLOCK), "exec-config.json", false) {
         @Transient
         val logger = loggerTypeNamed<ExeClientConfig>()
+        
+        @SubConfig
+        @Suppress("UNUSED")
+        val configFreeCamera = FreeCamConfig
         
         init {
                 logger.info("Begin initializing config")
