@@ -34,5 +34,6 @@ object ExeClientConfig : Config(Mod("Exe Client", ModType.SKYBLOCK), "exec-confi
                 logger.info("Finish initializing config")
         }
         
-        fun active() = enabled
+        fun active(
+        ) = enabled
 }

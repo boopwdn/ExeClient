@@ -20,6 +20,7 @@
 package net.llvg.exec
 
 import net.llvg.exec.config.ExeClientConfig
+import net.llvg.exec.features.FeatureManager
 import net.llvg.exec.utils.loggerTypeNamed
 
 object ExeClient {
@@ -28,6 +29,7 @@ object ExeClient {
         
         @JvmStatic
         fun initialize() {
+                FeatureManager
                 ExeClientConfig
         }
 }
