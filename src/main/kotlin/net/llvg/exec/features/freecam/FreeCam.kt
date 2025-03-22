@@ -38,8 +38,8 @@ import net.minecraft.util.MovementInputFromOptions
 object FreeCam : ExeFeature {
         init {
                 onEvent(dispatcher = Dispatchers.Default) { e: UserHealthChangeEvent ->
-                        if (e.instance.health > e.health) {
-                                toggle()
+                        if (FreeCamConfig.disableOnDamage && e.instance.health > e.health) {
+                                if (enabled) toggle()
                         }
                 }
                 
@@ -47,7 +47,7 @@ object FreeCam : ExeFeature {
                         sendToUser(ChatComponentText("[Exe Client] Server tries to change your camera!"))
                         
                         if (FreeCamConfig.disableOnSeverCameraChange) {
-                                toggle()
+                                if (enabled) toggle()
                         } else {
                                 previousEntity = e.entity
                                 e.entity = null

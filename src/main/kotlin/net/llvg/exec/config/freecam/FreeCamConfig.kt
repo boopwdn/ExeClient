@@ -55,6 +55,11 @@ object FreeCamConfig : ExeFeatureConfig(
         var allowTogglePerspective = false
         
         @Checkbox(
+                name = "Disable on Damage"
+        )
+        var disableOnDamage = false
+        
+        @Checkbox(
                 name = "Disable on Server Camera Change"
         )
         var disableOnSeverCameraChange = false
