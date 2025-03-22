@@ -107,6 +107,10 @@ object FreeCam : ExeFeature {
                 @[JvmStatic JvmName("allowPlayerInteract")]
                 inline get() = FreeCamConfig.allowPlayerInteract
         
+        val enableWaterAndLavaOverlay
+                @[JvmStatic JvmName("enableWaterAndLavaOverlay")]
+                inline get() = FreeCamConfig.enableWaterAndLavaOverlay
+        
         private val toggleLock = Any()
         
         @Synchronized

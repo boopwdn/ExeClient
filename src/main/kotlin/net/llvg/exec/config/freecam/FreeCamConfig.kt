@@ -70,6 +70,12 @@ object FreeCamConfig : ExeFeatureConfig(
         var disableOnSeverCameraChange = false
         
         @Checkbox(
+                name = "Enable Water and Lava overlay",
+                size = 2
+        )
+        var enableWaterAndLavaOverlay = false
+        
+        @Checkbox(
                 name = "Allow Camera Interact"
         )
         var allowCameraInteract = false

@@ -20,11 +20,14 @@
 package net.llvg.exec.mixin;
 
 import net.llvg.exec.features.freecam.FreeCam;
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
@@ -55,5 +58,15 @@ public class MixinEntityRenderer {
                         return FreeCam.getCamera();
                 }
                 return entityplayerIn;
+        }
+        
+        @ModifyVariable (method = { "setupFog", "updateFogColor" }, at = @At ("STORE"))
+        private Block setupFog_updateFogColorModifyVariable(Block block) {
+                if (FreeCam.isEnabled() && !FreeCam.enableWaterAndLavaOverlay()) {
+                        if (block.getMaterial() == Material.water || block.getMaterial() == Material.lava) {
+                                return Blocks.air;
+                        }
+                }
+                return block;
         }
 }
