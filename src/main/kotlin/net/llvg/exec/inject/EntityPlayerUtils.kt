@@ -17,19 +17,21 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-@file:JvmName("LoggerUtils")
+@file:JvmName("EntityPlayerUtils")
+@file:Suppress("UNUSED", "FunctionName")
 
-package net.llvg.exec.utils
+package net.llvg.exec.inject
 
-import net.minecraft.util.IChatComponent
-import org.apache.logging.log4j.LogManager
-import org.apache.logging.log4j.Logger
+import net.minecraft.entity.player.EntityPlayer
 
-inline fun <reified T> loggerTypeNamed(
-): Logger = LogManager.getLogger(T::class.java.simpleName)
+private val EntityPlayer.inject
+        inline get() = (this as EntityPlayerInject)
 
-fun sendToUser(
-        message: IChatComponent
-) {
-        player.addChatMessage(message)
-}
+var EntityPlayer.theInventoryEnderChest
+        get() = inject.exec_theInventoryEnderChest
+        set(o) {
+                inject.exec_theInventoryEnderChest = o
+        }
+
+fun EntityPlayer.EntityPlayer_super_onLivingUpdate(
+) = inject.exec_EntityPlayer_super_onLivingUpdate()

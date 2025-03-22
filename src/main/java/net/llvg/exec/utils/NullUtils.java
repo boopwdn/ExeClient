@@ -17,19 +17,14 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-@file:JvmName("LoggerUtils")
+package net.llvg.exec.utils;
 
-package net.llvg.exec.utils
+import java.util.function.Consumer;
 
-import net.minecraft.util.IChatComponent
-import org.apache.logging.log4j.LogManager
-import org.apache.logging.log4j.Logger
-
-inline fun <reified T> loggerTypeNamed(
-): Logger = LogManager.getLogger(T::class.java.simpleName)
-
-fun sendToUser(
-        message: IChatComponent
-) {
-        player.addChatMessage(message)
+public class NullUtils {
+        public static <T> void onNotNull(T value, Consumer<T> action) {
+                if (value != null) {
+                        action.accept(value);
+                }
+        }
 }

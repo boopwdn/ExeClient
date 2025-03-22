@@ -17,19 +17,17 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-@file:JvmName("LoggerUtils")
+@file:JvmName("EntityLivingBaseUtils")
 
-package net.llvg.exec.utils
+package net.llvg.exec.inject
 
-import net.minecraft.util.IChatComponent
-import org.apache.logging.log4j.LogManager
-import org.apache.logging.log4j.Logger
+import net.minecraft.entity.EntityLivingBase
 
-inline fun <reified T> loggerTypeNamed(
-): Logger = LogManager.getLogger(T::class.java.simpleName)
+private val EntityLivingBase.inject
+        inline get() = (this as EntityLivingBaseInject)
 
-fun sendToUser(
-        message: IChatComponent
-) {
-        player.addChatMessage(message)
-}
+var EntityLivingBase.activePotionsMap
+        get() = inject.exec_activePotionsMap
+        set(o) {
+                inject.exec_activePotionsMap = o
+        }

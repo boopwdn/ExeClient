@@ -37,6 +37,11 @@ object ExeClientConfig : Config(Mod("Exe Client", ModType.SKYBLOCK), "exec-confi
         init {
                 logger.info("Begin initializing config")
                 initialize()
+                
+                ExeClientConfig::class.java.declaredFields.forEach {
+                        (it.get(this) as? ExeFeatureConfig)?.initialize()
+                }
+                
                 logger.info("Finish initializing config")
         }
         
