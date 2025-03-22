@@ -111,9 +111,6 @@ class FreeCamEntity(
         }
         
         override fun onLivingUpdate() {
-                isSprinting = false
-                isSneaking = false
-                
                 movementInput.updatePlayerMoveState()
                 
                 val sprint = mc.gameSettings.keyBindSprint.isKeyDown
