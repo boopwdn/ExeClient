@@ -20,10 +20,8 @@
 package net.llvg.exec.event.events
 
 import net.llvg.exec.event.ExeCEvent
-import net.minecraft.client.Minecraft
-import net.minecraft.entity.Entity
+import net.minecraft.client.multiplayer.WorldClient
 
-data class ServerCameraChangeEvent(
-        val instance: Minecraft,
-        var entity: Entity?
+data class WorldLoadEvent(
+        val worldClientIn: WorldClient?
 ) : ExeCEvent

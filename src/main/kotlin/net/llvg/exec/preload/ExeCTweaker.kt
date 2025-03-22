@@ -20,21 +20,47 @@
 package net.llvg.exec.preload
 
 import java.io.File
+import java.net.URI
+import net.llvg.exec.utils.loggerTypeNamed
 import net.llvg.loliutils.exception.uncheckedCast
 import net.minecraft.launchwrapper.ITweaker
 import net.minecraft.launchwrapper.Launch
 import net.minecraft.launchwrapper.LaunchClassLoader
+import org.spongepowered.asm.launch.MixinBootstrap
 
 @Suppress("UNUSED")
 class ExeCTweaker : ITweaker {
-        override fun acceptOptions(args: MutableList<String>?, gameDir: File?, assetsDir: File?, profile: String?) {}
+        override fun acceptOptions(
+                args: MutableList<String>?,
+                gameDir: File?,
+                assetsDir: File?,
+                profile: String?
+        ) {
+        }
         
-        override fun injectIntoClassLoader(classLoader: LaunchClassLoader) {
+        override fun injectIntoClassLoader(
+                classLoader: LaunchClassLoader
+        ) {
                 val tweakClasses: MutableList<String> = Launch.blackboard["TweakClasses"].uncheckedCast()
                 tweakClasses.add("cc.polyfrost.oneconfig.loader.stage0.LaunchWrapperTweaker")
         }
         
-        override fun getLaunchTarget(): String = throw IllegalStateException("You should not be here!")
+        override fun getLaunchTarget(
+        ): String = throw IllegalStateException("You should not be here!")
         
-        override fun getLaunchArguments(): Array<String> = arrayOf()
+        override fun getLaunchArguments(
+        ): Array<String> {
+                val path = javaClass.getResource("mixin.exec.json")?.path ?: return arrayOf()
+                
+                val logger = loggerTypeNamed<ExeCTweaker>()
+                logger.info("path={}", path)
+                
+                if (path.startsWith("jar:")) {
+                        MixinBootstrap.getPlatform().addContainer(
+                                URI(path.substringBeforeLast('.').substring(4))
+                        )
+                        logger.info("path={}", path)
+                }
+                return arrayOf()
+        }
 }

@@ -19,8 +19,11 @@
 
 package net.llvg.exec.mixin;
 
+import net.llvg.exec.event.ExeCEventManager;
+import net.llvg.exec.event.events.WorldLoadEvent;
 import net.llvg.exec.features.freecam.FreeCam;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.settings.KeyBinding;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -35,6 +38,12 @@ public class MixinMinecraft {
                         return FreeCam.allowTogglePerspective() && instance.isPressed();
                 }
                 return instance.isPressed();
+        }
+        
+        @Inject (method = "loadWorld(Lnet/minecraft/client/multiplayer/WorldClient;Ljava/lang/String;)V", at = @At ("HEAD"))
+        private void loadWorldInject(WorldClient worldClientIn, String loadingMessage, CallbackInfo ci) {
+                WorldLoadEvent event = new WorldLoadEvent(worldClientIn);
+                ExeCEventManager.post(WorldLoadEvent.class, event, true);
         }
         
         @Inject (method = "clickMouse", at = @At ("HEAD"), cancellable = true)

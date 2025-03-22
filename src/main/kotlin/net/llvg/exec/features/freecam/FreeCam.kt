@@ -24,6 +24,7 @@ import net.llvg.exec.config.ExeFeatureConfig
 import net.llvg.exec.config.freecam.FreeCamConfig
 import net.llvg.exec.event.events.ServerCameraChangeEvent
 import net.llvg.exec.event.events.UserHealthChangeEvent
+import net.llvg.exec.event.events.WorldLoadEvent
 import net.llvg.exec.event.onEvent
 import net.llvg.exec.features.ExeFeature
 import net.llvg.exec.utils.mc
@@ -55,6 +56,10 @@ object FreeCam : ExeFeature {
                                 previousEntity = e.entity
                                 e.entity = null
                         }
+                }
+                
+                onEvent(dispatcher = Dispatchers.Default) { e: WorldLoadEvent ->
+                        disable()
                 }
         }
         
@@ -106,6 +111,8 @@ object FreeCam : ExeFeature {
         
         @Synchronized
         fun toggle() {
+                if (!config.active()) return
+                
                 if (enabled) {
                         disable()
                 } else {
@@ -114,8 +121,11 @@ object FreeCam : ExeFeature {
         }
         
         @Synchronized
-        fun toggleController() = camera?.let { camera ->
-                if (!FreeCamConfig.allowToggleController) return@let
+        fun toggleController() {
+                if (!config.active()) return
+                if (!enabled) return
+                val camera = camera ?: return
+                if (!FreeCamConfig.allowToggleController) return
                 // lock
                 synchronized(toggleLock) {
                         if (controllingPlayer) {
