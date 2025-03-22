@@ -50,7 +50,8 @@ object FreeCamConfig : ExeFeatureConfig(
         var keyToggleController = OneKeyBind()
         
         @Checkbox(
-                name = "Allow Toggle Perspective"
+                name = "Allow Toggle Perspective",
+                size = 2
         )
         var allowTogglePerspective = false
         

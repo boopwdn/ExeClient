@@ -60,9 +60,7 @@ object FreeCam : ExeFeature {
         override fun reactive() {}
         
         override fun inactive() {
-                if (enabled) {
-                        toggle()
-                }
+                if (enabled) toggle()
         }
         
         override val config: ExeFeatureConfig
