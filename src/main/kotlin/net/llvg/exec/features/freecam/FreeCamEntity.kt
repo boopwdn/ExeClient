@@ -94,6 +94,22 @@ class FreeCamEntity(
         
         override fun applyEntityCollision(entityIn: Entity?) {}
         
+        override fun setSprinting(sprinting: Boolean) {
+                super.setSprinting(false)
+        }
+        
+        override fun isSprinting(): Boolean {
+                return false
+        }
+        
+        override fun setSneaking(sneaking: Boolean) {
+                super.setSneaking(false)
+        }
+        
+        override fun isSneaking(): Boolean {
+                return false
+        }
+        
         override fun onLivingUpdate() {
                 isSprinting = false
                 isSneaking = false
