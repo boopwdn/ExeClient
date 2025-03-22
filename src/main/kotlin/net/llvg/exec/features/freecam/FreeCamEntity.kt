@@ -110,6 +110,11 @@ class FreeCamEntity(
                 return false
         }
         
+        override fun updateEntityActionState() {
+                super.updateEntityActionState()
+                isJumping = false
+        }
+        
         override fun onLivingUpdate() {
                 movementInput.updatePlayerMoveState()
                 
