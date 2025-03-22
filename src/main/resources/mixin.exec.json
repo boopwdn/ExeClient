@@ -19,6 +19,7 @@
     "mixins": [
         "MixinEntity",
         "MixinEntityLivingBase",
-        "MixinEntityPlayer"
+        "MixinEntityPlayer",
+        "MixinWorld"
     ]
 }
