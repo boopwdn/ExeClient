@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin (Main.class)
 public abstract class MixinMain {
         @Inject (method = "main", at = @At ("HEAD"), remap = false)
-        private static void startExeClient(String[] strings, CallbackInfo ci) {
+        private static void mainInject(String[] strings, CallbackInfo ci) {
                 ExeClient.initialize();
                 Class<? extends ExeClient> clazz = ExeClient.INSTANCE.getClass();
                 ExeClient.logger.info("ExeClient initialization succeed! Instance(class={}, classloader={})", clazz, clazz.getClassLoader());
