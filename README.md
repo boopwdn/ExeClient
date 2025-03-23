@@ -23,4 +23,4 @@
 > Use it at your own risk
 
 ### Features
- - There aren't any features currently
+ - Free Camera
