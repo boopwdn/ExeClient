@@ -83,7 +83,10 @@ public abstract class MixinMinecraft {
         
         @ModifyVariable (method = "sendClickBlockToController", at = @At ("HEAD"), index = 1, argsOnly = true)
         private boolean sendClickBlockToControllerModifyVariable(boolean leftClick) {
-                return leftClick && exec$allowInteract();
+                if (FreeCam.isEnabled()) {
+                        return leftClick && exec$allowInteract();
+                }
+                return leftClick;
         }
         
         @Unique
