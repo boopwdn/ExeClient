@@ -20,21 +20,19 @@
 package net.llvg.exec.mixin;
 
 import net.llvg.exec.features.freecam.FreeCam;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.ItemRenderer;
-import org.spongepowered.asm.lib.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Mixin (ItemRenderer.class)
-public class MixinItemRenderer {
-        @Redirect (method = "renderItemInFirstPerson", at = @At (value = "FIELD", target = "Lnet/minecraft/client/Minecraft;thePlayer:Lnet/minecraft/client/entity/EntityPlayerSP;", opcode = Opcodes.GETFIELD))
-        private EntityPlayerSP renderItemInFirstPersonRedirect(Minecraft instance) {
+public abstract class MixinItemRenderer {
+        @ModifyVariable (method = "renderItemInFirstPerson", at = @At ("STORE"), index = 3)
+        private AbstractClientPlayer renderItemInFirstPersonModifyVariable(AbstractClientPlayer abstractclientplayer) {
                 if (FreeCam.isEnabled()) {
                         return FreeCam.getCamera();
                 }
-                return instance.thePlayer;
+                return abstractclientplayer;
         }
 }

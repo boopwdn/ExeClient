@@ -27,7 +27,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin (RenderPlayer.class)
-public class MixinRenderPlayer {
+public abstract class MixinRenderPlayer {
         @Redirect (method = "doRender(Lnet/minecraft/client/entity/AbstractClientPlayer;DDDFF)V", at = @At (value = "INVOKE", target = "Lnet/minecraft/client/entity/AbstractClientPlayer;isUser()Z"))
         private boolean doRenderRedirect(AbstractClientPlayer instance) {
                 if (FreeCam.isEnabled()) {

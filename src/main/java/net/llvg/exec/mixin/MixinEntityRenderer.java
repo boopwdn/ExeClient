@@ -22,7 +22,6 @@ package net.llvg.exec.mixin;
 import net.llvg.exec.features.freecam.FreeCam;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.entity.Entity;
@@ -32,22 +31,21 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
-import org.spongepowered.asm.mixin.injection.Redirect;
 
 import java.util.List;
 
 @Mixin (EntityRenderer.class)
-public class MixinEntityRenderer {
-        @Redirect (method = "getMouseOver", at = @At (value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;getRenderViewEntity()Lnet/minecraft/entity/Entity;"))
-        private Entity getMouseOverRedirect(Minecraft instance) {
+public abstract class MixinEntityRenderer {
+        @ModifyVariable (method = "getMouseOver", at = @At ("STORE"), index = 2)
+        private Entity getMouseOverModifyVariable0(Entity entity) {
                 if (FreeCam.isEnabled()) {
                         return FreeCam.isControllingPlayer() ? FreeCam.getPreviousEntity() : FreeCam.getCamera();
                 }
-                return instance.getRenderViewEntity();
+                return entity;
         }
         
         @ModifyVariable (method = "getMouseOver", at = @At ("STORE"))
-        private List<Entity> getMouseOverModifyVariable(List<Entity> entities) {
+        private List<Entity> getMouseOverModifyVariable1(List<Entity> entities) {
                 entities.removeIf(EntityPlayerSP.class::isInstance);
                 return entities;
         }

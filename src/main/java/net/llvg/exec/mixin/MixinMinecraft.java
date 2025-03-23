@@ -24,20 +24,31 @@ import net.llvg.exec.event.events.WorldLoadEvent;
 import net.llvg.exec.features.freecam.FreeCam;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
-import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.client.settings.GameSettings;
+import org.spongepowered.asm.lib.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.*;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin (Minecraft.class)
-public class MixinMinecraft {
-        @Redirect (method = "runTick", slice = @Slice (from = @At (value = "FIELD", target = "Lnet/minecraft/client/settings/GameSettings;keyBindTogglePerspective:Lnet/minecraft/client/settings/KeyBinding;")), at = @At (value = "INVOKE", target = "Lnet/minecraft/client/settings/KeyBinding;isPressed()Z", ordinal = 0))
-        private boolean runTickRedirect(KeyBinding instance) {
-                if (FreeCam.isEnabled()) {
-                        return FreeCam.allowTogglePerspective() && instance.isPressed();
+public abstract class MixinMinecraft {
+        @Shadow public GameSettings gameSettings;
+        
+        @SuppressWarnings ("DiscouragedShift")
+        @Inject (method = "runTick", at = @At (value = "FIELD", target = "Lnet/minecraft/client/settings/GameSettings;thirdPersonView:I", opcode = Opcodes.GETFIELD, ordinal = 0, shift = At.Shift.BEFORE))
+        private void runTickInject(CallbackInfo ci) {
+                exec$gameSettings$thirdPersonView$storage = gameSettings.thirdPersonView;
+        }
+        
+        @Inject (method = "runTick", at = @At (value = "FIELD", target = "Lnet/minecraft/client/settings/GameSettings;thirdPersonView:I", opcode = Opcodes.PUTFIELD, ordinal = 0, shift = At.Shift.AFTER))
+        private void runTickInject1(CallbackInfo ci) {
+                if (FreeCam.isEnabled() && !FreeCam.allowTogglePerspective()) {
+                        gameSettings.thirdPersonView = exec$gameSettings$thirdPersonView$storage;
                 }
-                return instance.isPressed();
         }
         
         @Inject (method = "loadWorld(Lnet/minecraft/client/multiplayer/WorldClient;Ljava/lang/String;)V", at = @At ("HEAD"))
@@ -79,4 +90,7 @@ public class MixinMinecraft {
         private static boolean exec$allowInteract() {
                 return FreeCam.isControllingPlayer() ? FreeCam.allowPlayerInteract() : FreeCam.allowCameraInteract();
         }
+        
+        @Unique
+        private static int exec$gameSettings$thirdPersonView$storage;
 }

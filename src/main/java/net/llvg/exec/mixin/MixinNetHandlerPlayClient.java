@@ -21,22 +21,18 @@ package net.llvg.exec.mixin;
 
 import net.llvg.exec.event.ExeCEventManager;
 import net.llvg.exec.event.events.ServerCameraChangeEvent;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.entity.Entity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Mixin (NetHandlerPlayClient.class)
-public class MixinNetHandlerPlayClient {
-        @Redirect (method = "handleCamera", at = @At (value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;setRenderViewEntity(Lnet/minecraft/entity/Entity;)V"))
-        private void handleCameraRedirect(Minecraft instance, Entity viewingEntity) {
-                ServerCameraChangeEvent event = new ServerCameraChangeEvent(instance, viewingEntity);
+public abstract class MixinNetHandlerPlayClient {
+        @ModifyVariable (method = "handleCamera", at = @At ("STORE"), index = 2)
+        private Entity handleCameraRedirect(Entity entity) {
+                ServerCameraChangeEvent event = new ServerCameraChangeEvent(entity);
                 ExeCEventManager.post(ServerCameraChangeEvent.class, event, true);
-                viewingEntity = event.getEntity();
-                if (viewingEntity != null && viewingEntity != instance.getRenderViewEntity()) {
-                        instance.setRenderViewEntity(viewingEntity);
-                }
+                return event.getEntity();
         }
 }

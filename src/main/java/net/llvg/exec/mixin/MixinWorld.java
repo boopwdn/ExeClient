@@ -30,7 +30,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import java.util.List;
 
 @Mixin (World.class)
-public class MixinWorld {
+public abstract class MixinWorld {
         @ModifyVariable (method = "checkNoEntityCollision(Lnet/minecraft/util/AxisAlignedBB;Lnet/minecraft/entity/Entity;)Z", at = @At ("STORE"), index = 3)
         private List<Entity> checkNoEntityCollisionModifyVariable(List<Entity> list) {
                 NullUtils.onNotNull(FreeCam.getCamera(), it -> list.removeIf(it::isEntityEqual));

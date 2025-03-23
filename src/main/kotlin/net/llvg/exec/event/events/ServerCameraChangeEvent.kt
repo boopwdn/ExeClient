@@ -20,10 +20,8 @@
 package net.llvg.exec.event.events
 
 import net.llvg.exec.event.ExeCEvent
-import net.minecraft.client.Minecraft
 import net.minecraft.entity.Entity
 
 data class ServerCameraChangeEvent(
-        val instance: Minecraft,
         var entity: Entity?
 ) : ExeCEvent

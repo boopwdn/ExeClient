@@ -29,7 +29,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin (RenderManager.class)
-public class MixinRenderManager {
+public abstract class MixinRenderManager {
         @Inject (method = "shouldRender", at = @At ("HEAD"), cancellable = true)
         private void shouldRenderInject(Entity entityIn, ICamera camera, double camX, double camY, double camZ, CallbackInfoReturnable<Boolean> cir) {
                 if (entityIn instanceof FreeCamEntity) {
