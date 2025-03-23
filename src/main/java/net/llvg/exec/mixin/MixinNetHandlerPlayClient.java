@@ -30,7 +30,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 @Mixin (NetHandlerPlayClient.class)
 public abstract class MixinNetHandlerPlayClient {
         @ModifyVariable (method = "handleCamera", at = @At ("STORE"), index = 2)
-        private Entity handleCameraRedirect(Entity entity) {
+        private Entity handleCameraModifyVariable(Entity entity) {
                 ServerCameraChangeEvent event = new ServerCameraChangeEvent(entity);
                 ExeCEventManager.post(ServerCameraChangeEvent.class, event, true);
                 return event.getEntity();
