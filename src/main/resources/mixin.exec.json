@@ -6,6 +6,20 @@
     "compatibilityLevel": "JAVA_8",
     "verbose": true,
     "client": [
-        "MixinMain"
+        "MixinAbstractClientPlayer",
+        "MixinEntityPlayerSP",
+        "MixinEntityRenderer",
+        "MixinItemRenderer",
+        "MixinMain",
+        "MixinMinecraft",
+        "MixinNetHandlerPlayClient",
+        "MixinRenderManager",
+        "MixinRenderPlayer"
+    ],
+    "mixins": [
+        "MixinEntity",
+        "MixinEntityLivingBase",
+        "MixinEntityPlayer",
+        "MixinWorld"
     ]
 }

@@ -29,6 +29,8 @@ val mod_group: String by properties
 val mod_name: String by properties
 val mixin_id: String by properties
 
+val refmap_file = "refmap.$mixin_id.json"
+
 version = mod_version
 group = mod_group
 base.archivesName = "$mod_name-$platform"
@@ -44,6 +46,8 @@ loom {
         
         runConfigs.configureEach {
                 property("mixin.debug.export", "true")
+                property("mixin.hotSwap", "true")
+                vmArg("-XX:+AllowEnhancedClassRedefinition")
         }
         
         if (project.platform.isForge) forge {
@@ -51,7 +55,7 @@ loom {
         }
         
         @Suppress("UnstableApiUsage")
-        mixin.defaultRefmapName = "refmap.$mixin_id.json"
+        mixin.defaultRefmapName = refmap_file
 }
 
 val shade by configurations.registering
@@ -146,7 +150,7 @@ tasks {
         processResources {
                 filesMatching("mixin.$mixin_id.json") {
                         expand(mapOf(
-                                "refmap" to "refmap.$mixin_id.json",
+                                "refmap" to refmap_file,
                         ))
                 }
         }
@@ -167,7 +171,7 @@ tasks {
                         val attr: MutableMap<String, Any> = HashMap()
                         attr["ModSide"] = "CLIENT"
                         attr["ForceLoadAsMod"] = true
-                        attr["TweakClass"] = "net.llvg.exec.preload.ExeCTweaker"
+                        attr["TweakClass"] = "cc.polyfrost.oneconfig.loader.stage0.LaunchWrapperTweaker"
                         attr["TweakOrder"] = 0
                         attr["MixinConfigs"] = "mixin.$mixin_id.json"
                         manifest.attributes += attr

@@ -17,19 +17,11 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-@file:JvmName("LoggerUtils")
+package net.llvg.exec.inject
 
-package net.llvg.exec.utils
+import net.minecraft.client.network.NetworkPlayerInfo
 
-import net.minecraft.util.IChatComponent
-import org.apache.logging.log4j.LogManager
-import org.apache.logging.log4j.Logger
-
-inline fun <reified T> loggerTypeNamed(
-): Logger = LogManager.getLogger(T::class.java.simpleName)
-
-fun sendToUser(
-        message: IChatComponent
-) {
-        player.addChatMessage(message)
+@Suppress("FunctionName")
+interface AbstractClientPlayerInject {
+        fun exec_getPlayerInfo(): NetworkPlayerInfo?
 }

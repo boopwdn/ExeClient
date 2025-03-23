@@ -3,7 +3,7 @@ package net.llvg.exec.config
 import cc.polyfrost.oneconfig.config.elements.SubConfig
 import net.llvg.exec.features.ExeFeature
 
-class ExeFeatureConfig(
+abstract class ExeFeatureConfig(
         @Transient private val isOwnerActive: () -> Boolean,
         @Transient private val feature: ExeFeature,
         name: String,

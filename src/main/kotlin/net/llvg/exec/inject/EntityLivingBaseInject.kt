@@ -17,19 +17,11 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-@file:JvmName("LoggerUtils")
+package net.llvg.exec.inject
 
-package net.llvg.exec.utils
+import net.minecraft.potion.PotionEffect
 
-import net.minecraft.util.IChatComponent
-import org.apache.logging.log4j.LogManager
-import org.apache.logging.log4j.Logger
-
-inline fun <reified T> loggerTypeNamed(
-): Logger = LogManager.getLogger(T::class.java.simpleName)
-
-fun sendToUser(
-        message: IChatComponent
-) {
-        player.addChatMessage(message)
+@Suppress("PropertyName")
+interface EntityLivingBaseInject {
+        var exec_activePotionsMap: MutableMap<Integer, PotionEffect>
 }
