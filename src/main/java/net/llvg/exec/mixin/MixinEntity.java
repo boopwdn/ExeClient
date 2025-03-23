@@ -34,7 +34,7 @@ public abstract class MixinEntity {
         @Shadow public abstract boolean isEntityEqual(Entity entityIn);
         
         @Inject (method = "setAngles", at = @At ("HEAD"), cancellable = true)
-        private void setRotationInject(float yaw, float pitch, CallbackInfo ci) {
+        private void setAnglesInject(float yaw, float pitch, CallbackInfo ci) {
                 if (FreeCam.isEnabled() && isEntityEqual(MinecraftUtils.player()) && !FreeCam.isControllingPlayer()) {
                         NullUtils.onNotNull(FreeCam.getCamera(), it -> it.setAngles(yaw, pitch));
                         ci.cancel();
