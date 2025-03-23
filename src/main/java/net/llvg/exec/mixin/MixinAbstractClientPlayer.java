@@ -40,7 +40,8 @@ public abstract class MixinAbstractClientPlayer extends EntityPlayer implements 
         
         @Unique
         @Override
-        public @Nullable NetworkPlayerInfo exec_getPlayerInfo() {
+        @Nullable
+        public NetworkPlayerInfo exec_getPlayerInfo() {
                 return getPlayerInfo();
         }
 }

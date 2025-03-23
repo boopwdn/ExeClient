@@ -22,6 +22,7 @@ package net.llvg.exec.mixin;
 import net.llvg.exec.features.freecam.FreeCam;
 import net.llvg.exec.utils.NullUtils;
 import net.minecraft.entity.Entity;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -30,7 +31,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import java.util.List;
 
 @Mixin (World.class)
-public abstract class MixinWorld {
+public abstract class MixinWorld implements IBlockAccess {
         @ModifyVariable (method = "checkNoEntityCollision(Lnet/minecraft/util/AxisAlignedBB;Lnet/minecraft/entity/Entity;)Z", at = @At ("STORE"), index = 3)
         private List<Entity> checkNoEntityCollisionModifyVariable(List<Entity> list) {
                 NullUtils.onNotNull(FreeCam.getCamera(), it -> list.removeIf(it::isEntityEqual));

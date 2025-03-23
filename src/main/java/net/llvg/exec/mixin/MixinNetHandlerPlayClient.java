@@ -23,12 +23,13 @@ import net.llvg.exec.event.ExeCEventManager;
 import net.llvg.exec.event.events.ServerCameraChangeEvent;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.entity.Entity;
+import net.minecraft.network.play.INetHandlerPlayClient;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Mixin (NetHandlerPlayClient.class)
-public abstract class MixinNetHandlerPlayClient {
+public abstract class MixinNetHandlerPlayClient implements INetHandlerPlayClient {
         @ModifyVariable (method = "handleCamera", at = @At ("STORE"), index = 2)
         private Entity handleCameraModifyVariable(Entity entity) {
                 ServerCameraChangeEvent event = new ServerCameraChangeEvent(entity);

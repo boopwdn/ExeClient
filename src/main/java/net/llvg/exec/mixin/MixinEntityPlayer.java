@@ -30,7 +30,8 @@ import org.spongepowered.asm.mixin.Unique;
 
 @Mixin (EntityPlayer.class)
 public abstract class MixinEntityPlayer extends EntityLivingBase implements EntityPlayerInject {
-        @Shadow private InventoryEnderChest theInventoryEnderChest;
+        @Shadow
+        private InventoryEnderChest theInventoryEnderChest;
         
         private MixinEntityPlayer() {
                 super(null);
@@ -44,7 +45,8 @@ public abstract class MixinEntityPlayer extends EntityLivingBase implements Enti
         
         @Unique
         @Override
-        public @NotNull InventoryEnderChest getExec_theInventoryEnderChest() {
+        @NotNull
+        public InventoryEnderChest getExec_theInventoryEnderChest() {
                 return theInventoryEnderChest;
         }
         
