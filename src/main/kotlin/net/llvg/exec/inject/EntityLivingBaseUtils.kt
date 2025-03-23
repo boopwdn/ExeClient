@@ -22,11 +22,12 @@
 package net.llvg.exec.inject
 
 import net.minecraft.entity.EntityLivingBase
+import net.minecraft.potion.PotionEffect
 
-private val EntityLivingBase.inject
+private val EntityLivingBase.inject: EntityLivingBaseInject
         inline get() = (this as EntityLivingBaseInject)
 
-var EntityLivingBase.activePotionsMap
+var EntityLivingBase.activePotionsMap: MutableMap<Integer, PotionEffect>
         get() = inject.exec_activePotionsMap
         set(o) {
                 inject.exec_activePotionsMap = o

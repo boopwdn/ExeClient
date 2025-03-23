@@ -39,15 +39,15 @@ public abstract class MixinEntityPlayer extends EntityLivingBase implements Enti
         
         @Unique
         @Override
-        public void setExec_theInventoryEnderChest(@NotNull InventoryEnderChest theInventoryEnderChest) {
-                this.theInventoryEnderChest = theInventoryEnderChest;
+        @NotNull
+        public InventoryEnderChest getExec_theInventoryEnderChest() {
+                return theInventoryEnderChest;
         }
         
         @Unique
         @Override
-        @NotNull
-        public InventoryEnderChest getExec_theInventoryEnderChest() {
-                return theInventoryEnderChest;
+        public void setExec_theInventoryEnderChest(@NotNull InventoryEnderChest theInventoryEnderChest) {
+                this.theInventoryEnderChest = theInventoryEnderChest;
         }
         
         @Unique

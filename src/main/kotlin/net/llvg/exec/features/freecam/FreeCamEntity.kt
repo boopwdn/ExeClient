@@ -69,9 +69,8 @@ class FreeCamEntity(
                         player.activePotionsMap
         }
         
-        override fun getPlayerInfo(): NetworkPlayerInfo? {
-                return player.getPlayerInfo()
-        }
+        override fun getPlayerInfo(
+        ): NetworkPlayerInfo? = player.getPlayerInfo()
         
         override fun canAttackWithItem(
         ): Boolean = false
@@ -82,9 +81,8 @@ class FreeCamEntity(
         
         private var forceSpectator = false
         
-        override fun isSpectator(): Boolean {
-                return forceSpectator || super.isSpectator()
-        }
+        override fun isSpectator(
+        ): Boolean = forceSpectator || super.isSpectator()
         
         override fun onUpdate() {
                 forceSpectator = true
@@ -92,23 +90,28 @@ class FreeCamEntity(
                 forceSpectator = false
         }
         
-        override fun applyEntityCollision(entityIn: Entity?) {}
+        override fun applyEntityCollision(
+                entityIn: Entity?
+        ) {
+        }
         
-        override fun setSprinting(sprinting: Boolean) {
+        override fun setSprinting(
+                sprinting: Boolean
+        ) {
                 super.setSprinting(false)
         }
         
-        override fun isSprinting(): Boolean {
-                return false
-        }
+        override fun isSprinting(
+        ): Boolean = false
         
-        override fun setSneaking(sneaking: Boolean) {
+        override fun setSneaking(
+                sneaking: Boolean
+        ) {
                 super.setSneaking(false)
         }
         
-        override fun isSneaking(): Boolean {
-                return false
-        }
+        override fun isSneaking(
+        ): Boolean = false
         
         override fun updateEntityActionState() {
                 super.updateEntityActionState()
@@ -121,14 +124,20 @@ class FreeCamEntity(
                 val sprint = mc.gameSettings.keyBindSprint.isKeyDown
                 
                 motionY = 0.0
-                if (movementInput.jump)
+                if (movementInput.jump) {
                         motionY += 1
-                if (movementInput.sneak)
+                }
+                if (movementInput.sneak) {
                         motionY -= 1
+                }
                 
-                motionY *= FreeCamConfig.run { if (sprint) vSprintSpeed else vSpeed }
+                motionY *= FreeCamConfig.run {
+                        if (sprint) vSprintSpeed else vSpeed
+                }
                 
-                val hSpeed = FreeCamConfig.run { if (sprint) hSprintSpeed else hSpeed }
+                val hSpeed = FreeCamConfig.run {
+                        if (sprint) hSprintSpeed else hSpeed
+                }
                 val faceDirSpeed = hSpeed * movementInput.moveForward
                 val sideDirSpeed = hSpeed * movementInput.moveStrafe
                 
@@ -138,12 +147,15 @@ class FreeCamEntity(
                 motionX = (sideDirSpeed * cosV - faceDirSpeed * sinV).double
                 motionZ = (sideDirSpeed * sinV + faceDirSpeed * cosV).double
                 
-                if (abs(motionX) < 0.005)
+                if (abs(motionX) < 0.005) {
                         motionX = 0.0
-                if (abs(motionY) < 0.005)
+                }
+                if (abs(motionY) < 0.005) {
                         motionY = 0.0
-                if (abs(motionZ) < 0.005)
+                }
+                if (abs(motionZ) < 0.005) {
                         motionZ = 0.0
+                }
                 
                 EntityPlayer_super_onLivingUpdate()
         }

@@ -23,11 +23,12 @@
 package net.llvg.exec.inject
 
 import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.inventory.InventoryEnderChest
 
-private val EntityPlayer.inject
+private val EntityPlayer.inject: EntityPlayerInject
         inline get() = (this as EntityPlayerInject)
 
-var EntityPlayer.theInventoryEnderChest
+var EntityPlayer.theInventoryEnderChest: InventoryEnderChest
         get() = inject.exec_theInventoryEnderChest
         set(o) {
                 inject.exec_theInventoryEnderChest = o

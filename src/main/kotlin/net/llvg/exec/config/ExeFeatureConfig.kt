@@ -30,7 +30,13 @@ abstract class ExeFeatureConfig(
         icon: String? = null,
         enabled: Boolean = false,
         canToggle: Boolean = true
-) : SubConfig(name, configFile, icon, enabled, canToggle) {
+) : SubConfig(
+        name,
+        configFile,
+        icon,
+        enabled,
+        canToggle
+) {
         @Transient
         private var active = isOwnerActive() && enabled
         
@@ -47,10 +53,11 @@ abstract class ExeFeatureConfig(
                 val wasActive = active
                 active = isOwnerActive() && enabled
                 if (wasActive != active) with(feature) {
-                        if (active)
+                        if (active) {
                                 reactive()
-                        else
+                        } else {
                                 inactive()
+                        }
                 }
         }
 }

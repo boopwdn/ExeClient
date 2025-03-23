@@ -38,6 +38,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin (Minecraft.class)
 public abstract class MixinMinecraft implements IThreadListener, IPlayerUsage {
+        @Unique
+        private static int exec$gameSettings$thirdPersonView$storage;
         @Shadow public GameSettings gameSettings;
         
         @Inject (method = "clickMouse", at = @At ("HEAD"), cancellable = true)
@@ -46,6 +48,11 @@ public abstract class MixinMinecraft implements IThreadListener, IPlayerUsage {
                         if (exec$allowInteract()) { return; }
                         ci.cancel();
                 }
+        }
+        
+        @Unique
+        private static boolean exec$allowInteract() {
+                return FreeCam.isControllingPlayer() ? FreeCam.allowPlayerInteract() : FreeCam.allowCameraInteract();
         }
         
         @Inject (method = "rightClickMouse", at = @At ("HEAD"), cancellable = true)
@@ -90,12 +97,4 @@ public abstract class MixinMinecraft implements IThreadListener, IPlayerUsage {
                 }
                 return leftClick;
         }
-        
-        @Unique
-        private static boolean exec$allowInteract() {
-                return FreeCam.isControllingPlayer() ? FreeCam.allowPlayerInteract() : FreeCam.allowCameraInteract();
-        }
-        
-        @Unique
-        private static int exec$gameSettings$thirdPersonView$storage;
 }
