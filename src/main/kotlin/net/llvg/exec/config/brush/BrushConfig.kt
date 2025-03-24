@@ -19,6 +19,9 @@
 
 package net.llvg.exec.config.brush
 
+import cc.polyfrost.oneconfig.config.annotations.Checkbox
+import cc.polyfrost.oneconfig.config.annotations.KeyBind
+import cc.polyfrost.oneconfig.config.core.OneKeyBind
 import net.llvg.exec.config.ExeClientConfig
 import net.llvg.exec.config.ExeFeatureConfig
 import net.llvg.exec.features.brush.Brush
@@ -28,4 +31,22 @@ object BrushConfig : ExeFeatureConfig(
         Brush,
         "Brush",
         "exec-brush-config.json"
-)
+) {
+        @KeyBind(
+                name = "Brush Toggle Key"
+        )
+        var keyToggle = OneKeyBind()
+        
+        @Checkbox(
+                name = "Send Message"
+        )
+        var sendMessage = false
+        
+        override fun initialize() {
+                super.initialize()
+                registerKeyBind(
+                        keyToggle,
+                        Brush::toggle
+                )
+        }
+}

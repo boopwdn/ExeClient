@@ -22,6 +22,8 @@ package net.llvg.exec.features.brush
 import net.llvg.exec.config.ExeFeatureConfig
 import net.llvg.exec.config.brush.BrushConfig
 import net.llvg.exec.features.ExeFeature
+import net.llvg.exec.utils.sendToUser
+import net.minecraft.util.ChatComponentText
 
 object Brush : ExeFeature {
         override fun initialize() {}
@@ -32,4 +34,54 @@ object Brush : ExeFeature {
         
         override val config: ExeFeatureConfig
                 get() = BrushConfig
+        
+        @get:[JvmStatic JvmName("isEnabled")]
+        var enabled: Boolean = false
+                private set
+        
+        override val active: Boolean
+                get() = enabled
+        
+        private val toggleLock = Any()
+        
+        @Synchronized
+        fun toggle() {
+                if (enabled) {
+                        disable()
+                } else {
+                        enable()
+                }
+        }
+        
+        @Synchronized
+        private fun enable() {
+                // check if config active
+                if (!config.active()) return
+                // check if already enabled
+                if (enabled) return
+                // lock
+                synchronized(toggleLock) {
+                        // set enabled
+                        enabled = true
+                }
+                // send message
+                if (BrushConfig.sendMessage) {
+                        sendToUser(ChatComponentText("[Exe Client] Brush Enabled"))
+                }
+        }
+        
+        @Synchronized
+        private fun disable() {
+                // check if already disabled
+                if (!enabled) return
+                // lock
+                synchronized(toggleLock) {
+                        // set disabled
+                        enabled = false
+                }
+                // send message
+                if (BrushConfig.sendMessage) {
+                        sendToUser(ChatComponentText("[Exe Client] Brush Disabled"))
+                }
+        }
 }
