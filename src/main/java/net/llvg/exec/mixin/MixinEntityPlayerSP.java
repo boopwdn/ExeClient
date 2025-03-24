@@ -37,18 +37,17 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer {
                 super(null, null);
         }
         
+        @Inject (method = "swingItem", at = @At ("HEAD"))
+        private void swingItemInject(CallbackInfo ci) {
+                if (FreeCam.isEnabled() && isEntityEqual(MinecraftUtils.player())) {
+                        NullUtils.onNotNull(FreeCam.getCamera(), EntityPlayerSP::swingItem);
+                }
+        }
+        
         @Inject (method = "isCurrentViewEntity", at = @At ("HEAD"), cancellable = true)
         private void isCurrentViewEntityInject(CallbackInfoReturnable<Boolean> cir) {
                 if (FreeCam.isEnabled() && isEntityEqual(FreeCam.getPreviousEntity())) {
                         cir.setReturnValue(true);
-                }
-        }
-        
-        @SuppressWarnings ("Convert2MethodRef")
-        @Inject (method = "swingItem", at = @At ("HEAD"))
-        private void swingItemInject(CallbackInfo ci) {
-                if (FreeCam.isEnabled() && isEntityEqual(MinecraftUtils.player())) {
-                        NullUtils.onNotNull(FreeCam.getCamera(), it -> it.swingItem());
                 }
         }
 }

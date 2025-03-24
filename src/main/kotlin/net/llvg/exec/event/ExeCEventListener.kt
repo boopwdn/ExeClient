@@ -30,17 +30,18 @@ class ExeCEventListener<E : ExeCEvent>(
         val dispatcher: CoroutineDispatcher,
         val action: suspend CoroutineScope.(ValueWrapper<ExeCEvent>) -> Unit
 ) : Comparable<ExeCEventListener<E>> {
-        val active: Boolean get() = always || owner.active
+        val active: Boolean
+                get() = always || owner.active
         
         val order = ExeCEventListener.order++
         
-        override fun compareTo(other: ExeCEventListener<E>): Int {
-                if (this === other) return 0
-                val result = priority.compareTo(other.priority)
-                return if (result != 0) result else order.compareTo(other.order)
-        }
+        override fun compareTo(
+                other: ExeCEventListener<E>
+        ): Int = ExeCEventListener.compare(this, other)
         
-        companion object {
+        companion object : Comparator<ExeCEventListener<*>> by Comparator
+        .comparingInt(ExeCEventListener<*>::priority)
+        .thenComparingInt(ExeCEventListener<*>::order) {
                 private var order = 0
         }
 }

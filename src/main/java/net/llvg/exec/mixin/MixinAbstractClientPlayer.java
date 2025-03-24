@@ -30,9 +30,6 @@ import org.spongepowered.asm.mixin.Unique;
 
 @Mixin (AbstractClientPlayer.class)
 public abstract class MixinAbstractClientPlayer extends EntityPlayer implements AbstractClientPlayerInject {
-        @Shadow
-        protected abstract NetworkPlayerInfo getPlayerInfo();
-        
         @SuppressWarnings ("DataFlowIssue")
         private MixinAbstractClientPlayer() {
                 super(null, null);
@@ -40,7 +37,11 @@ public abstract class MixinAbstractClientPlayer extends EntityPlayer implements 
         
         @Unique
         @Override
-        public @Nullable NetworkPlayerInfo exec_getPlayerInfo() {
+        @Nullable
+        public NetworkPlayerInfo exec_getPlayerInfo() {
                 return getPlayerInfo();
         }
+        
+        @Shadow
+        protected abstract NetworkPlayerInfo getPlayerInfo();
 }

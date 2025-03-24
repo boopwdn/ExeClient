@@ -37,29 +37,41 @@ object ExeCEventManager : CoroutineScope by CoroutineScope(SupervisorJob()) {
         private val logger = LogManager.getLogger(ExeCEventManager::class.java.simpleName)
         
         private val normalStorage: MutableMap<Class<out ExeCEvent>, MutableSet<ExeCEventListener<out ExeCEvent>>> =
-        HashMap()
+                HashMap()
         
         private val forcedStorage: MutableMap<Class<out ExeCEvent>, MutableSet<ExeCEventListener<out ExeCEvent>>> =
-        HashMap()
+                HashMap()
         
         private val cachedStorages: MutableMap<Class<out ExeCEvent>, List<MutableSet<ExeCEventListener<out ExeCEvent>>>> =
-        HashMap()
+                HashMap()
         
         private fun <E : ExeCEvent> MutableMap<Class<out ExeCEvent>, MutableSet<ExeCEventListener<out ExeCEvent>>>.getSafe(
                 key: Class<E>
-        ) = synchronized(this) { getOrPut(key) { TreeSet() } }
+        ): MutableSet<ExeCEventListener<out ExeCEvent>> = synchronized(this) {
+                getOrPut(key) { TreeSet() }
+        }
         
         @JvmStatic
-        fun <E : ExeCEvent> register(type: Class<E>, forced: Boolean, listener: ExeCEventListener<E>) {
+        fun <E : ExeCEvent> register(
+                type: Class<E>,
+                forced: Boolean,
+                listener: ExeCEventListener<E>
+        ) {
                 val storage = if (forced) forcedStorage else normalStorage
                 val listeners = storage.getSafe(type)
                 
-                synchronized(listeners) { listeners.add(listener) }
+                synchronized(listeners) {
+                        listeners.add(listener)
+                }
         }
         
         @OptIn(ExperimentalCoroutinesApi::class)
         @JvmStatic
-        fun <E : ExeCEvent> post(type: Class<E>, event: ExeCEvent, wait: Boolean) {
+        fun <E : ExeCEvent> post(
+                type: Class<E>,
+                event: ExeCEvent,
+                wait: Boolean
+        ) {
                 if (!type.isInstance(event)) {
                         val exception = IllegalArgumentException(
                                 "event $event(loader=" + event.javaClass.classLoader + ") is not in type $type(loader=" + type.classLoader + ")"
@@ -73,10 +85,14 @@ object ExeCEventManager : CoroutineScope by CoroutineScope(SupervisorJob()) {
                 
                 val cachedStorage = cachedStorages.getOrPut(type) {
                         val builder = ImmutableList.builder<MutableSet<ExeCEventListener<out ExeCEvent>>>()
-                        builder.add(synchronized(forcedStorage) { forcedStorage.getSafe(type) })
+                        builder.add(synchronized(forcedStorage) {
+                                forcedStorage.getSafe(type)
+                        })
                         var clazz: Class<out ExeCEvent>? = type
                         while (clazz != null) {
-                                builder.add(synchronized(normalStorage) { normalStorage.getSafe(clazz) })
+                                builder.add(synchronized(normalStorage) {
+                                        normalStorage.getSafe(clazz)
+                                })
                                 clazz = clazz.superclass as? Class<out ExeCEvent>
                         }
                         
@@ -100,7 +116,9 @@ object ExeCEventManager : CoroutineScope by CoroutineScope(SupervisorJob()) {
                 }
                 
                 cachedStorage.forEach {
-                        synchronized(it) { it.forEach(collect) }
+                        synchronized(it) {
+                                it.forEach(collect)
+                        }
                 }
                 
                 if (wait) runBlocking(methodTread) {

@@ -25,23 +25,29 @@ import net.minecraft.util.MovementInput
 class FreeCamMovementInput(val gameSettings: GameSettings) : MovementInput() {
         override fun updatePlayerMoveState() {
                 jump = false
-                if (gameSettings.keyBindJump.isKeyDown)
+                if (gameSettings.keyBindJump.isKeyDown) {
                         jump = true
+                }
                 
                 sneak = false
-                if (gameSettings.keyBindSneak.isKeyDown)
+                if (gameSettings.keyBindSneak.isKeyDown) {
                         sneak = true
+                }
                 
                 moveForward = 0F
-                if (gameSettings.keyBindForward.isKeyDown)
+                if (gameSettings.keyBindForward.isKeyDown) {
                         moveForward += 1
-                if (gameSettings.keyBindBack.isKeyDown)
+                }
+                if (gameSettings.keyBindBack.isKeyDown) {
                         moveForward -= 1
+                }
                 
                 moveStrafe = 0F
-                if (gameSettings.keyBindLeft.isKeyDown)
+                if (gameSettings.keyBindLeft.isKeyDown) {
                         moveStrafe += 1
-                if (gameSettings.keyBindRight.isKeyDown)
+                }
+                if (gameSettings.keyBindRight.isKeyDown) {
                         moveStrafe -= 1
+                }
         }
 }

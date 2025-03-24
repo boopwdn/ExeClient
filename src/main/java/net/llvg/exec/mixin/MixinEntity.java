@@ -22,7 +22,10 @@ package net.llvg.exec.mixin;
 import net.llvg.exec.features.freecam.FreeCam;
 import net.llvg.exec.utils.MinecraftUtils;
 import net.llvg.exec.utils.NullUtils;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -30,9 +33,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin (Entity.class)
-public abstract class MixinEntity {
-        @Shadow public abstract boolean isEntityEqual(Entity entityIn);
-        
+public abstract class MixinEntity implements ICommandSender, ICapabilitySerializable<NBTTagCompound> {
         @Inject (method = "setAngles", at = @At ("HEAD"), cancellable = true)
         private void setAnglesInject(float yaw, float pitch, CallbackInfo ci) {
                 if (FreeCam.isEnabled() && isEntityEqual(MinecraftUtils.player()) && !FreeCam.isControllingPlayer()) {
@@ -40,6 +41,9 @@ public abstract class MixinEntity {
                         ci.cancel();
                 }
         }
+        
+        @Shadow
+        public abstract boolean isEntityEqual(Entity entityIn);
         
         @Inject (method = "applyEntityCollision", at = @At ("HEAD"), cancellable = true)
         private void applyEntityCollisionInject(Entity entityIn, CallbackInfo ci) {

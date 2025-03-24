@@ -22,12 +22,17 @@ package net.llvg.exec.mixin;
 import net.llvg.exec.features.freecam.FreeCam;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.RenderPlayer;
+import net.minecraft.client.renderer.entity.RendererLivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin (RenderPlayer.class)
-public abstract class MixinRenderPlayer {
+public abstract class MixinRenderPlayer extends RendererLivingEntity<AbstractClientPlayer> {
+        private MixinRenderPlayer() {
+                super(null, null, 0);
+        }
+        
         @Redirect (method = "doRender(Lnet/minecraft/client/entity/AbstractClientPlayer;DDDFF)V", at = @At (value = "INVOKE", target = "Lnet/minecraft/client/entity/AbstractClientPlayer;isUser()Z"))
         private boolean doRenderRedirect(AbstractClientPlayer instance) {
                 if (FreeCam.isEnabled()) {

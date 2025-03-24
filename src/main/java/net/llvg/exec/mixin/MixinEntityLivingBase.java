@@ -56,7 +56,8 @@ public abstract class MixinEntityLivingBase extends Entity implements EntityLivi
         
         @Unique
         @Override
-        public @NotNull Map<Integer, PotionEffect> getExec_activePotionsMap() {
+        @NotNull
+        public Map<Integer, PotionEffect> getExec_activePotionsMap() {
                 return activePotionsMap;
         }
         

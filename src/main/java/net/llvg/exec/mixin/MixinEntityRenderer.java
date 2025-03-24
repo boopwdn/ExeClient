@@ -24,6 +24,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.EntityRenderer;
+import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -35,7 +36,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import java.util.List;
 
 @Mixin (EntityRenderer.class)
-public abstract class MixinEntityRenderer {
+public abstract class MixinEntityRenderer implements IResourceManagerReloadListener {
         @ModifyVariable (method = "getMouseOver", at = @At ("STORE"), index = 2)
         private Entity getMouseOverModifyVariable0(Entity entity) {
                 if (FreeCam.isEnabled()) {
@@ -58,8 +59,18 @@ public abstract class MixinEntityRenderer {
                 return entityplayerIn;
         }
         
-        @ModifyVariable (method = { "setupFog", "updateFogColor" }, at = @At ("STORE"))
-        private Block setupFog_updateFogColorModifyVariable(Block block) {
+        @ModifyVariable (method = "updateFogColor", at = @At ("STORE"))
+        private Block updateFogColorModifyVariable(Block block) {
+                if (FreeCam.isEnabled() && !FreeCam.enableWaterAndLavaOverlay()) {
+                        if (block.getMaterial() == Material.water || block.getMaterial() == Material.lava) {
+                                return Blocks.air;
+                        }
+                }
+                return block;
+        }
+        
+        @ModifyVariable (method = "setupFog", at = @At ("STORE"))
+        private Block setupFogModifyVariable(Block block) {
                 if (FreeCam.isEnabled() && !FreeCam.enableWaterAndLavaOverlay()) {
                         if (block.getMaterial() == Material.water || block.getMaterial() == Material.lava) {
                                 return Blocks.air;

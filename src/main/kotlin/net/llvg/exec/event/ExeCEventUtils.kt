@@ -40,9 +40,12 @@ inline fun <reified E : ExeCEvent> ExeCEventListenable.onEvent(
                 always,
                 priority,
                 dispatcher
-        ) { action(it.cast()) }
+        ) {
+                action(it.cast())
+        }
 )
 
+@Suppress("UNUSED")
 inline fun <reified E : ExeCEvent> E.post(
         wait: Boolean
 ): Unit = ExeCEventManager.post(E::class.java, this, wait)

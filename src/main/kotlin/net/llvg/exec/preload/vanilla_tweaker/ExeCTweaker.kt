@@ -17,15 +17,16 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.llvg.exec.preload
+package net.llvg.exec.preload.vanilla_tweaker
 
+import cc.polyfrost.oneconfig.loader.stage0.LaunchWrapperTweaker
 import java.io.File
-import java.net.URI
 import net.llvg.exec.utils.loggerTypeNamed
 import net.llvg.loliutils.exception.uncheckedCast
 import net.minecraft.launchwrapper.ITweaker
 import net.minecraft.launchwrapper.Launch
 import net.minecraft.launchwrapper.LaunchClassLoader
+import net.minecraftforge.fml.common.launcher.FMLTweaker
 import org.spongepowered.asm.launch.MixinBootstrap
 
 @Suppress("UNUSED")
@@ -42,7 +43,9 @@ class ExeCTweaker : ITweaker {
                 classLoader: LaunchClassLoader
         ) {
                 val tweakClasses: MutableList<String> = Launch.blackboard["TweakClasses"].uncheckedCast()
-                tweakClasses.add("cc.polyfrost.oneconfig.loader.stage0.LaunchWrapperTweaker")
+                tweakClasses.add(FMLTweaker::class.java.name)
+                tweakClasses.add(LaunchWrapperTweaker::class.java.name)
+                tweakClasses.add("org.spongepowered.asm.launch.MixinTweaker")
         }
         
         override fun getLaunchTarget(
@@ -50,17 +53,27 @@ class ExeCTweaker : ITweaker {
         
         override fun getLaunchArguments(
         ): Array<String> {
-                val path = javaClass.getResource("mixin.exec.json")?.path ?: return arrayOf()
-                
-                val logger = loggerTypeNamed<ExeCTweaker>()
-                logger.info("path={}", path)
-                
-                if (path.startsWith("jar:")) {
-                        MixinBootstrap.getPlatform().addContainer(
-                                URI(path.substringBeforeLast('.').substring(4))
-                        )
-                        logger.info("path={}", path)
-                }
+                addMixinConfig()
                 return arrayOf()
         }
+        
+        private fun addMixinConfig() {
+                val location = try {
+                        File(javaClass.protectionDomain.codeSource.location.toURI())
+                } catch (e: Throwable) {
+                        logger.error("Failed to find mod location", e)
+                        return
+                }
+                
+                logger.info("Found mod location at {}", location.absolutePath)
+                
+                if (!location.isFile) {
+                        logger.warn("Skip adding mixin config since mod location is not a file")
+                        return
+                }
+                
+                MixinBootstrap.getPlatform().addContainer(location.toURI())
+        }
 }
+
+private val logger = loggerTypeNamed<ExeCTweaker>()

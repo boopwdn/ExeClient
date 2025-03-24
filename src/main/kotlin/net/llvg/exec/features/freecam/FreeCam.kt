@@ -95,19 +95,19 @@ object FreeCam : ExeFeature {
         var controllingPlayer = false
                 private set
         
-        val allowTogglePerspective
+        val allowTogglePerspective: Boolean
                 @[JvmStatic JvmName("allowTogglePerspective")]
                 inline get() = FreeCamConfig.allowTogglePerspective
         
-        val allowCameraInteract
+        val allowCameraInteract: Boolean
                 @[JvmStatic JvmName("allowCameraInteract")]
                 inline get() = FreeCamConfig.allowCameraInteract
         
-        val allowPlayerInteract
+        val allowPlayerInteract: Boolean
                 @[JvmStatic JvmName("allowPlayerInteract")]
                 inline get() = FreeCamConfig.allowPlayerInteract
         
-        val enableWaterAndLavaOverlay
+        val enableWaterAndLavaOverlay: Boolean
                 @[JvmStatic JvmName("enableWaterAndLavaOverlay")]
                 inline get() = FreeCamConfig.enableWaterAndLavaOverlay
         

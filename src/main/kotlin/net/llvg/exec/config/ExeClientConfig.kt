@@ -46,5 +46,5 @@ object ExeClientConfig : Config(Mod("Exe Client", ModType.SKYBLOCK), "exec-confi
         }
         
         fun active(
-        ) = enabled
+        ): Boolean = enabled
 }

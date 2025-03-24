@@ -23,7 +23,7 @@ package net.llvg.exec.inject
 
 import net.minecraft.client.entity.AbstractClientPlayer
 
-private val AbstractClientPlayer.inject
+private val AbstractClientPlayer.inject: AbstractClientPlayerInject
         inline get() = (this as AbstractClientPlayerInject)
 
 fun AbstractClientPlayer.getPlayerInfo(
