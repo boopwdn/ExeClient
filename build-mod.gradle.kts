@@ -40,7 +40,7 @@ loom {
         
         if (project.platform.isLegacyForge) runConfigs {
                 "client" {
-                        programArgs("--tweakClass", "net.llvg.exec.preload.ExeCTweaker")
+                        programArgs("--tweakClass", "net.llvg.exec.preload.vanilla_tweaker.ExeCTweaker")
                 }
         }
         
@@ -118,6 +118,9 @@ dependencies {
         
         modRuntimeOnly("me.djtheredstoner:$artifactDevAuth:" + properties["version_DevAuth"])
         
+        compileOnly("cc.polyfrost:oneconfig-1.8.9-forge:0.2.2-alpha223:full")
+        compileOnly("cc.polyfrost:oneconfig-loader-launchwrapper:1.0.0-beta17")
+        
         runtimeOnly("com.github.boopwdn:YqlossClientMixin:v0.7.0:dev")
         shade("com.github.Water-OR:llvg-utils:1.1")
         
@@ -170,9 +173,11 @@ tasks {
                 if (platform.isLegacyForge) {
                         val attr: MutableMap<String, Any> = HashMap()
                         attr["ModSide"] = "CLIENT"
+                        attr["FMLCorePluginContainsFMLMod"] = true
+                        attr["FMLCorePlugin"] = "net.llvg.exec.preload.fml_plugin.ExeCFMLLoadingPlugin"
                         attr["ForceLoadAsMod"] = true
-                        attr["TweakClass"] = "cc.polyfrost.oneconfig.loader.stage0.LaunchWrapperTweaker"
-                        attr["TweakOrder"] = 0
+                        attr["TweakClass"] = "net.llvg.exec.preload.vanilla_tweaker.ExeCTweaker"
+                        attr["TweakOrder"] = -1
                         attr["MixinConfigs"] = "mixin.$mixin_id.json"
                         manifest.attributes += attr
                 }
