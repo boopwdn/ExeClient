@@ -20,6 +20,7 @@
 package net.llvg.exec.features.freecam
 
 import kotlinx.coroutines.Dispatchers
+import net.llvg.exec.ExeClient
 import net.llvg.exec.config.ExeFeatureConfig
 import net.llvg.exec.config.freecam.FreeCamConfig
 import net.llvg.exec.event.events.ServerCameraChangeEvent
@@ -27,13 +28,14 @@ import net.llvg.exec.event.events.UserHealthChangeEvent
 import net.llvg.exec.event.events.WorldLoadEvent
 import net.llvg.exec.event.onEvent
 import net.llvg.exec.features.ExeFeature
+import net.llvg.exec.utils.chat_component.buildChatComponent
+import net.llvg.exec.utils.chat_component.plus
 import net.llvg.exec.utils.mc
 import net.llvg.exec.utils.player
-import net.llvg.exec.utils.sendToUser
 import net.llvg.exec.utils.world
 import net.llvg.loliutils.exception.asNotNull
 import net.minecraft.entity.Entity
-import net.minecraft.util.ChatComponentText
+import net.minecraft.util.EnumChatFormatting
 import net.minecraft.util.MovementInput
 import net.minecraft.util.MovementInputFromOptions
 
@@ -41,16 +43,24 @@ object FreeCam : ExeFeature {
         init {
                 onEvent(dispatcher = Dispatchers.Default) { e: UserHealthChangeEvent ->
                         if (FreeCamConfig.disableOnDamage && e.instance.health > e.health) {
+                                if (FreeCamConfig.sendMessage) ExeClient.send {
+                                        text("You took damage!") {
+                                                color = EnumChatFormatting.YELLOW
+                                        }
+                                }
+                                
                                 disable()
                         }
                 }
                 
                 onEvent(dispatcher = Dispatchers.Default) { e: ServerCameraChangeEvent ->
-                        if (FreeCamConfig.sendMessage) {
-                                sendToUser(ChatComponentText("[Exe Client] Server tries to change your camera!"))
-                        }
-                        
                         if (FreeCamConfig.disableOnSeverCameraChange) {
+                                if (FreeCamConfig.sendMessage) ExeClient.send {
+                                        text("Server is trying to change your camera entity!") {
+                                                color = EnumChatFormatting.YELLOW
+                                        }
+                                }
+                                
                                 disable()
                         } else {
                                 previousEntity = e.entity
@@ -146,6 +156,13 @@ object FreeCam : ExeFeature {
                 }
         }
         
+        private val MESSAGE_ENABLED = buildChatComponent {
+                empty +
+                text("Free Camera") +
+                space +
+                ExeFeature.MESSAGE_ENABLED
+        }
+        
         @Synchronized
         private fun enable() {
                 if (enabled) return
@@ -175,8 +192,15 @@ object FreeCam : ExeFeature {
                 }
                 // send message
                 if (FreeCamConfig.sendMessage) {
-                        sendToUser(ChatComponentText("[Exe Client] Free Camera Enabled"))
+                        ExeClient.send(MESSAGE_ENABLED)
                 }
+        }
+        
+        private val MESSAGE_DISABLED = buildChatComponent {
+                empty +
+                text("Free Camera") +
+                space +
+                ExeFeature.MESSAGE_DISABLED
         }
         
         @Synchronized
@@ -205,7 +229,7 @@ object FreeCam : ExeFeature {
                 }
                 // send message
                 if (FreeCamConfig.sendMessage) {
-                        sendToUser(ChatComponentText("[Exe Client] Free Camera Disabled"))
+                        ExeClient.send(MESSAGE_DISABLED)
                 }
         }
 }

@@ -21,7 +21,13 @@ package net.llvg.exec
 
 import net.llvg.exec.config.ExeClientConfig
 import net.llvg.exec.features.FeatureManager
+import net.llvg.exec.utils.chat_component.ChatComponentBuildScope
+import net.llvg.exec.utils.chat_component.buildChatComponent
+import net.llvg.exec.utils.chat_component.plus
 import net.llvg.exec.utils.loggerTypeNamed
+import net.llvg.exec.utils.player
+import net.minecraft.util.EnumChatFormatting
+import net.minecraft.util.IChatComponent
 
 object ExeClient {
         @JvmField
@@ -31,5 +37,32 @@ object ExeClient {
         fun initialize() {
                 FeatureManager
                 ExeClientConfig
+        }
+        
+        fun send(
+                message: IChatComponent
+        ) {
+                buildChatComponent {
+                        empty +
+                        combine {
+                                empty {
+                                        bold = true
+                                        color = EnumChatFormatting.WHITE
+                                } +
+                                text("[") +
+                                text("Exe Client") {
+                                        color = EnumChatFormatting.AQUA
+                                } +
+                                text("]")
+                        } +
+                        space +
+                        message
+                }.run(player::addChatMessage)
+        }
+        
+        fun send(
+                builder: ChatComponentBuildScope.() -> IChatComponent
+        ) {
+                send(ChatComponentBuildScope.builder())
         }
 }
