@@ -47,7 +47,6 @@ loom {
         runConfigs.configureEach {
                 property("mixin.debug.export", "true")
                 property("mixin.hotSwap", "true")
-                vmArg("-XX:+AllowEnhancedClassRedefinition")
         }
         
         if (project.platform.isForge) forge {

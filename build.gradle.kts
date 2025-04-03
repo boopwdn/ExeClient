@@ -20,7 +20,7 @@ idea {
         }
         
         project.settings {
-                @Suppress("LocalVariableName")
+                @Suppress("UNUSED", "LocalVariableName")
                 runConfigurations {
                         val `Setup Env` by registering(Gradle::class) {
                                 taskNames = listOf(
