@@ -26,8 +26,8 @@ import net.minecraft.util.IChatComponent
 
 @Suppress("UNUSED")
 inline fun buildChatComponent(
-        action: ChatComponentBuildScope.() -> IChatComponent
-): IChatComponent = ChatComponentBuildScope.action()
+        builder: ChatComponentBuildScope.() -> IChatComponent
+): IChatComponent = ChatComponentBuildScope.builder()
 
 inline fun <C : IChatComponent> C.withChatStyle(
         chatStyle: ChatStyle,
@@ -38,41 +38,12 @@ inline infix fun <C : IChatComponent> C.withChatStyle(
         configure: ChatStyle.() -> Unit
 ): C = withChatStyle(chatStyle, configure)
 
-@Suppress("UNUSED")
 context(scope: ChatComponentBuildScope)
-fun empty(
-        configure: ChatStyle.() -> Unit
-): IChatComponent = with(scope) {
-        empty withChatStyle configure
-}
+infix operator fun <C : IChatComponent> C.plus(
+        o: IChatComponent
+): C = apply { appendSibling(o) }
 
-@Suppress("UNUSED")
 context(scope: ChatComponentBuildScope)
-fun space(
-        configure: ChatStyle.() -> Unit
-): IChatComponent = with(scope) {
-        space withChatStyle configure
-}
-
-@Suppress("UNUSED")
-context(scope: ChatComponentBuildScope)
-fun endl(
-        configure: ChatStyle.() -> Unit
-): IChatComponent = with(scope) {
-        endl withChatStyle configure
-}
-
-@Suppress("UNUSED")
-context(scope: ChatComponentBuildScope)
-fun text(
-        text: String,
-        configure: ChatStyle.() -> Unit
-): IChatComponent = with(scope) {
-        text(text) withChatStyle configure
-}
-
-@Suppress("UNUSED")
-context(scope: ChatComponentBuildScope)
-fun combine(
-        action: () -> IChatComponent
-): IChatComponent = action()
+inline infix operator fun <C : IChatComponent> C.plus(
+        configure: (C) -> Unit
+): C = apply(configure)

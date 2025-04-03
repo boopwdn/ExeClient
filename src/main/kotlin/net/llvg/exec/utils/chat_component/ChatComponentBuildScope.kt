@@ -20,27 +20,46 @@
 package net.llvg.exec.utils.chat_component
 
 import net.minecraft.util.ChatComponentText
+import net.minecraft.util.ChatStyle
 import net.minecraft.util.IChatComponent
 
 object ChatComponentBuildScope {
         val empty: IChatComponent
                 get() = ChatComponentEmpty()
         
+        @Suppress("UNUSED")
+        fun ChatComponentBuildScope.empty(
+                configure: ChatStyle.() -> Unit
+        ): IChatComponent = empty withChatStyle configure
+        
         val space: IChatComponent
                 get() = ChatComponentText(" ")
         
+        @Suppress("UNUSED")
+        fun ChatComponentBuildScope.space(
+                configure: ChatStyle.() -> Unit
+        ): IChatComponent = space withChatStyle configure
+        
         val endl: IChatComponent
                 get() = ChatComponentText("\n")
+        
+        @Suppress("UNUSED")
+        fun ChatComponentBuildScope.endl(
+                configure: ChatStyle.() -> Unit
+        ): IChatComponent = endl withChatStyle configure
         
         fun text(
                 text: String
         ): IChatComponent = ChatComponentText(text)
         
-        infix operator fun <C : IChatComponent> C.plus(
-                o: IChatComponent
-        ): C = apply { appendSibling(o) }
+        @Suppress("UNUSED")
+        fun ChatComponentBuildScope.text(
+                text: String,
+                configure: ChatStyle.() -> Unit
+        ): IChatComponent = text(text) withChatStyle configure
         
-        inline infix operator fun <C : IChatComponent> C.plus(
-                configure: (C) -> Unit
-        ): C = apply(configure)
+        @Suppress("UNUSED", "UnusedReceiverParameter")
+        fun ChatComponentBuildScope.combine(
+                builder: () -> IChatComponent
+        ): IChatComponent = builder()
 }
