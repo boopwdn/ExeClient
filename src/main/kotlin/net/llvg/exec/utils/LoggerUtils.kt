@@ -24,5 +24,5 @@ package net.llvg.exec.utils
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 
-inline fun <reified T> loggerTypeNamed(
+inline fun <reified T> classNameLogger(
 ): Logger = LogManager.getLogger(T::class.java.simpleName)
