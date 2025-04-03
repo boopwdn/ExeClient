@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2025-2025 Water-OR
  *
- * This file is part of ExeClient-temp1
+ * This file is part of ExeClient
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
