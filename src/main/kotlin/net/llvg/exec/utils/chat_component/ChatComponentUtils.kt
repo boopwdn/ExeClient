@@ -37,13 +37,3 @@ inline fun <C : IChatComponent> C.withChatStyle(
 inline infix fun <C : IChatComponent> C.withChatStyle(
         configure: ChatStyle.() -> Unit
 ): C = withChatStyle(chatStyle, configure)
-
-context(scope: ChatComponentBuildScope)
-infix operator fun <C : IChatComponent> C.plus(
-        o: IChatComponent
-): C = apply { appendSibling(o) }
-
-context(scope: ChatComponentBuildScope)
-inline infix operator fun <C : IChatComponent> C.plus(
-        configure: (C) -> Unit
-): C = apply(configure)

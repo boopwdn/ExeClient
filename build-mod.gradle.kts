@@ -149,7 +149,7 @@ kotlin {
                 
                 val args = listOf(
                         "-Xjvm-default=all",
-                        "-Xcontext-parameters"
+                        "-Xcontext-recievers"
                 )
                 freeCompilerArgs.addAll(args)
         }

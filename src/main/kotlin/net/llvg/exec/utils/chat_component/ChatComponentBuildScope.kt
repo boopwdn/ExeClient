@@ -62,4 +62,12 @@ object ChatComponentBuildScope {
         fun ChatComponentBuildScope.combine(
                 builder: () -> IChatComponent
         ): IChatComponent = builder()
+        
+        infix operator fun <C : IChatComponent> C.plus(
+                o: IChatComponent
+        ): C = apply { appendSibling(o) }
+        
+        inline infix operator fun <C : IChatComponent> C.plus(
+                configure: (C) -> Unit
+        ): C = apply(configure)
 }

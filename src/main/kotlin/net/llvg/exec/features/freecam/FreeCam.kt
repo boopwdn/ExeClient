@@ -29,7 +29,6 @@ import net.llvg.exec.event.events.WorldLoadEvent
 import net.llvg.exec.event.onEvent
 import net.llvg.exec.features.ExeFeature
 import net.llvg.exec.utils.chat_component.buildChatComponent
-import net.llvg.exec.utils.chat_component.plus
 import net.llvg.exec.utils.mc
 import net.llvg.exec.utils.player
 import net.llvg.exec.utils.world
@@ -222,7 +221,9 @@ object FreeCam : ExeFeature {
                         mc.renderViewEntity = previousEntity
                         previousEntity = null
                         // reload shader
-                        mc.entityRenderer.loadEntityShader(if (mc.gameSettings.thirdPersonView == 0) previousEntity else null)
+                        mc.entityRenderer.loadEntityShader(
+                                if (mc.gameSettings.thirdPersonView == 0) previousEntity else null
+                        )
                         mc.renderGlobal.setDisplayListEntitiesDirty()
                         // set disabled
                         enabled = false

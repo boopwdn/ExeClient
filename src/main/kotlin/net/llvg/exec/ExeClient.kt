@@ -23,7 +23,6 @@ import net.llvg.exec.config.ExeClientConfig
 import net.llvg.exec.features.FeatureManager
 import net.llvg.exec.utils.chat_component.ChatComponentBuildScope
 import net.llvg.exec.utils.chat_component.buildChatComponent
-import net.llvg.exec.utils.chat_component.plus
 import net.llvg.exec.utils.classNameLogger
 import net.llvg.exec.utils.player
 import net.minecraft.util.EnumChatFormatting
