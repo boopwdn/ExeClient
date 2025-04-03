@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Water-OR
+ * Copyright (C) 2025-2025 Water-OR
  *
  * This file is part of ExeClient
  *
@@ -17,12 +17,23 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-@file:JvmName("LoggerUtils")
+@file:JvmName("ChatComponentUtils")
 
-package net.llvg.exec.utils
+package net.llvg.exec.utils.chat_component
 
-import org.apache.logging.log4j.LogManager
-import org.apache.logging.log4j.Logger
+import net.minecraft.util.ChatStyle
+import net.minecraft.util.IChatComponent
 
-inline fun <reified T> classNameLogger(
-): Logger = LogManager.getLogger(T::class.java.simpleName)
+@Suppress("UNUSED")
+inline fun buildChatComponent(
+        builder: ChatComponentBuildScope.() -> IChatComponent
+): IChatComponent = ChatComponentBuildScope.builder()
+
+inline fun <C : IChatComponent> C.withChatStyle(
+        chatStyle: ChatStyle,
+        configure: ChatStyle.() -> Unit
+): C = apply { this.chatStyle = chatStyle.apply(configure) }
+
+inline infix fun <C : IChatComponent> C.withChatStyle(
+        configure: ChatStyle.() -> Unit
+): C = withChatStyle(chatStyle, configure)

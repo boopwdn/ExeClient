@@ -21,7 +21,7 @@ package net.llvg.exec.preload.vanilla_tweaker
 
 import cc.polyfrost.oneconfig.loader.stage0.LaunchWrapperTweaker
 import java.io.File
-import net.llvg.exec.utils.loggerTypeNamed
+import net.llvg.exec.utils.classNameLogger
 import net.llvg.loliutils.exception.uncheckedCast
 import net.minecraft.launchwrapper.ITweaker
 import net.minecraft.launchwrapper.Launch
@@ -76,4 +76,4 @@ class ExeCTweaker : ITweaker {
         }
 }
 
-private val logger = loggerTypeNamed<ExeCTweaker>()
+private val logger = classNameLogger<ExeCTweaker>()

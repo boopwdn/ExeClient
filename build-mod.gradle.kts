@@ -146,6 +146,12 @@ kotlin {
                 
                 languageVersion = KotlinVersion.KOTLIN_2_0
                 apiVersion = KotlinVersion.KOTLIN_2_0
+                
+                val args = listOf(
+                        "-Xjvm-default=all",
+                        "-Xcontext-recievers"
+                )
+                freeCompilerArgs.addAll(args)
         }
 }
 

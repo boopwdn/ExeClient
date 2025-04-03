@@ -24,11 +24,11 @@ import cc.polyfrost.oneconfig.config.annotations.SubConfig
 import cc.polyfrost.oneconfig.config.data.Mod
 import cc.polyfrost.oneconfig.config.data.ModType
 import net.llvg.exec.config.freecam.FreeCamConfig
-import net.llvg.exec.utils.loggerTypeNamed
+import net.llvg.exec.utils.classNameLogger
 
 object ExeClientConfig : Config(Mod("Exe Client", ModType.SKYBLOCK), "exec-config.json", false) {
         @Transient
-        val logger = loggerTypeNamed<ExeClientConfig>()
+        val logger = classNameLogger<ExeClientConfig>()
         
         @SubConfig
         @Suppress("UNUSED")

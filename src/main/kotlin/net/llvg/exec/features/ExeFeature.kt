@@ -21,6 +21,10 @@ package net.llvg.exec.features
 
 import net.llvg.exec.config.ExeFeatureConfig
 import net.llvg.exec.event.ExeCEventListenable
+import net.llvg.exec.utils.chat_component.withChatStyle
+import net.minecraft.util.ChatComponentText
+import net.minecraft.util.EnumChatFormatting
+import net.minecraft.util.IChatComponent
 
 interface ExeFeature : ExeCEventListenable {
         fun initialize()
@@ -33,4 +37,18 @@ interface ExeFeature : ExeCEventListenable {
         
         override val active: Boolean
                 get() = config.active()
+        
+        companion object {
+                val MESSAGE_ENABLED: IChatComponent =
+                        ChatComponentText("Enabled")
+                        .withChatStyle {
+                                color = EnumChatFormatting.GREEN
+                        }
+                
+                val MESSAGE_DISABLED: IChatComponent =
+                        ChatComponentText("Disabled")
+                        .withChatStyle {
+                                color = EnumChatFormatting.RED
+                        }
+        }
 }
