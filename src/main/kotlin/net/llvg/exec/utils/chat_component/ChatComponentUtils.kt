@@ -70,3 +70,9 @@ fun text(
 ): IChatComponent = with(scope) {
         text(text) withChatStyle configure
 }
+
+@Suppress("UNUSED")
+context(scope: ChatComponentBuildScope)
+fun combine(
+        action: () -> IChatComponent
+): IChatComponent = action()
