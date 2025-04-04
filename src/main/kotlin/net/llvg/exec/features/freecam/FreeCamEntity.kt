@@ -24,7 +24,7 @@ import java.util.UUID
 import kotlin.math.abs
 import net.llvg.exec.config.freecam.FreeCamConfig
 import net.llvg.exec.mixin.inject.InjectAbstractClientPlayer
-import net.llvg.exec.mixin.inject.InjectEntityEntityLivingBase
+import net.llvg.exec.mixin.inject.InjectEntityLivingBase
 import net.llvg.exec.mixin.inject.InjectEntityPlayer
 import net.llvg.exec.utils.mc
 import net.llvg.exec.utils.player
@@ -65,8 +65,8 @@ class FreeCamEntity(
                         player.inventoryContainer
                 openContainer =
                         player.openContainer
-                cast<InjectEntityEntityLivingBase>(this).`activePotionsMap$exec` =
-                        cast<InjectEntityEntityLivingBase>(player).`activePotionsMap$exec`
+                cast<InjectEntityLivingBase>(this).`activePotionsMap$exec` =
+                        cast<InjectEntityLivingBase>(player).`activePotionsMap$exec`
         }
         
         override fun getPlayerInfo(

@@ -24,7 +24,7 @@ import net.minecraft.potion.PotionEffect;
 import java.util.Map;
 
 @SuppressWarnings("unused")
-public interface InjectEntityEntityLivingBase {
+public interface InjectEntityLivingBase {
         Map<Integer, PotionEffect> getActivePotionsMap$exec();
         
         void setActivePotionsMap$exec(Map<Integer, PotionEffect> o);

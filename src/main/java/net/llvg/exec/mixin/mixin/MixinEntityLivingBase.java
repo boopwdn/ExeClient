@@ -21,7 +21,7 @@ package net.llvg.exec.mixin.mixin;
 
 import net.llvg.exec.event.ExeCEventManager;
 import net.llvg.exec.event.events.UserHealthChangeEvent;
-import net.llvg.exec.mixin.inject.InjectEntityEntityLivingBase;
+import net.llvg.exec.mixin.inject.InjectEntityLivingBase;
 import net.llvg.exec.utils.MinecraftUtils;
 import net.llvg.loliutils.exception.TypeCast;
 import net.minecraft.entity.Entity;
@@ -38,7 +38,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.Map;
 
 @Mixin (EntityLivingBase.class)
-public abstract class MixinEntityLivingBase extends Entity implements InjectEntityEntityLivingBase {
+public abstract class MixinEntityLivingBase extends Entity implements InjectEntityLivingBase {
         @Final
         @Shadow
         @Mutable
