@@ -19,9 +19,8 @@
 
 package net.llvg.exec.mixin.mixin;
 
-import net.llvg.exec.event.ExeCEventManager;
-import net.llvg.exec.event.events.WorldLoadEvent;
 import net.llvg.exec.features.freecam.FreeCam;
+import net.llvg.exec.mixin.callback.CallbackMinecraft;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.settings.GameSettings;
@@ -80,8 +79,7 @@ public abstract class MixinMinecraft implements IThreadListener, IPlayerUsage {
         
         @Inject (method = "loadWorld(Lnet/minecraft/client/multiplayer/WorldClient;Ljava/lang/String;)V", at = @At ("HEAD"))
         private void loadWorldInject(WorldClient worldClientIn, String loadingMessage, CallbackInfo ci) {
-                WorldLoadEvent event = new WorldLoadEvent(worldClientIn);
-                ExeCEventManager.post(WorldLoadEvent.class, event, true);
+                CallbackMinecraft.postWorldLoadEvent(worldClientIn);
         }
         
         @Inject (method = "middleClickMouse", at = @At ("HEAD"), cancellable = true)

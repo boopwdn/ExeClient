@@ -19,8 +19,7 @@
 
 package net.llvg.exec.mixin.mixin;
 
-import net.llvg.exec.event.ExeCEventManager;
-import net.llvg.exec.event.events.UserHealthChangeEvent;
+import net.llvg.exec.mixin.callback.CallbackEntityLivingBase;
 import net.llvg.exec.mixin.inject.InjectEntityLivingBase;
 import net.llvg.exec.utils.MinecraftUtils;
 import net.llvg.loliutils.exception.TypeCast;
@@ -51,8 +50,7 @@ public abstract class MixinEntityLivingBase extends Entity implements InjectEnti
         @Inject (method = "setHealth", at = @At ("HEAD"))
         private void setHealthInject(float health, CallbackInfo ci) {
                 if (isEntityEqual(MinecraftUtils.mc().thePlayer)) {
-                        UserHealthChangeEvent event = new UserHealthChangeEvent(TypeCast.uncheckedCast(this), health);
-                        ExeCEventManager.post(UserHealthChangeEvent.class, event, true);
+                        CallbackEntityLivingBase.postUserHealthChangeEvent(TypeCast.cast(this), health);
                 }
         }
         
