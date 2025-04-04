@@ -17,14 +17,11 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-@file:JvmName("AbstractClientPlayerUtils")
+package net.llvg.exec.mixin.inject;
 
-package net.llvg.exec.inject
+import net.minecraft.client.network.NetworkPlayerInfo;
 
-import net.minecraft.client.entity.AbstractClientPlayer
-
-private val AbstractClientPlayer.inject: AbstractClientPlayerInject
-        inline get() = (this as AbstractClientPlayerInject)
-
-fun AbstractClientPlayer.getPlayerInfo(
-) = inject.exec_getPlayerInfo()
+@SuppressWarnings("unused")
+public interface InjectAbstractClientPlayer {
+        NetworkPlayerInfo getPlayerInfo$exec();
+}

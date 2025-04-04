@@ -17,31 +17,27 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.llvg.exec.mixin;
+package net.llvg.exec.mixin.mixin;
 
-import net.llvg.exec.inject.AbstractClientPlayerInject;
+import net.llvg.exec.mixin.inject.InjectAbstractClientPlayer;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.entity.player.EntityPlayer;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 
 @Mixin (AbstractClientPlayer.class)
-public abstract class MixinAbstractClientPlayer extends EntityPlayer implements AbstractClientPlayerInject {
+public abstract class MixinAbstractClientPlayer extends EntityPlayer implements InjectAbstractClientPlayer {
+        @Shadow
+        protected abstract NetworkPlayerInfo getPlayerInfo();
+        
         @SuppressWarnings ("DataFlowIssue")
         private MixinAbstractClientPlayer() {
                 super(null, null);
         }
         
-        @Unique
         @Override
-        @Nullable
-        public NetworkPlayerInfo exec_getPlayerInfo() {
+        public NetworkPlayerInfo getPlayerInfo$exec() {
                 return getPlayerInfo();
         }
-        
-        @Shadow
-        protected abstract NetworkPlayerInfo getPlayerInfo();
 }

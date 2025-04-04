@@ -17,24 +17,21 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.llvg.exec.mixin;
+package net.llvg.exec.mixin.mixin;
 
-import net.llvg.exec.features.freecam.FreeCam;
-import net.llvg.exec.utils.NullUtils;
-import net.minecraft.entity.Entity;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
+import net.llvg.exec.ExeClient;
+import net.minecraft.client.main.Main;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.List;
-
-@Mixin (World.class)
-public abstract class MixinWorld implements IBlockAccess {
-        @ModifyVariable (method = "checkNoEntityCollision(Lnet/minecraft/util/AxisAlignedBB;Lnet/minecraft/entity/Entity;)Z", at = @At ("STORE"), index = 3)
-        private List<Entity> checkNoEntityCollisionModifyVariable(List<Entity> list) {
-                NullUtils.onNotNull(FreeCam.getCamera(), it -> list.removeIf(it::isEntityEqual));
-                return list;
+@Mixin (Main.class)
+public abstract class MixinMain {
+        @Inject (method = "main", at = @At ("HEAD"), remap = false)
+        private static void mainInject(String[] strings, CallbackInfo ci) {
+                ExeClient.initialize();
+                Class<? extends ExeClient> clazz = ExeClient.INSTANCE.getClass();
+                ExeClient.logger.info("ExeClient initialization succeed! Instance(class={}, classloader={})", clazz, clazz.getClassLoader());
         }
 }

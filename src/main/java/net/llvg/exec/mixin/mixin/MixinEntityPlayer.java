@@ -17,19 +17,18 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.llvg.exec.mixin;
+package net.llvg.exec.mixin.mixin;
 
-import net.llvg.exec.inject.EntityPlayerInject;
+import net.llvg.exec.mixin.inject.InjectEntityPlayer;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryEnderChest;
-import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
 @Mixin (EntityPlayer.class)
-public abstract class MixinEntityPlayer extends EntityLivingBase implements EntityPlayerInject {
+public abstract class MixinEntityPlayer extends EntityLivingBase implements InjectEntityPlayer {
         @Shadow
         private InventoryEnderChest theInventoryEnderChest;
         
@@ -39,20 +38,18 @@ public abstract class MixinEntityPlayer extends EntityLivingBase implements Enti
         
         @Unique
         @Override
-        @NotNull
-        public InventoryEnderChest getExec_theInventoryEnderChest() {
+        public InventoryEnderChest getTheInventoryEnderChest$exec() {
                 return theInventoryEnderChest;
         }
         
         @Unique
         @Override
-        public void setExec_theInventoryEnderChest(@NotNull InventoryEnderChest theInventoryEnderChest) {
-                this.theInventoryEnderChest = theInventoryEnderChest;
+        public void setTheInventoryEnderChest$exec(InventoryEnderChest o) {
+                theInventoryEnderChest = o;
         }
         
-        @Unique
         @Override
-        public void exec_EntityPlayer_super_onLivingUpdate() {
+        public void $super$onLivingUpdate$exec() {
                 super.onLivingUpdate();
         }
 }

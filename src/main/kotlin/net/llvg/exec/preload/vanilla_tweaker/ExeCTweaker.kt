@@ -26,7 +26,6 @@ import net.llvg.loliutils.exception.uncheckedCast
 import net.minecraft.launchwrapper.ITweaker
 import net.minecraft.launchwrapper.Launch
 import net.minecraft.launchwrapper.LaunchClassLoader
-import net.minecraftforge.fml.common.launcher.FMLTweaker
 import org.spongepowered.asm.launch.MixinBootstrap
 
 @Suppress("UNUSED")
@@ -43,7 +42,6 @@ class ExeCTweaker : ITweaker {
                 classLoader: LaunchClassLoader
         ) {
                 val tweakClasses: MutableList<String> = Launch.blackboard["TweakClasses"].uncheckedCast()
-                tweakClasses.add(FMLTweaker::class.java.name)
                 tweakClasses.add(LaunchWrapperTweaker::class.java.name)
                 tweakClasses.add("org.spongepowered.asm.launch.MixinTweaker")
         }

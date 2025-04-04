@@ -17,22 +17,15 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-@file:JvmName("EntityPlayerUtils")
-@file:Suppress("UNUSED", "FunctionName")
+package net.llvg.exec.mixin.inject;
 
-package net.llvg.exec.inject
+import net.minecraft.inventory.InventoryEnderChest;
 
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.inventory.InventoryEnderChest
-
-private val EntityPlayer.inject: EntityPlayerInject
-        inline get() = (this as EntityPlayerInject)
-
-var EntityPlayer.theInventoryEnderChest: InventoryEnderChest
-        get() = inject.exec_theInventoryEnderChest
-        set(o) {
-                inject.exec_theInventoryEnderChest = o
-        }
-
-fun EntityPlayer.EntityPlayer_super_onLivingUpdate(
-) = inject.exec_EntityPlayer_super_onLivingUpdate()
+@SuppressWarnings("unused")
+public interface InjectEntityPlayer {
+        InventoryEnderChest getTheInventoryEnderChest$exec();
+        
+        void setTheInventoryEnderChest$exec(InventoryEnderChest o);
+        
+        void $super$onLivingUpdate$exec();
+}

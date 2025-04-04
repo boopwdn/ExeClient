@@ -17,18 +17,20 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.llvg.exec.mixin;
+package net.llvg.exec.mixin.mixin;
 
 import net.llvg.exec.event.ExeCEventManager;
 import net.llvg.exec.event.events.UserHealthChangeEvent;
-import net.llvg.exec.inject.EntityLivingBaseInject;
+import net.llvg.exec.mixin.inject.InjectEntityEntityLivingBase;
 import net.llvg.exec.utils.MinecraftUtils;
 import net.llvg.loliutils.exception.TypeCast;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.potion.PotionEffect;
-import org.jetbrains.annotations.NotNull;
-import org.spongepowered.asm.mixin.*;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Mutable;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -36,7 +38,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.Map;
 
 @Mixin (EntityLivingBase.class)
-public abstract class MixinEntityLivingBase extends Entity implements EntityLivingBaseInject {
+public abstract class MixinEntityLivingBase extends Entity implements InjectEntityEntityLivingBase {
         @Final
         @Shadow
         @Mutable
@@ -54,16 +56,13 @@ public abstract class MixinEntityLivingBase extends Entity implements EntityLivi
                 }
         }
         
-        @Unique
         @Override
-        @NotNull
-        public Map<Integer, PotionEffect> getExec_activePotionsMap() {
+        public Map<Integer, PotionEffect> getActivePotionsMap$exec() {
                 return activePotionsMap;
         }
         
-        @Unique
         @Override
-        public void setExec_activePotionsMap(@NotNull Map<Integer, PotionEffect> activePotionsMap) {
-                this.activePotionsMap = activePotionsMap;
+        public void setActivePotionsMap$exec(Map<Integer, PotionEffect> o) {
+                activePotionsMap = o;
         }
 }

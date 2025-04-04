@@ -17,18 +17,15 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-@file:JvmName("EntityLivingBaseUtils")
+package net.llvg.exec.mixin.inject;
 
-package net.llvg.exec.inject
+import net.minecraft.potion.PotionEffect;
 
-import net.minecraft.entity.EntityLivingBase
-import net.minecraft.potion.PotionEffect
+import java.util.Map;
 
-private val EntityLivingBase.inject: EntityLivingBaseInject
-        inline get() = (this as EntityLivingBaseInject)
-
-var EntityLivingBase.activePotionsMap: MutableMap<Integer, PotionEffect>
-        get() = inject.exec_activePotionsMap
-        set(o) {
-                inject.exec_activePotionsMap = o
-        }
+@SuppressWarnings("unused")
+public interface InjectEntityEntityLivingBase {
+        Map<Integer, PotionEffect> getActivePotionsMap$exec();
+        
+        void setActivePotionsMap$exec(Map<Integer, PotionEffect> o);
+}
