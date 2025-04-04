@@ -17,12 +17,19 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.llvg.exec.event.events
+@file:[JvmName("CallbackMinecraft") Suppress("FunctionName")]
 
-import net.llvg.exec.event.ExeCEvent
-import net.minecraft.entity.EntityLivingBase
+package net.llvg.exec.mixin.callback
 
-data class UserHealthChangeEvent(
-        val instance: EntityLivingBase,
-        val health: Float
-) : ExeCEvent
+import net.llvg.exec.event.events.WorldClientEvent
+import net.llvg.exec.event.post
+import net.minecraft.client.multiplayer.WorldClient
+
+fun `post$WorldClientEvent$Load$Pre`(
+        worldClient: WorldClient
+) {
+        val event = WorldClientEvent.Load.Pre.Impl(
+                worldClient
+        )
+        event.post(wait = true)
+}

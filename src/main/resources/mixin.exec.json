@@ -1,5 +1,5 @@
 {
-    "package": "net.llvg.exec.mixin",
+    "package": "net.llvg.exec.mixin.mixin",
     "required": true,
     "refmap": "${refmap}",
     "minVersion": "0.7",

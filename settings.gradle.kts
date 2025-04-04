@@ -45,7 +45,7 @@ val libz by dependencyResolutionManagement.versionCatalogs.registering {
         version("kotlinx-serialization", version_kotlinx_serialization)
         
         plugin("idea-ext", "org.jetbrains.gradle.plugin.idea-ext").versionRef("idea-ext")
-        plugin("shadow", "com.github.johnrengelman.shadow").versionRef("shadow")
+        plugin("shadow", "com.gradleup.shadow").versionRef("shadow")
         
         val kotlin = "org.jetbrains.kotlin"
         library("kotlin-stdlib", kotlin, "kotlin-stdlib").versionRef("kotlin")

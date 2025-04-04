@@ -17,14 +17,19 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-@file:JvmName("AbstractClientPlayerUtils")
+package net.llvg.exec.event.events
 
-package net.llvg.exec.inject
+import net.llvg.exec.event.ExeCEvent
+import net.minecraft.entity.Entity
 
-import net.minecraft.client.entity.AbstractClientPlayer
-
-private val AbstractClientPlayer.inject: AbstractClientPlayerInject
-        inline get() = (this as AbstractClientPlayerInject)
-
-fun AbstractClientPlayer.getPlayerInfo(
-) = inject.exec_getPlayerInfo()
+interface ServerEvent: ExeCEvent {
+        interface CameraChange : ServerEvent {
+                var camera: Entity?
+                
+                interface Pre: CameraChange {
+                        data class Impl(
+                                override var camera: Entity?
+                        ) : Pre
+                }
+        }
+}

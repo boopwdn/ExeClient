@@ -17,7 +17,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.llvg.exec.mixin;
+package net.llvg.exec.mixin.mixin;
 
 import net.llvg.exec.features.freecam.FreeCam;
 import net.llvg.exec.utils.MinecraftUtils;
@@ -34,6 +34,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin (Entity.class)
 public abstract class MixinEntity implements ICommandSender, ICapabilitySerializable<NBTTagCompound> {
+        @Shadow
+        public abstract boolean isEntityEqual(Entity entityIn);
+        
         @Inject (method = "setAngles", at = @At ("HEAD"), cancellable = true)
         private void setAnglesInject(float yaw, float pitch, CallbackInfo ci) {
                 if (FreeCam.isEnabled() && isEntityEqual(MinecraftUtils.player()) && !FreeCam.isControllingPlayer()) {
@@ -41,9 +44,6 @@ public abstract class MixinEntity implements ICommandSender, ICapabilitySerializ
                         ci.cancel();
                 }
         }
-        
-        @Shadow
-        public abstract boolean isEntityEqual(Entity entityIn);
         
         @Inject (method = "applyEntityCollision", at = @At ("HEAD"), cancellable = true)
         private void applyEntityCollisionInject(Entity entityIn, CallbackInfo ci) {

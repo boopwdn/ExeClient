@@ -17,18 +17,18 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-@file:JvmName("EntityLivingBaseUtils")
+@file:JvmName("CallbackNetHandlerPlayClient")
 
-package net.llvg.exec.inject
+package net.llvg.exec.mixin.callback
 
-import net.minecraft.entity.EntityLivingBase
-import net.minecraft.potion.PotionEffect
+import net.llvg.exec.event.events.ServerEvent
+import net.llvg.exec.event.post
+import net.minecraft.entity.Entity
 
-private val EntityLivingBase.inject: EntityLivingBaseInject
-        inline get() = (this as EntityLivingBaseInject)
-
-var EntityLivingBase.activePotionsMap: MutableMap<Integer, PotionEffect>
-        get() = inject.exec_activePotionsMap
-        set(o) {
-                inject.exec_activePotionsMap = o
-        }
+fun postServerCameraChangeEvent(
+        entity: Entity
+): Entity? {
+        val event = ServerEvent.CameraChange.Pre.Impl(entity)
+        event.post(wait = true)
+        return event.camera
+}

@@ -17,23 +17,23 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.llvg.exec.mixin;
+package net.llvg.exec.mixin.mixin;
 
-import net.llvg.exec.event.ExeCEventManager;
-import net.llvg.exec.event.events.ServerCameraChangeEvent;
-import net.minecraft.client.network.NetHandlerPlayClient;
+import net.llvg.exec.features.freecam.FreeCamEntity;
+import net.minecraft.client.renderer.culling.ICamera;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
-import net.minecraft.network.play.INetHandlerPlayClient;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin (NetHandlerPlayClient.class)
-public abstract class MixinNetHandlerPlayClient implements INetHandlerPlayClient {
-        @ModifyVariable (method = "handleCamera", at = @At ("STORE"), index = 2)
-        private Entity handleCameraModifyVariable(Entity entity) {
-                ServerCameraChangeEvent event = new ServerCameraChangeEvent(entity);
-                ExeCEventManager.post(ServerCameraChangeEvent.class, event, true);
-                return event.getEntity();
+@Mixin (RenderManager.class)
+public abstract class MixinRenderManager {
+        @Inject (method = "shouldRender", at = @At ("HEAD"), cancellable = true)
+        private void shouldRenderInject(Entity entityIn, ICamera camera, double camX, double camY, double camZ, CallbackInfoReturnable<Boolean> cir) {
+                if (entityIn instanceof FreeCamEntity) {
+                        cir.setReturnValue(false);
+                }
         }
 }

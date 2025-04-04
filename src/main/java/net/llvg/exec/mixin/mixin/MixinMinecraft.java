@@ -17,17 +17,16 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.llvg.exec.mixin;
+package net.llvg.exec.mixin.mixin;
 
-import net.llvg.exec.event.ExeCEventManager;
-import net.llvg.exec.event.events.WorldLoadEvent;
 import net.llvg.exec.features.freecam.FreeCam;
+import net.llvg.exec.mixin.callback.CallbackMinecraft;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.profiler.IPlayerUsage;
 import net.minecraft.util.IThreadListener;
-import org.spongepowered.asm.lib.Opcodes;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -38,9 +37,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin (Minecraft.class)
 public abstract class MixinMinecraft implements IThreadListener, IPlayerUsage {
+        @Shadow
+        public GameSettings gameSettings;
+        
         @Unique
         private static int exec$gameSettings$thirdPersonView$storage;
-        @Shadow public GameSettings gameSettings;
         
         @Inject (method = "clickMouse", at = @At ("HEAD"), cancellable = true)
         private void clickMouseInject(CallbackInfo ci) {
@@ -78,8 +79,7 @@ public abstract class MixinMinecraft implements IThreadListener, IPlayerUsage {
         
         @Inject (method = "loadWorld(Lnet/minecraft/client/multiplayer/WorldClient;Ljava/lang/String;)V", at = @At ("HEAD"))
         private void loadWorldInject(WorldClient worldClientIn, String loadingMessage, CallbackInfo ci) {
-                WorldLoadEvent event = new WorldLoadEvent(worldClientIn);
-                ExeCEventManager.post(WorldLoadEvent.class, event, true);
+                CallbackMinecraft.post$WorldClientEvent$Load$Pre(worldClientIn);
         }
         
         @Inject (method = "middleClickMouse", at = @At ("HEAD"), cancellable = true)

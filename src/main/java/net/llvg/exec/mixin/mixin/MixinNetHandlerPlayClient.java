@@ -17,21 +17,20 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.llvg.exec.mixin;
+package net.llvg.exec.mixin.mixin;
 
-import net.llvg.exec.ExeClient;
-import net.minecraft.client.main.Main;
+import net.llvg.exec.mixin.callback.CallbackNetHandlerPlayClient;
+import net.minecraft.client.network.NetHandlerPlayClient;
+import net.minecraft.entity.Entity;
+import net.minecraft.network.play.INetHandlerPlayClient;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
-@Mixin (Main.class)
-public abstract class MixinMain {
-        @Inject (method = "main", at = @At ("HEAD"), remap = false)
-        private static void mainInject(String[] strings, CallbackInfo ci) {
-                ExeClient.initialize();
-                Class<? extends ExeClient> clazz = ExeClient.INSTANCE.getClass();
-                ExeClient.logger.info("ExeClient initialization succeed! Instance(class={}, classloader={})", clazz, clazz.getClassLoader());
+@Mixin (NetHandlerPlayClient.class)
+public abstract class MixinNetHandlerPlayClient implements INetHandlerPlayClient {
+        @ModifyVariable (method = "handleCamera", at = @At ("STORE"), index = 2)
+        private Entity handleCameraModifyVariable(Entity entity) {
+                return CallbackNetHandlerPlayClient.postServerCameraChangeEvent(entity);
         }
 }

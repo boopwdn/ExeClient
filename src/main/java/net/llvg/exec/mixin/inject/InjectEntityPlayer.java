@@ -17,11 +17,15 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.llvg.exec.event.events
+package net.llvg.exec.mixin.inject;
 
-import net.llvg.exec.event.ExeCEvent
-import net.minecraft.client.multiplayer.WorldClient
+import net.minecraft.inventory.InventoryEnderChest;
 
-data class WorldLoadEvent(
-        val worldClientIn: WorldClient?
-) : ExeCEvent
+@SuppressWarnings("unused")
+public interface InjectEntityPlayer {
+        InventoryEnderChest getTheInventoryEnderChest$exec();
+        
+        void setTheInventoryEnderChest$exec(InventoryEnderChest o);
+        
+        void $super$onLivingUpdate$exec();
+}
