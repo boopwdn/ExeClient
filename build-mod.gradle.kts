@@ -47,7 +47,6 @@ loom {
         runConfigs.configureEach {
                 property("mixin.debug.export", "true")
                 property("mixin.hotSwap", "true")
-                vmArg("-XX:+AllowEnhancedClassRedefinition")
         }
         
         if (project.platform.isForge) forge {
@@ -74,6 +73,12 @@ sourceSets.main {
 repositories {
         mavenLocal()
         mavenCentral()
+        maven("https://jitpack.io") {
+                name = "Jitpack Maven"
+                content {
+                        includeGroupByRegex("com\\.github\\.(.)+")
+                }
+        }
         maven("https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1") {
                 name = "DevAuth Repo"
                 content {
@@ -91,9 +96,6 @@ repositories {
                 content {
                         includeGroup("curse.maven")
                 }
-        }
-        maven("https://jitpack.io") {
-                name = "Jitpack Maven"
         }
 }
 
@@ -121,8 +123,13 @@ dependencies {
         compileOnly("cc.polyfrost:oneconfig-1.8.9-forge:0.2.2-alpha223:full")
         compileOnly("cc.polyfrost:oneconfig-loader-launchwrapper:1.0.0-beta17")
         
-        runtimeOnly("com.github.boopwdn:YqlossClientMixin:v0.7.0:dev")
-        shade("com.github.Water-OR:llvg-utils:1.1")
+        runtimeOnly("com.github.boopwdn:YqlossClientMixin:master-SNAPSHOT:dev") {
+                isChanging = true
+        }
+        runtimeOnly("com.github.boopwdn:EnchAddons:main-SNAPSHOT:dev") {
+                isChanging = true
+        }
+        shade("com.github.Water-OR:llvg-utils:1.3")
         
         if (platform.isLegacyForge) {
                 compileOnly("org.spongepowered:mixin:0.7.11-SNAPSHOT")
@@ -158,9 +165,11 @@ kotlin {
 tasks {
         processResources {
                 filesMatching("mixin.$mixin_id.json") {
-                        expand(mapOf(
-                                "refmap" to refmap_file,
-                        ))
+                        expand(
+                                mapOf(
+                                        "refmap" to refmap_file,
+                                )
+                        )
                 }
         }
         
