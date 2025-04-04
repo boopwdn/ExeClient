@@ -20,9 +20,16 @@
 package net.llvg.exec.event.events
 
 import net.llvg.exec.event.ExeCEvent
-import net.minecraft.entity.EntityLivingBase
+import net.minecraft.entity.Entity
 
-data class UserHealthChangeEvent(
-        val instance: EntityLivingBase,
-        val health: Float
-) : ExeCEvent
+interface ServerEvent: ExeCEvent {
+        interface CameraChange : ServerEvent {
+                var camera: Entity?
+                
+                interface Pre: CameraChange {
+                        data class Impl(
+                                override var camera: Entity?
+                        ) : Pre
+                }
+        }
+}

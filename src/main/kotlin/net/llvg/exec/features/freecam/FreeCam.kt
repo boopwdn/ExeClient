@@ -23,9 +23,9 @@ import kotlinx.coroutines.Dispatchers
 import net.llvg.exec.ExeClient
 import net.llvg.exec.config.ExeFeatureConfig
 import net.llvg.exec.config.freecam.FreeCamConfig
-import net.llvg.exec.event.events.ServerCameraChangeEvent
-import net.llvg.exec.event.events.UserHealthChangeEvent
-import net.llvg.exec.event.events.WorldLoadEvent
+import net.llvg.exec.event.events.EntityLivingBaseEvent
+import net.llvg.exec.event.events.ServerEvent
+import net.llvg.exec.event.events.WorldClientEvent
 import net.llvg.exec.event.onEvent
 import net.llvg.exec.features.ExeFeature
 import net.llvg.exec.utils.chat_component.buildChatComponent
@@ -40,8 +40,10 @@ import net.minecraft.util.MovementInputFromOptions
 
 object FreeCam : ExeFeature {
         init {
-                onEvent(dispatcher = Dispatchers.Default) { e: UserHealthChangeEvent ->
-                        if (FreeCamConfig.disableOnDamage && e.instance.health > e.health) {
+                onEvent(dispatcher = Dispatchers.Default) { e: EntityLivingBaseEvent.HealthChange.Pre ->
+                        if (e.entity !== player) return@onEvent
+                        
+                        if (FreeCamConfig.disableOnDamage && e.entity.health > e.health) {
                                 if (FreeCamConfig.sendMessage) ExeClient.send {
                                         text("You took damage!") {
                                                 color = EnumChatFormatting.YELLOW
@@ -52,7 +54,7 @@ object FreeCam : ExeFeature {
                         }
                 }
                 
-                onEvent(dispatcher = Dispatchers.Default) { e: ServerCameraChangeEvent ->
+                onEvent(dispatcher = Dispatchers.Default) { e: ServerEvent.CameraChange.Pre ->
                         if (FreeCamConfig.disableOnSeverCameraChange) {
                                 if (FreeCamConfig.sendMessage) ExeClient.send {
                                         text("Server is trying to change your camera entity!") {
@@ -62,12 +64,12 @@ object FreeCam : ExeFeature {
                                 
                                 disable()
                         } else {
-                                previousEntity = e.entity
-                                e.entity = null
+                                previousEntity = e.camera
+                                e.camera = null
                         }
                 }
                 
-                onEvent(dispatcher = Dispatchers.Default) { e: WorldLoadEvent ->
+                onEvent(dispatcher = Dispatchers.Default) { _: WorldClientEvent.Load.Pre ->
                         disable()
                 }
         }

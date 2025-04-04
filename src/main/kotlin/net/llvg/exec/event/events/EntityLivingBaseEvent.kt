@@ -17,18 +17,21 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-@file:JvmName("CallbackNetHandlerPlayClient")
+package net.llvg.exec.event.events
 
-package net.llvg.exec.mixin.callback
+import net.minecraft.entity.EntityLivingBase
 
-import net.llvg.exec.event.events.ServerEvent
-import net.llvg.exec.event.post
-import net.minecraft.entity.Entity
-
-fun postServerCameraChangeEvent(
-        entity: Entity
-): Entity? {
-        val event = ServerEvent.CameraChange.Pre.Impl(entity)
-        event.post(wait = true)
-        return event.camera
+interface EntityLivingBaseEvent : EntityEvent {
+        override val entity: EntityLivingBase
+        
+        interface HealthChange : EntityLivingBaseEvent {
+                val health: Float
+                
+                interface Pre : HealthChange {
+                        data class Impl(
+                                override val entity: EntityLivingBase,
+                                override val health: Float,
+                        ) : Pre
+                }
+        }
 }
