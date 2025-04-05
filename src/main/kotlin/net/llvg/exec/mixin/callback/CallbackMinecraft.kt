@@ -17,17 +17,19 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-@file:JvmName("CallbackMinecraft")
+@file:[JvmName("CallbackMinecraft") Suppress("FunctionName")]
 
 package net.llvg.exec.mixin.callback
 
-import net.llvg.exec.event.events.WorldLoadEvent
+import net.llvg.exec.event.events.WorldClientEvent
 import net.llvg.exec.event.post
 import net.minecraft.client.multiplayer.WorldClient
 
-fun postWorldLoadEvent(
+fun `post$WorldClientEvent$Load$Pre`(
         worldClient: WorldClient
 ) {
-        val event = WorldLoadEvent(worldClient)
+        val event = WorldClientEvent.Load.Pre.Impl(
+                worldClient
+        )
         event.post(wait = true)
 }

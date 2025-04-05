@@ -20,17 +20,34 @@
 package net.llvg.exec.mixin.mixin;
 
 import net.llvg.exec.mixin.callback.CallbackNetHandlerPlayClient;
+import net.llvg.exec.mixin.inject.InjectNetHandlerPlayClient;
+import net.llvg.loliutils.exception.TypeCast;
+import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.network.NetHandlerPlayClient;
-import net.minecraft.entity.Entity;
 import net.minecraft.network.play.INetHandlerPlayClient;
+import net.minecraft.network.play.server.S43PacketCamera;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin (NetHandlerPlayClient.class)
-public abstract class MixinNetHandlerPlayClient implements INetHandlerPlayClient {
-        @ModifyVariable (method = "handleCamera", at = @At ("STORE"), index = 2)
-        private Entity handleCameraModifyVariable(Entity entity) {
-                return CallbackNetHandlerPlayClient.postServerCameraChangeEvent(entity);
+public abstract class MixinNetHandlerPlayClient implements INetHandlerPlayClient, InjectNetHandlerPlayClient {
+        @Shadow
+        private WorldClient clientWorldController;
+        
+        @Inject (method = "handleCamera", at = @At ("HEAD"), cancellable = true)
+        private void handleCameraInject(S43PacketCamera packetIn, CallbackInfo ci) {
+                if (CallbackNetHandlerPlayClient.postPacketEventServerS43Pre(TypeCast.cast(this), packetIn)) {
+                        ci.cancel();
+                }
+        }
+        
+        @Unique
+        @Override
+        public WorldClient getClientWorldController$exec() {
+                return clientWorldController;
         }
 }

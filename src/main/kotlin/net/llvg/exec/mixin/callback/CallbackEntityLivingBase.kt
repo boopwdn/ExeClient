@@ -21,14 +21,17 @@
 
 package net.llvg.exec.mixin.callback
 
-import net.llvg.exec.event.events.UserHealthChangeEvent
+import net.llvg.exec.event.events.EntityLivingBaseEvent
 import net.llvg.exec.event.post
 import net.minecraft.entity.EntityLivingBase
 
 fun postUserHealthChangeEvent(
-        instance: EntityLivingBase,
+        entity: EntityLivingBase,
         health: Float,
 ) {
-        val event = UserHealthChangeEvent(instance, health)
+        val event = EntityLivingBaseEvent.HealthChange.Pre.Impl(
+                entity,
+                health
+        )
         event.post(wait = true)
 }

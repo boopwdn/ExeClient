@@ -19,10 +19,19 @@
 
 package net.llvg.exec.event.events
 
-import net.llvg.exec.event.ExeCEvent
 import net.minecraft.entity.EntityLivingBase
 
-data class UserHealthChangeEvent(
-        val instance: EntityLivingBase,
-        val health: Float
-) : ExeCEvent
+interface EntityLivingBaseEvent : EntityEvent {
+        override val entity: EntityLivingBase
+        
+        interface HealthChange : EntityLivingBaseEvent {
+                val health: Float
+                
+                interface Pre : HealthChange {
+                        data class Impl(
+                                override val entity: EntityLivingBase,
+                                override val health: Float,
+                        ) : Pre
+                }
+        }
+}

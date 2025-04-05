@@ -20,8 +20,8 @@
 package net.llvg.exec.event.events
 
 import net.llvg.exec.event.ExeCEvent
-import net.minecraft.client.multiplayer.WorldClient
+import net.minecraft.entity.Entity
 
-data class WorldLoadEvent(
-        val worldClientIn: WorldClient?
-) : ExeCEvent
+interface EntityEvent : ExeCEvent {
+        val entity: Entity
+}
