@@ -37,7 +37,7 @@ public abstract class MixinAbstractClientPlayer extends EntityPlayer implements 
         }
         
         @Override
-        public NetworkPlayerInfo getPlayerInfo$exec() {
+        public NetworkPlayerInfo getPlayerInfo_exec() {
                 return getPlayerInfo();
         }
 }

@@ -38,18 +38,18 @@ public abstract class MixinEntityPlayer extends EntityLivingBase implements Inje
         
         @Unique
         @Override
-        public InventoryEnderChest getTheInventoryEnderChest$exec() {
+        public InventoryEnderChest get_theInventoryEnderChest_exec() {
                 return theInventoryEnderChest;
         }
         
         @Unique
         @Override
-        public void setTheInventoryEnderChest$exec(InventoryEnderChest o) {
+        public void set_theInventoryEnderChest_exec(InventoryEnderChest o) {
                 theInventoryEnderChest = o;
         }
         
         @Override
-        public void $super$onLivingUpdate$exec() {
+        public void _super_onLivingUpdate_exec() {
                 super.onLivingUpdate();
         }
 }

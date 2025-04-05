@@ -23,5 +23,5 @@ import net.minecraft.client.multiplayer.WorldClient;
 
 @SuppressWarnings("unused")
 public interface InjectNetHandlerPlayClient {
-        WorldClient getClientWorldController$exec();
+        WorldClient get_clientWorldController_exec();
 }

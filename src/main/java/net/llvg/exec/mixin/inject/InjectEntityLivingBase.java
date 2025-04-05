@@ -25,7 +25,7 @@ import java.util.Map;
 
 @SuppressWarnings("unused")
 public interface InjectEntityLivingBase {
-        Map<Integer, PotionEffect> getActivePotionsMap$exec();
+        Map<Integer, PotionEffect> get_activePotionsMap_exec();
         
-        void setActivePotionsMap$exec(Map<Integer, PotionEffect> o);
+        void set_activePotionsMap_exec(Map<Integer, PotionEffect> o);
 }

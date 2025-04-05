@@ -52,12 +52,12 @@ public abstract class MixinEntityLivingBase extends Entity implements InjectEnti
         }
         
         @Override
-        public Map<Integer, PotionEffect> getActivePotionsMap$exec() {
+        public Map<Integer, PotionEffect> get_activePotionsMap_exec() {
                 return activePotionsMap;
         }
         
         @Override
-        public void setActivePotionsMap$exec(Map<Integer, PotionEffect> o) {
+        public void set_activePotionsMap_exec(Map<Integer, PotionEffect> o) {
                 activePotionsMap = o;
         }
 }

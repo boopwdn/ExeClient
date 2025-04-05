@@ -59,18 +59,18 @@ class FreeCamEntity(
                 
                 inventory =
                         player.inventory
-                cast<InjectEntityPlayer>(this).`theInventoryEnderChest$exec` =
-                        cast<InjectEntityPlayer>(player).`theInventoryEnderChest$exec`
+                cast<InjectEntityPlayer>(this)._theInventoryEnderChest_exec =
+                        cast<InjectEntityPlayer>(player)._theInventoryEnderChest_exec
                 inventoryContainer =
                         player.inventoryContainer
                 openContainer =
                         player.openContainer
-                cast<InjectEntityLivingBase>(this).`activePotionsMap$exec` =
-                        cast<InjectEntityLivingBase>(player).`activePotionsMap$exec`
+                cast<InjectEntityLivingBase>(this)._activePotionsMap_exec =
+                        cast<InjectEntityLivingBase>(player)._activePotionsMap_exec
         }
         
         override fun getPlayerInfo(
-        ): NetworkPlayerInfo? = cast<InjectAbstractClientPlayer>(player).`playerInfo$exec`
+        ): NetworkPlayerInfo? = cast<InjectAbstractClientPlayer>(player).playerInfo_exec
         
         override fun canAttackWithItem(
         ): Boolean = false
@@ -157,6 +157,6 @@ class FreeCamEntity(
                         motionZ = 0.0
                 }
                 
-                cast<InjectEntityPlayer>(this).`$super$onLivingUpdate$exec`()
+                cast<InjectEntityPlayer>(this)._super_onLivingUpdate_exec()
         }
 }

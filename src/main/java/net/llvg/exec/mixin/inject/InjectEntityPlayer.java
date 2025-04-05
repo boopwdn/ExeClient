@@ -23,9 +23,9 @@ import net.minecraft.inventory.InventoryEnderChest;
 
 @SuppressWarnings("unused")
 public interface InjectEntityPlayer {
-        InventoryEnderChest getTheInventoryEnderChest$exec();
+        InventoryEnderChest get_theInventoryEnderChest_exec();
         
-        void setTheInventoryEnderChest$exec(InventoryEnderChest o);
+        void set_theInventoryEnderChest_exec(InventoryEnderChest o);
         
-        void $super$onLivingUpdate$exec();
+        void _super_onLivingUpdate_exec();
 }

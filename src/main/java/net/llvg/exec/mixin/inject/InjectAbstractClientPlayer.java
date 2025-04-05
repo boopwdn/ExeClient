@@ -23,5 +23,5 @@ import net.minecraft.client.network.NetworkPlayerInfo;
 
 @SuppressWarnings("unused")
 public interface InjectAbstractClientPlayer {
-        NetworkPlayerInfo getPlayerInfo$exec();
+        NetworkPlayerInfo getPlayerInfo_exec();
 }

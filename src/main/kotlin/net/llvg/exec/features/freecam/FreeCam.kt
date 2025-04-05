@@ -67,7 +67,7 @@ object FreeCam : ExeFeature {
                                 disable()
                         } else {
                                 previousEntity = e.packet.getEntity(
-                                        cast<InjectNetHandlerPlayClient>(e.handler).`clientWorldController$exec`
+                                        cast<InjectNetHandlerPlayClient>(e.handler)._clientWorldController_exec
                                 )
                                 e.cancel()
                         }

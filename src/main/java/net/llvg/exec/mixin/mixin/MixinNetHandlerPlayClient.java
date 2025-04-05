@@ -47,7 +47,7 @@ public abstract class MixinNetHandlerPlayClient implements INetHandlerPlayClient
         
         @Unique
         @Override
-        public WorldClient getClientWorldController$exec() {
+        public WorldClient get_clientWorldController_exec() {
                 return clientWorldController;
         }
 }
