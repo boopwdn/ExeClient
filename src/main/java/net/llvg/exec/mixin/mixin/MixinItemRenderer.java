@@ -17,23 +17,22 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.llvg.exec.mixin;
+package net.llvg.exec.mixin.mixin;
 
-import net.llvg.exec.event.ExeCEventManager;
-import net.llvg.exec.event.events.ServerCameraChangeEvent;
-import net.minecraft.client.network.NetHandlerPlayClient;
-import net.minecraft.entity.Entity;
-import net.minecraft.network.play.INetHandlerPlayClient;
+import net.llvg.exec.features.freecam.FreeCam;
+import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.client.renderer.ItemRenderer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
-@Mixin (NetHandlerPlayClient.class)
-public abstract class MixinNetHandlerPlayClient implements INetHandlerPlayClient {
-        @ModifyVariable (method = "handleCamera", at = @At ("STORE"), index = 2)
-        private Entity handleCameraModifyVariable(Entity entity) {
-                ServerCameraChangeEvent event = new ServerCameraChangeEvent(entity);
-                ExeCEventManager.post(ServerCameraChangeEvent.class, event, true);
-                return event.getEntity();
+@Mixin (ItemRenderer.class)
+public abstract class MixinItemRenderer {
+        @ModifyVariable (method = "renderItemInFirstPerson", at = @At ("STORE"), index = 3)
+        private AbstractClientPlayer renderItemInFirstPersonModifyVariable(AbstractClientPlayer abstractclientplayer) {
+                if (FreeCam.isEnabled()) {
+                        return FreeCam.getCamera();
+                }
+                return abstractclientplayer;
         }
 }

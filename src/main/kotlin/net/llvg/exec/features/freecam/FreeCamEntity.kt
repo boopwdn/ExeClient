@@ -23,13 +23,13 @@ import com.mojang.authlib.GameProfile
 import java.util.UUID
 import kotlin.math.abs
 import net.llvg.exec.config.freecam.FreeCamConfig
-import net.llvg.exec.inject.EntityPlayer_super_onLivingUpdate
-import net.llvg.exec.inject.activePotionsMap
-import net.llvg.exec.inject.getPlayerInfo
-import net.llvg.exec.inject.theInventoryEnderChest
+import net.llvg.exec.mixin.inject.InjectAbstractClientPlayer
+import net.llvg.exec.mixin.inject.InjectEntityLivingBase
+import net.llvg.exec.mixin.inject.InjectEntityPlayer
 import net.llvg.exec.utils.mc
 import net.llvg.exec.utils.player
 import net.llvg.exec.utils.world
+import net.llvg.loliutils.exception.cast
 import net.llvg.loliutils.exception.double
 import net.llvg.loliutils.exception.float
 import net.minecraft.client.entity.EntityPlayerSP
@@ -59,18 +59,18 @@ class FreeCamEntity(
                 
                 inventory =
                         player.inventory
-                theInventoryEnderChest =
-                        player.theInventoryEnderChest
+                cast<InjectEntityPlayer>(this)._theInventoryEnderChest_exec =
+                        cast<InjectEntityPlayer>(player)._theInventoryEnderChest_exec
                 inventoryContainer =
                         player.inventoryContainer
                 openContainer =
                         player.openContainer
-                activePotionsMap =
-                        player.activePotionsMap
+                cast<InjectEntityLivingBase>(this)._activePotionsMap_exec =
+                        cast<InjectEntityLivingBase>(player)._activePotionsMap_exec
         }
         
         override fun getPlayerInfo(
-        ): NetworkPlayerInfo? = player.getPlayerInfo()
+        ): NetworkPlayerInfo? = cast<InjectAbstractClientPlayer>(player).playerInfo_exec
         
         override fun canAttackWithItem(
         ): Boolean = false
@@ -157,6 +157,6 @@ class FreeCamEntity(
                         motionZ = 0.0
                 }
                 
-                EntityPlayer_super_onLivingUpdate()
+                cast<InjectEntityPlayer>(this)._super_onLivingUpdate_exec()
         }
 }

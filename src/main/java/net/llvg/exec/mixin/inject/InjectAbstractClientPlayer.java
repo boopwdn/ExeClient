@@ -17,11 +17,11 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.llvg.exec.event.events
+package net.llvg.exec.mixin.inject;
 
-import net.llvg.exec.event.ExeCEvent
-import net.minecraft.client.multiplayer.WorldClient
+import net.minecraft.client.network.NetworkPlayerInfo;
 
-data class WorldLoadEvent(
-        val worldClientIn: WorldClient?
-) : ExeCEvent
+@SuppressWarnings("unused")
+public interface InjectAbstractClientPlayer {
+        NetworkPlayerInfo getPlayerInfo_exec();
+}

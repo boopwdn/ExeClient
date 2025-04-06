@@ -17,7 +17,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.llvg.exec.mixin;
+package net.llvg.exec.mixin.mixin;
 
 import net.llvg.exec.ExeClient;
 import net.minecraft.client.main.Main;

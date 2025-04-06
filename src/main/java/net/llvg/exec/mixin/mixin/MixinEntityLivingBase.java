@@ -17,18 +17,18 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.llvg.exec.mixin;
+package net.llvg.exec.mixin.mixin;
 
-import net.llvg.exec.event.ExeCEventManager;
-import net.llvg.exec.event.events.UserHealthChangeEvent;
-import net.llvg.exec.inject.EntityLivingBaseInject;
-import net.llvg.exec.utils.MinecraftUtils;
+import net.llvg.exec.mixin.callback.CallbackEntityLivingBase;
+import net.llvg.exec.mixin.inject.InjectEntityLivingBase;
 import net.llvg.loliutils.exception.TypeCast;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.potion.PotionEffect;
-import org.jetbrains.annotations.NotNull;
-import org.spongepowered.asm.mixin.*;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Mutable;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -36,7 +36,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.Map;
 
 @Mixin (EntityLivingBase.class)
-public abstract class MixinEntityLivingBase extends Entity implements EntityLivingBaseInject {
+public abstract class MixinEntityLivingBase extends Entity implements InjectEntityLivingBase {
         @Final
         @Shadow
         @Mutable
@@ -48,22 +48,16 @@ public abstract class MixinEntityLivingBase extends Entity implements EntityLivi
         
         @Inject (method = "setHealth", at = @At ("HEAD"))
         private void setHealthInject(float health, CallbackInfo ci) {
-                if (isEntityEqual(MinecraftUtils.mc().thePlayer)) {
-                        UserHealthChangeEvent event = new UserHealthChangeEvent(TypeCast.uncheckedCast(this), health);
-                        ExeCEventManager.post(UserHealthChangeEvent.class, event, true);
-                }
+                CallbackEntityLivingBase.postUserHealthChangeEvent(TypeCast.cast(this), health);
         }
         
-        @Unique
         @Override
-        @NotNull
-        public Map<Integer, PotionEffect> getExec_activePotionsMap() {
+        public Map<Integer, PotionEffect> get_activePotionsMap_exec() {
                 return activePotionsMap;
         }
         
-        @Unique
         @Override
-        public void setExec_activePotionsMap(@NotNull Map<Integer, PotionEffect> activePotionsMap) {
-                this.activePotionsMap = activePotionsMap;
+        public void set_activePotionsMap_exec(Map<Integer, PotionEffect> o) {
+                activePotionsMap = o;
         }
 }

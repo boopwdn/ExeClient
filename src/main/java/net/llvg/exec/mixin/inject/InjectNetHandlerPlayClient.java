@@ -17,11 +17,11 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.llvg.exec.inject
+package net.llvg.exec.mixin.inject;
 
-import net.minecraft.potion.PotionEffect
+import net.minecraft.client.multiplayer.WorldClient;
 
-@Suppress("PropertyName")
-interface EntityLivingBaseInject {
-        var exec_activePotionsMap: MutableMap<Integer, PotionEffect>
+@SuppressWarnings("unused")
+public interface InjectNetHandlerPlayClient {
+        WorldClient get_clientWorldController_exec();
 }

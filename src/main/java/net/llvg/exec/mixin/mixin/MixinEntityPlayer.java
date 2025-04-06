@@ -17,31 +17,39 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.llvg.exec.mixin;
+package net.llvg.exec.mixin.mixin;
 
-import net.llvg.exec.inject.AbstractClientPlayerInject;
-import net.minecraft.client.entity.AbstractClientPlayer;
-import net.minecraft.client.network.NetworkPlayerInfo;
+import net.llvg.exec.mixin.inject.InjectEntityPlayer;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.inventory.InventoryEnderChest;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
-@Mixin (AbstractClientPlayer.class)
-public abstract class MixinAbstractClientPlayer extends EntityPlayer implements AbstractClientPlayerInject {
-        @SuppressWarnings ("DataFlowIssue")
-        private MixinAbstractClientPlayer() {
-                super(null, null);
+@Mixin (EntityPlayer.class)
+public abstract class MixinEntityPlayer extends EntityLivingBase implements InjectEntityPlayer {
+        @Shadow
+        private InventoryEnderChest theInventoryEnderChest;
+        
+        private MixinEntityPlayer() {
+                super(null);
         }
         
         @Unique
         @Override
-        @Nullable
-        public NetworkPlayerInfo exec_getPlayerInfo() {
-                return getPlayerInfo();
+        public InventoryEnderChest get_theInventoryEnderChest_exec() {
+                return theInventoryEnderChest;
         }
         
-        @Shadow
-        protected abstract NetworkPlayerInfo getPlayerInfo();
+        @Unique
+        @Override
+        public void set_theInventoryEnderChest_exec(InventoryEnderChest o) {
+                theInventoryEnderChest = o;
+        }
+        
+        @Override
+        public void _super_onLivingUpdate_exec() {
+                super.onLivingUpdate();
+        }
 }

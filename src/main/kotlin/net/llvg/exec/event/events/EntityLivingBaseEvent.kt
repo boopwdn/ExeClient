@@ -17,13 +17,21 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.llvg.exec.inject
+package net.llvg.exec.event.events
 
-import net.minecraft.inventory.InventoryEnderChest
+import net.minecraft.entity.EntityLivingBase
 
-@Suppress("PropertyName", "FunctionName")
-interface EntityPlayerInject {
-        var exec_theInventoryEnderChest: InventoryEnderChest
+interface EntityLivingBaseEvent : EntityEvent {
+        override val entity: EntityLivingBase
         
-        fun exec_EntityPlayer_super_onLivingUpdate()
+        interface HealthChange : EntityLivingBaseEvent {
+                val health: Float
+                
+                interface Pre : HealthChange {
+                        data class Impl(
+                                override val entity: EntityLivingBase,
+                                override val health: Float,
+                        ) : Pre
+                }
+        }
 }

@@ -17,22 +17,11 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-@file:JvmName("EntityPlayerUtils")
-@file:Suppress("UNUSED", "FunctionName")
+package net.llvg.exec.event.events
 
-package net.llvg.exec.inject
+import net.llvg.exec.event.ExeCEvent
+import net.minecraft.entity.Entity
 
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.inventory.InventoryEnderChest
-
-private val EntityPlayer.inject: EntityPlayerInject
-        inline get() = (this as EntityPlayerInject)
-
-var EntityPlayer.theInventoryEnderChest: InventoryEnderChest
-        get() = inject.exec_theInventoryEnderChest
-        set(o) {
-                inject.exec_theInventoryEnderChest = o
-        }
-
-fun EntityPlayer.EntityPlayer_super_onLivingUpdate(
-) = inject.exec_EntityPlayer_super_onLivingUpdate()
+interface EntityEvent : ExeCEvent {
+        val entity: Entity
+}

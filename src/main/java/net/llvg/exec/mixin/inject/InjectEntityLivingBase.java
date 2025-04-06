@@ -17,11 +17,15 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.llvg.exec.inject
+package net.llvg.exec.mixin.inject;
 
-import net.minecraft.client.network.NetworkPlayerInfo
+import net.minecraft.potion.PotionEffect;
 
-@Suppress("FunctionName")
-interface AbstractClientPlayerInject {
-        fun exec_getPlayerInfo(): NetworkPlayerInfo?
+import java.util.Map;
+
+@SuppressWarnings("unused")
+public interface InjectEntityLivingBase {
+        Map<Integer, PotionEffect> get_activePotionsMap_exec();
+        
+        void set_activePotionsMap_exec(Map<Integer, PotionEffect> o);
 }

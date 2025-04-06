@@ -17,7 +17,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.llvg.exec.mixin;
+package net.llvg.exec.mixin.mixin;
 
 import net.llvg.exec.features.freecam.FreeCam;
 import net.llvg.exec.utils.MinecraftUtils;

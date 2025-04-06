@@ -17,24 +17,23 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.llvg.exec.mixin;
+package net.llvg.exec.mixin.mixin;
 
-import net.llvg.exec.features.freecam.FreeCam;
-import net.llvg.exec.utils.NullUtils;
+import net.llvg.exec.features.freecam.FreeCamEntity;
+import net.minecraft.client.renderer.culling.ICamera;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.List;
-
-@Mixin (World.class)
-public abstract class MixinWorld implements IBlockAccess {
-        @ModifyVariable (method = "checkNoEntityCollision(Lnet/minecraft/util/AxisAlignedBB;Lnet/minecraft/entity/Entity;)Z", at = @At ("STORE"), index = 3)
-        private List<Entity> checkNoEntityCollisionModifyVariable(List<Entity> list) {
-                NullUtils.onNotNull(FreeCam.getCamera(), it -> list.removeIf(it::isEntityEqual));
-                return list;
+@Mixin (RenderManager.class)
+public abstract class MixinRenderManager {
+        @Inject (method = "shouldRender", at = @At ("HEAD"), cancellable = true)
+        private void shouldRenderInject(Entity entityIn, ICamera camera, double camX, double camY, double camZ, CallbackInfoReturnable<Boolean> cir) {
+                if (entityIn instanceof FreeCamEntity) {
+                        cir.setReturnValue(false);
+                }
         }
 }

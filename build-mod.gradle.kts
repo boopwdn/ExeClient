@@ -60,7 +60,6 @@ loom {
 val shade by configurations.registering
 val modShade by configurations.registering
 
-@Suppress("UnstableApiUsage")
 configurations {
         implementation.extendsFrom(shade)
         modImplementation.extendsFrom(modShade)
@@ -189,7 +188,6 @@ tasks {
                         val attr: MutableMap<String, Any> = HashMap()
                         attr["ModSide"] = "CLIENT"
                         attr["FMLCorePluginContainsFMLMod"] = true
-                        attr["FMLCorePlugin"] = "net.llvg.exec.preload.fml_plugin.ExeCFMLLoadingPlugin"
                         attr["ForceLoadAsMod"] = true
                         attr["TweakClass"] = "net.llvg.exec.preload.vanilla_tweaker.ExeCTweaker"
                         attr["TweakOrder"] = -1
