@@ -37,6 +37,7 @@ import net.minecraft.client.network.NetworkPlayerInfo
 import net.minecraft.entity.Entity
 import net.minecraft.network.Packet
 import net.minecraft.util.MathHelper
+import net.minecraft.util.MovementInput
 
 class FreeCamEntity : EntityPlayerSP(
         mc,
@@ -52,6 +53,8 @@ class FreeCamEntity : EntityPlayerSP(
         player.statFileWriter,
 ) {
         init {
+                movementInput = MovementInput()
+                
                 capabilities.allowFlying = true
                 capabilities.isFlying = true
                 
