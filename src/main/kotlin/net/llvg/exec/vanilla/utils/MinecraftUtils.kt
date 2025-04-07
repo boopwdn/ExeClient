@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Water-OR
+ * Copyright (C) 2025-2025 Water-OR
  *
  * This file is part of ExeClient
  *
@@ -17,23 +17,22 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-@file:JvmName("CallbackNetHandlerPlayClient")
+@file:JvmName("MinecraftUtils")
 
-package net.llvg.exec.mixin.callback
+package net.llvg.exec.vanilla.utils
 
-import net.llvg.exec.vanilla.event.PacketEvent
-import net.llvg.exec.api.event.post
-import net.minecraft.network.play.INetHandlerPlayClient
-import net.minecraft.network.play.server.S43PacketCamera
+import net.minecraft.client.Minecraft
+import net.minecraft.client.entity.EntityPlayerSP
+import net.minecraft.client.multiplayer.WorldClient
 
-fun postPacketEventServerS43Pre(
-        handler: INetHandlerPlayClient,
-        packet: S43PacketCamera
-): Boolean {
-        val event = PacketEvent.Server.S43.Pre.Impl(
-                handler,
-                packet
-        )
-        event.post(wait = true)
-        return event.cancelled
-}
+val mc: Minecraft
+        @JvmName("mc")
+        inline get() = Minecraft.getMinecraft()
+
+val player: EntityPlayerSP
+        @JvmName("player")
+        inline get() = mc.thePlayer
+
+val world: WorldClient
+        @JvmName("world")
+        inline get() = mc.theWorld

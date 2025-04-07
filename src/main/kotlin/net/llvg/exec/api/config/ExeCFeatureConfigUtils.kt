@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Water-OR
+ * Copyright (C) 2025-2025 Water-OR
  *
  * This file is part of ExeClient
  *
@@ -17,23 +17,24 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-@file:JvmName("CallbackNetHandlerPlayClient")
+@file:JvmName("ExeCFeatureConfigUtils")
 
-package net.llvg.exec.mixin.callback
+package net.llvg.exec.api.config
 
-import net.llvg.exec.vanilla.event.PacketEvent
-import net.llvg.exec.api.event.post
-import net.minecraft.network.play.INetHandlerPlayClient
-import net.minecraft.network.play.server.S43PacketCamera
+import cc.polyfrost.oneconfig.config.annotations.SubConfig
 
-fun postPacketEventServerS43Pre(
-        handler: INetHandlerPlayClient,
-        packet: S43PacketCamera
-): Boolean {
-        val event = PacketEvent.Server.S43.Pre.Impl(
-                handler,
-                packet
-        )
-        event.post(wait = true)
-        return event.cancelled
+fun initializeExeCFeatureConfigs(
+        owner: Any
+) {
+        owner
+        .javaClass
+        .declaredFields
+        .filter {
+                it.getAnnotation(SubConfig::class.java) !== null &&
+                ExeCFeatureConfig::class.java.isAssignableFrom(it.type)
+        }
+        .forEach {
+                it.isAccessible = true
+                (it[owner] as? ExeCFeatureConfig<*>)?.initialize()
+        }
 }

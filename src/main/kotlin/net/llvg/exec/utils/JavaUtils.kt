@@ -17,23 +17,15 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-@file:JvmName("CallbackNetHandlerPlayClient")
+@file:JvmName("JavaUtils")
 
-package net.llvg.exec.mixin.callback
+package net.llvg.exec.utils
 
-import net.llvg.exec.vanilla.event.PacketEvent
-import net.llvg.exec.api.event.post
-import net.minecraft.network.play.INetHandlerPlayClient
-import net.minecraft.network.play.server.S43PacketCamera
+import java.util.function.Consumer
 
-fun postPacketEventServerS43Pre(
-        handler: INetHandlerPlayClient,
-        packet: S43PacketCamera
-): Boolean {
-        val event = PacketEvent.Server.S43.Pre.Impl(
-                handler,
-                packet
-        )
-        event.post(wait = true)
-        return event.cancelled
+fun <T> onNotNull(
+        v: T?,
+        action: Consumer<T>
+) {
+        v?.run(action::accept)
 }

@@ -19,7 +19,7 @@
 
 package net.llvg.exec.utils.registry
 
-import net.llvg.exec.event.ExeCEvent
+import net.llvg.exec.api.event.ExeCEvent
 
 interface RegisterEvent<T> : ExeCEvent {
         infix fun register(element: T)

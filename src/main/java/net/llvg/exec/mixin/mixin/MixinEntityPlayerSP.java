@@ -19,9 +19,9 @@
 
 package net.llvg.exec.mixin.mixin;
 
-import net.llvg.exec.features.freecam.FreeCam;
-import net.llvg.exec.utils.MinecraftUtils;
-import net.llvg.exec.utils.NullUtils;
+import net.llvg.exec.impl.feature.freecam.FreeCam;
+import net.llvg.exec.utils.JavaUtils;
+import net.llvg.exec.vanilla.utils.MinecraftUtils;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.entity.EntityPlayerSP;
 import org.spongepowered.asm.mixin.Mixin;
@@ -40,7 +40,7 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer {
         @Inject (method = "swingItem", at = @At ("HEAD"))
         private void swingItemInject(CallbackInfo ci) {
                 if (FreeCam.isEnabled() && isEntityEqual(MinecraftUtils.player())) {
-                        NullUtils.onNotNull(FreeCam.getCamera(), EntityPlayerSP::swingItem);
+                        JavaUtils.onNotNull(FreeCam.getCamera(), EntityPlayerSP::swingItem);
                 }
         }
         

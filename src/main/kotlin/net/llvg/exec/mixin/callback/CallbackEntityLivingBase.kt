@@ -21,8 +21,8 @@
 
 package net.llvg.exec.mixin.callback
 
-import net.llvg.exec.event.events.EntityLivingBaseEvent
-import net.llvg.exec.event.post
+import net.llvg.exec.vanilla.event.EntityLivingBaseEvent
+import net.llvg.exec.api.event.post
 import net.minecraft.entity.EntityLivingBase
 
 fun postUserHealthChangeEvent(

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Water-OR
+ * Copyright (C) 2025-2025 Water-OR
  *
  * This file is part of ExeClient
  *
@@ -17,23 +17,23 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-@file:JvmName("CallbackNetHandlerPlayClient")
+@file:JvmName("ChatComponentUtils")
 
-package net.llvg.exec.mixin.callback
+package net.llvg.exec.vanilla.utils.chat_component
 
-import net.llvg.exec.vanilla.event.PacketEvent
-import net.llvg.exec.api.event.post
-import net.minecraft.network.play.INetHandlerPlayClient
-import net.minecraft.network.play.server.S43PacketCamera
+import net.minecraft.util.ChatStyle
+import net.minecraft.util.IChatComponent
 
-fun postPacketEventServerS43Pre(
-        handler: INetHandlerPlayClient,
-        packet: S43PacketCamera
-): Boolean {
-        val event = PacketEvent.Server.S43.Pre.Impl(
-                handler,
-                packet
-        )
-        event.post(wait = true)
-        return event.cancelled
-}
+@Suppress("UNUSED")
+inline fun buildChatComponent(
+        builder: ChatComponentBuildScope.() -> IChatComponent
+): IChatComponent = ChatComponentBuildScope.builder()
+
+inline fun <C : IChatComponent> C.withChatStyle(
+        chatStyle: ChatStyle,
+        configure: ChatStyle.() -> Unit
+): C = apply { this.chatStyle = chatStyle.apply(configure) }
+
+inline infix fun <C : IChatComponent> C.withChatStyle(
+        configure: ChatStyle.() -> Unit
+): C = withChatStyle(chatStyle, configure)
