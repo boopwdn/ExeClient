@@ -70,7 +70,7 @@ public abstract class MixinMinecraft implements IThreadListener, IPlayerUsage {
         
         @Inject (method = "loadWorld(Lnet/minecraft/client/multiplayer/WorldClient;Ljava/lang/String;)V", at = @At ("HEAD"))
         private void loadWorldInject(WorldClient worldClientIn, String loadingMessage, CallbackInfo ci) {
-                CallbackMinecraft.post$WorldClientEvent$Load$Pre(worldClientIn);
+                CallbackMinecraft.postWorldClientEventLoadPre(worldClientIn);
         }
         
         @Inject (method = "middleClickMouse", at = @At ("HEAD"), cancellable = true)
