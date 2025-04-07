@@ -34,6 +34,7 @@ fun initializeExeCFeatureConfigs(
                 ExeCFeatureConfig::class.java.isAssignableFrom(it.type)
         }
         .forEach {
+                it.isAccessible = true
                 (it[owner] as? ExeCFeatureConfig<*>)?.initialize()
         }
 }
