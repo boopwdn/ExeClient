@@ -121,7 +121,7 @@ object FreeCam : ExeCFeature<FreeCamConfig> {
                 private set
         
         @get:[JvmStatic JvmName("isControllingPlayer")]
-        var controllingPlayer = false
+        var controllingPlayer = true
                 private set
         
         private val toggleControllerLock = Any()
@@ -193,10 +193,10 @@ object FreeCam : ExeCFeature<FreeCamConfig> {
                         val camera = FreeCamEntity()
                         camera.copyLocationAndAnglesFrom(player)
                         
-                        setControlCamera()
-                        
                         world.addEntityToWorld(-114514, camera)
                         this.camera = camera
+                        
+                        setControlCamera()
                         
                         previousView = mc.gameSettings.thirdPersonView
                         mc.gameSettings.thirdPersonView = 0
