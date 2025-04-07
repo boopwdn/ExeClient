@@ -21,32 +21,32 @@ package net.llvg.exec.features.freecam
 
 import kotlinx.coroutines.Dispatchers
 import net.llvg.exec.ExeClient
-import net.llvg.exec.config.ExeFeatureConfig
+import net.llvg.exec.config.ExeCFeatureConfigEvent
+import net.llvg.exec.config.ExeClientConfig
 import net.llvg.exec.config.freecam.FreeCamConfig
 import net.llvg.exec.event.events.EntityLivingBaseEvent
 import net.llvg.exec.event.events.PacketEvent
 import net.llvg.exec.event.events.WorldClientEvent
 import net.llvg.exec.event.onEvent
-import net.llvg.exec.features.ExeFeature
+import net.llvg.exec.features.ExeCFeature
 import net.llvg.exec.mixin.inject.InjectNetHandlerPlayClient
 import net.llvg.exec.utils.chat_component.buildChatComponent
 import net.llvg.exec.utils.mc
 import net.llvg.exec.utils.player
 import net.llvg.exec.utils.world
-import net.llvg.loliutils.exception.asNotNull
 import net.llvg.loliutils.exception.cast
 import net.minecraft.entity.Entity
 import net.minecraft.util.EnumChatFormatting
 import net.minecraft.util.MovementInput
 import net.minecraft.util.MovementInputFromOptions
 
-object FreeCam : ExeFeature {
+object FreeCam : ExeCFeature<FreeCamConfig> {
         init {
                 onEvent(dispatcher = Dispatchers.Default) { e: EntityLivingBaseEvent.HealthChange.Pre ->
                         if (e.entity !== player) return@onEvent
                         
-                        if (FreeCamConfig.disableOnDamage && e.entity.health > e.health) {
-                                if (FreeCamConfig.sendMessage) ExeClient.send {
+                        if (config.disableOnDamage && e.entity.health > e.health) {
+                                if (config.sendMessage) ExeClient.send {
                                         text("You took damage!") {
                                                 color = EnumChatFormatting.YELLOW
                                         }
@@ -57,8 +57,8 @@ object FreeCam : ExeFeature {
                 }
                 
                 onEvent(dispatcher = Dispatchers.Default) { e: PacketEvent.Server.S43.Pre ->
-                        if (FreeCamConfig.disableOnSeverCameraChange) {
-                                if (FreeCamConfig.sendMessage) ExeClient.send {
+                        if (config.disableOnSeverCameraChange) {
+                                if (config.sendMessage) ExeClient.send {
                                         text("Server is trying to change your camera entity!") {
                                                 color = EnumChatFormatting.YELLOW
                                         }
@@ -76,25 +76,39 @@ object FreeCam : ExeFeature {
                 onEvent(dispatcher = Dispatchers.Default) { _: WorldClientEvent.Load.Pre ->
                         disable()
                 }
+                
+                onEvent(dispatcher = Dispatchers.Default) { _: ExeCFeatureConfigEvent.Inactive<FreeCamConfig> ->
+                        disable()
+                }
         }
         
         override fun initialize() {}
         
-        override fun reactive() {}
+        override val config: FreeCamConfig
+                get() = ExeClientConfig.configFreeCamera
         
-        override fun inactive() {
-                disable()
-        }
+        val allowTogglePerspective: Boolean
+                @[JvmStatic JvmName("allowTogglePerspective")]
+                inline get() = config.allowTogglePerspective
         
-        override val config: ExeFeatureConfig
-                get() = FreeCamConfig
+        val allowCameraInteract: Boolean
+                @[JvmStatic JvmName("allowCameraInteract")]
+                inline get() = config.allowCameraInteract
+        
+        val allowPlayerInteract: Boolean
+                @[JvmStatic JvmName("allowPlayerInteract")]
+                inline get() = config.allowPlayerInteract
+        
+        val enableWaterAndLavaOverlay: Boolean
+                @[JvmStatic JvmName("enableWaterAndLavaOverlay")]
+                inline get() = config.enableWaterAndLavaOverlay
         
         @get:[JvmStatic JvmName("isEnabled")]
         var enabled: Boolean = false
                 private set
         
         override val active: Boolean
-                get() = enabled
+                get() = config.active && enabled
         
         @get:JvmStatic
         var camera: FreeCamEntity? = null
@@ -110,133 +124,133 @@ object FreeCam : ExeFeature {
         var controllingPlayer = false
                 private set
         
-        val allowTogglePerspective: Boolean
-                @[JvmStatic JvmName("allowTogglePerspective")]
-                inline get() = FreeCamConfig.allowTogglePerspective
+        private val toggleControllerLock = Any()
         
-        val allowCameraInteract: Boolean
-                @[JvmStatic JvmName("allowCameraInteract")]
-                inline get() = FreeCamConfig.allowCameraInteract
-        
-        val allowPlayerInteract: Boolean
-                @[JvmStatic JvmName("allowPlayerInteract")]
-                inline get() = FreeCamConfig.allowPlayerInteract
-        
-        val enableWaterAndLavaOverlay: Boolean
-                @[JvmStatic JvmName("enableWaterAndLavaOverlay")]
-                inline get() = FreeCamConfig.enableWaterAndLavaOverlay
-        
-        private val toggleLock = Any()
-        
-        @Synchronized
-        fun toggle() {
-                if (!config.active()) return
+        private fun setControlPlayer() {
+                if (controllingPlayer) return
                 
-                if (enabled) {
-                        disable()
-                } else {
-                        enable()
+                synchronized(toggleControllerLock) {
+                        if (controllingPlayer) return
+                        controllingPlayer = true
+                        
+                        val camera = camera ?: return
+                        
+                        camera.movementInput = MovementInput()
+                        player.movementInput = MovementInputFromOptions(mc.gameSettings)
+                }
+        }
+        
+        private fun setControlCamera() {
+                if (!controllingPlayer) return
+                
+                synchronized(toggleControllerLock) {
+                        if (!controllingPlayer) return
+                        controllingPlayer = false
+                        
+                        val camera = camera ?: return
+                        
+                        player.movementInput = MovementInput()
+                        camera.movementInput = FreeCamMovementInput(mc.gameSettings)
                 }
         }
         
         @Synchronized
         fun toggleController() {
-                if (!config.active()) return
                 if (!enabled) return
-                val camera = camera ?: return
-                if (!FreeCamConfig.allowToggleController) return
+                if (!config.allowToggleController) return
                 // lock
-                synchronized(toggleLock) {
-                        if (controllingPlayer) {
-                                player.movementInput = MovementInput()
-                                camera.movementInput = FreeCamMovementInput(mc.gameSettings)
-                                
-                                controllingPlayer = false
-                        } else {
-                                camera.movementInput = MovementInput()
-                                player.movementInput = MovementInputFromOptions(mc.gameSettings)
-                                
-                                controllingPlayer = true
-                        }
+                if (controllingPlayer) {
+                        setControlCamera()
+                } else {
+                        setControlPlayer()
                 }
         }
+        
+        private val toggleLock = Any()
         
         private val MESSAGE_ENABLED = buildChatComponent {
                 empty +
                 text("Free Camera") +
                 space +
-                ExeFeature.MESSAGE_ENABLED
-        }
-        
-        @Synchronized
-        private fun enable() {
-                if (enabled) return
-                // lock
-                synchronized(toggleLock) {
-                        // disable player movement
-                        player.movementInput = MovementInput()
-                        controllingPlayer = false
-                        // create new camera
-                        val newCameraEntity = FreeCamEntity()
-                        newCameraEntity.copyLocationAndAnglesFrom(player)
-                        // put camera to world
-                        newCameraEntity.movementInput = FreeCamMovementInput(mc.gameSettings)
-                        world.addEntityToWorld(-114514, newCameraEntity)
-                        camera = newCameraEntity
-                        // store previous view
-                        previousView = mc.gameSettings.thirdPersonView
-                        mc.gameSettings.thirdPersonView = 0
-                        // store previous entity
-                        previousEntity = mc.renderViewEntity
-                        mc.renderViewEntity = camera
-                        // reload shader
-                        mc.entityRenderer.loadEntityShader(newCameraEntity)
-                        mc.renderGlobal.setDisplayListEntitiesDirty()
-                        // set enabled
-                        enabled = true
-                }
-                // send message
-                if (FreeCamConfig.sendMessage) {
-                        ExeClient.send(MESSAGE_ENABLED)
-                }
+                ExeCFeature.MESSAGE_ENABLED
         }
         
         private val MESSAGE_DISABLED = buildChatComponent {
                 empty +
                 text("Free Camera") +
                 space +
-                ExeFeature.MESSAGE_DISABLED
+                ExeCFeature.MESSAGE_DISABLED
+        }
+        
+        @Synchronized
+        private fun enable() {
+                if (enabled) return
+                
+                synchronized(toggleLock) {
+                        if (enabled) return
+                        enabled = true
+                        
+                        val camera = FreeCamEntity()
+                        camera.copyLocationAndAnglesFrom(player)
+                        
+                        setControlCamera()
+                        
+                        world.addEntityToWorld(-114514, camera)
+                        this.camera = camera
+                        
+                        previousView = mc.gameSettings.thirdPersonView
+                        mc.gameSettings.thirdPersonView = 0
+                        
+                        previousEntity = mc.renderViewEntity
+                        mc.renderViewEntity = camera
+                        
+                        mc.entityRenderer.loadEntityShader(camera)
+                        mc.renderGlobal.setDisplayListEntitiesDirty()
+                }
+                
+                if (config.sendMessage) {
+                        ExeClient.send(MESSAGE_ENABLED)
+                }
         }
         
         @Synchronized
         private fun disable() {
                 if (!enabled) return
-                // lock
+                
                 synchronized(toggleLock) {
-                        // remove camera from world
-                        camera.asNotNull.movementInput = MovementInput()
+                        if (!enabled) return
+                        enabled = false
+                        
+                        setControlPlayer()
+                        
                         world.removeEntity(camera)
                         camera = null
-                        // enable player movement
-                        player.movementInput = MovementInputFromOptions(mc.gameSettings)
-                        controllingPlayer = true
-                        // put previous view
+                        
                         mc.gameSettings.thirdPersonView = previousView
                         previousView = 0
-                        // put previous entity
+                        
                         mc.renderViewEntity = previousEntity
                         previousEntity = null
-                        // reload shader
+                        
                         mc.entityRenderer.loadEntityShader(
-                                if (mc.gameSettings.thirdPersonView == 0) previousEntity else null
+                                if (previousView == 0) previousEntity else null
                         )
                         mc.renderGlobal.setDisplayListEntitiesDirty()
-                        // set disabled
-                        enabled = false
                 }
-                // send message
-                if (FreeCamConfig.sendMessage) {
+                
+                if (config.sendMessage) {
                         ExeClient.send(MESSAGE_DISABLED)
+                }
+        }
+        
+        @Synchronized
+        fun toggle() {
+                if (!config.active) return
+                
+                if (enabled) {
+                        disable()
+                } else {
+                        enable()
                 }
         }
 }

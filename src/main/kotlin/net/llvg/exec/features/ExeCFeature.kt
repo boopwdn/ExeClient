@@ -19,24 +19,19 @@
 
 package net.llvg.exec.features
 
-import net.llvg.exec.config.ExeFeatureConfig
+import net.llvg.exec.config.ExeCFeatureConfig
 import net.llvg.exec.event.ExeCEventListenable
 import net.llvg.exec.utils.chat_component.withChatStyle
 import net.minecraft.util.ChatComponentText
 import net.minecraft.util.EnumChatFormatting
 import net.minecraft.util.IChatComponent
 
-interface ExeFeature : ExeCEventListenable {
+interface ExeCFeature<C : ExeCFeatureConfig<C>> : ExeCEventListenable {
         fun initialize()
         
-        fun reactive()
-        
-        fun inactive()
-        
-        val config: ExeFeatureConfig
+        val config: C
         
         override val active: Boolean
-                get() = config.active()
         
         companion object {
                 val MESSAGE_ENABLED: IChatComponent =

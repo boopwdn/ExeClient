@@ -34,8 +34,8 @@ object ExeClient {
         
         @JvmStatic
         fun initialize() {
-                FeatureManager
                 ExeClientConfig
+                FeatureManager
         }
         
         fun send(

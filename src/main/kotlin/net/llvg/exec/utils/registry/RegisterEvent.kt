@@ -17,17 +17,10 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.llvg.exec.features
+package net.llvg.exec.utils.registry
 
-import net.llvg.exec.features.freecam.FreeCam
-import net.llvg.exec.utils.registry.Registry
+import net.llvg.exec.event.ExeCEvent
 
-object FeatureManager : Registry<ExeCFeature<*>>(
-        FreeCam
-) {
-        init {
-                elements.forEach {
-                        it.initialize()
-                }
-        }
+interface RegisterEvent<T> : ExeCEvent {
+        infix fun register(element: T)
 }

@@ -40,9 +40,6 @@ public abstract class MixinMinecraft implements IThreadListener, IPlayerUsage {
         @Shadow
         public GameSettings gameSettings;
         
-        @Unique
-        private static int exec$gameSettings$thirdPersonView$storage;
-        
         @Inject (method = "clickMouse", at = @At ("HEAD"), cancellable = true)
         private void clickMouseInject(CallbackInfo ci) {
                 if (FreeCam.isEnabled()) {
@@ -64,16 +61,10 @@ public abstract class MixinMinecraft implements IThreadListener, IPlayerUsage {
                 }
         }
         
-        @SuppressWarnings ("DiscouragedShift")
-        @Inject (method = "runTick", at = @At (value = "FIELD", target = "Lnet/minecraft/client/settings/GameSettings;thirdPersonView:I", opcode = Opcodes.GETFIELD, ordinal = 0, shift = At.Shift.BEFORE))
-        private void runTickInject(CallbackInfo ci) {
-                exec$gameSettings$thirdPersonView$storage = gameSettings.thirdPersonView;
-        }
-        
         @Inject (method = "runTick", at = @At (value = "FIELD", target = "Lnet/minecraft/client/settings/GameSettings;thirdPersonView:I", opcode = Opcodes.PUTFIELD, ordinal = 0, shift = At.Shift.AFTER))
-        private void runTickInject1(CallbackInfo ci) {
+        private void runTickInject(CallbackInfo ci) {
                 if (FreeCam.isEnabled() && !FreeCam.allowTogglePerspective()) {
-                        gameSettings.thirdPersonView = exec$gameSettings$thirdPersonView$storage;
+                        gameSettings.thirdPersonView = 0;
                 }
         }
         
