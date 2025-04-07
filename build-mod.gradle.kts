@@ -60,6 +60,7 @@ loom {
 val shade by configurations.registering
 val modShade by configurations.registering
 
+@Suppress("UnstableApiUsage")
 configurations {
         implementation.extendsFrom(shade)
         modImplementation.extendsFrom(modShade)
@@ -155,7 +156,7 @@ kotlin {
                 
                 val args = listOf(
                         "-Xjvm-default=all",
-                        "-Xcontext-recievers"
+                        "-Xcontext-receivers"
                 )
                 freeCompilerArgs.addAll(args)
         }
