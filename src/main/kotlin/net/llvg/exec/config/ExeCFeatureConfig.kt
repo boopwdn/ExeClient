@@ -47,6 +47,7 @@ abstract class ExeCFeatureConfig<C : ExeCFeatureConfig<C>>(
         
         override fun initialize() {
                 super.initialize()
+                active = active()
                 
                 initializeExeCFeatureConfigs(this)
         }
