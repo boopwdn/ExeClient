@@ -17,23 +17,17 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-@file:JvmName("CallbackNetHandlerPlayClient")
+package net.llvg.exec.api.feature
 
-package net.llvg.exec.mixin.callback
+import net.llvg.exec.impl.feature.freecam.FreeCam
+import net.llvg.exec.utils.registry.Registry
 
-import net.llvg.exec.vanilla.event.PacketEvent
-import net.llvg.exec.api.event.post
-import net.minecraft.network.play.INetHandlerPlayClient
-import net.minecraft.network.play.server.S43PacketCamera
-
-fun postPacketEventServerS43Pre(
-        handler: INetHandlerPlayClient,
-        packet: S43PacketCamera
-): Boolean {
-        val event = PacketEvent.Server.S43.Pre.Impl(
-                handler,
-                packet
-        )
-        event.post(wait = true)
-        return event.cancelled
+object FeatureManager : Registry<ExeCFeature<*>>(
+        FreeCam
+) {
+        init {
+                elements.forEach {
+                        it.initialize()
+                }
+        }
 }

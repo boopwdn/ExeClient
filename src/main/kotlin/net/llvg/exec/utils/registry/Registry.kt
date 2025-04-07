@@ -21,7 +21,7 @@ package net.llvg.exec.utils.registry
 
 import com.google.common.collect.ImmutableList
 import java.util.LinkedList
-import net.llvg.exec.event.post
+import net.llvg.exec.api.event.post
 
 abstract class Registry<T>(
         vararg initial: T

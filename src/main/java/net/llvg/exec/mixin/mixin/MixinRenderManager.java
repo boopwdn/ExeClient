@@ -19,7 +19,7 @@
 
 package net.llvg.exec.mixin.mixin;
 
-import net.llvg.exec.features.freecam.FreeCamEntity;
+import net.llvg.exec.impl.feature.freecam.FreeCamEntity;
 import net.minecraft.client.renderer.culling.ICamera;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;

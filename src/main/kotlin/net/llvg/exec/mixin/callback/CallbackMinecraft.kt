@@ -21,8 +21,8 @@
 
 package net.llvg.exec.mixin.callback
 
-import net.llvg.exec.event.events.WorldClientEvent
-import net.llvg.exec.event.post
+import net.llvg.exec.vanilla.event.WorldClientEvent
+import net.llvg.exec.api.event.post
 import net.minecraft.client.multiplayer.WorldClient
 
 fun postWorldClientEventLoadPre(

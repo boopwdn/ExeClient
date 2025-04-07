@@ -19,9 +19,9 @@
 
 package net.llvg.exec.mixin.mixin;
 
-import net.llvg.exec.features.freecam.FreeCam;
-import net.llvg.exec.utils.MinecraftUtils;
-import net.llvg.exec.utils.NullUtils;
+import net.llvg.exec.impl.feature.freecam.FreeCam;
+import net.llvg.exec.utils.JavaUtils;
+import net.llvg.exec.vanilla.utils.MinecraftUtils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
@@ -40,7 +40,7 @@ public abstract class MixinEntity implements ICommandSender, ICapabilitySerializ
         @Inject (method = "setAngles", at = @At ("HEAD"), cancellable = true)
         private void setAnglesInject(float yaw, float pitch, CallbackInfo ci) {
                 if (FreeCam.isEnabled() && isEntityEqual(MinecraftUtils.player()) && !FreeCam.isControllingPlayer()) {
-                        NullUtils.onNotNull(FreeCam.getCamera(), it -> it.setAngles(yaw, pitch));
+                        JavaUtils.onNotNull(FreeCam.getCamera(), it -> it.setAngles(yaw, pitch));
                         ci.cancel();
                 }
         }
