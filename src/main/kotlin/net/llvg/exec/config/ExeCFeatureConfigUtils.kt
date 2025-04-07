@@ -31,7 +31,7 @@ fun initializeExeCFeatureConfigs(
         .declaredFields
         .filter {
                 it.getAnnotation(SubConfig::class.java) !== null &&
-                it.type.isAssignableFrom(ExeCFeatureConfig::class.java)
+                ExeCFeatureConfig::class.java.isAssignableFrom(it.type)
         }
         .forEach {
                 (it[owner] as? ExeCFeatureConfig<*>)?.initialize()
