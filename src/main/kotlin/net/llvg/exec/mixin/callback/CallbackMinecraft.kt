@@ -26,7 +26,7 @@ import net.llvg.exec.event.post
 import net.minecraft.client.multiplayer.WorldClient
 
 fun `post$WorldClientEvent$Load$Pre`(
-        worldClient: WorldClient
+        worldClient: WorldClient?
 ) {
         val event = WorldClientEvent.Load.Pre.Impl(
                 worldClient

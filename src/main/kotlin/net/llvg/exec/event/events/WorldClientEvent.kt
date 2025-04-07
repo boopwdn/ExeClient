@@ -23,12 +23,12 @@ import net.llvg.exec.event.ExeCEvent
 import net.minecraft.client.multiplayer.WorldClient
 
 interface WorldClientEvent : ExeCEvent {
-        val worldClient: WorldClient
+        val worldClient: WorldClient?
         
         interface Load : WorldClientEvent {
                 interface Pre : Load {
                         data class Impl(
-                                override val worldClient: WorldClient
+                                override val worldClient: WorldClient?
                         ) : Pre
                 }
         }
