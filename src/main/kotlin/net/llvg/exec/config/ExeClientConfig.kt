@@ -26,21 +26,26 @@ import cc.polyfrost.oneconfig.config.data.ModType
 import net.llvg.exec.config.freecam.FreeCamConfig
 import net.llvg.exec.utils.classNameLogger
 
-object ExeClientConfig : Config(Mod("Exe Client", ModType.SKYBLOCK), "exec-config.json", false) {
+object ExeClientConfig : Config(
+        Mod(
+                "Exe Client",
+                ModType.SKYBLOCK
+        ),
+        "exec-config.json",
+        false
+) {
         @Transient
-        val logger = classNameLogger<ExeClientConfig>()
+        private val logger = classNameLogger<ExeClientConfig>()
         
         @SubConfig
-        @Suppress("UNUSED")
-        val configFreeCamera = FreeCamConfig
+        val configFreeCamera =
+                FreeCamConfig
         
         init {
                 logger.info("Begin initializing config")
                 initialize()
-                
-                ExeClientConfig::class.java.declaredFields.forEach {
-                        (it.get(this) as? ExeFeatureConfig)?.initialize()
-                }
+
+                initializeExeCFeatureConfigs(this)
                 
                 logger.info("Finish initializing config")
         }

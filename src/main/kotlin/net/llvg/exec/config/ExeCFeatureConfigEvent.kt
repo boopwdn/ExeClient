@@ -17,17 +17,22 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.llvg.exec.features
+package net.llvg.exec.config
 
-import net.llvg.exec.features.freecam.FreeCam
-import net.llvg.exec.utils.registry.Registry
+import net.llvg.exec.event.ExeCEvent
 
-object FeatureManager : Registry<ExeCFeature<*>>(
-        FreeCam
-) {
-        init {
-                elements.forEach {
-                        it.initialize()
-                }
+interface ExeCFeatureConfigEvent<C : ExeCFeatureConfig<C>> : ExeCEvent {
+        val config: C
+        
+        interface Reactive<C : ExeCFeatureConfig<C>> : ExeCFeatureConfigEvent<C> {
+                open class Impl<C : ExeCFeatureConfig<C>>(
+                        override val config: C
+                ) : Reactive<C>
+        }
+        
+        interface Inactive<C : ExeCFeatureConfig<C>> : ExeCFeatureConfigEvent<C> {
+                open class Impl<C : ExeCFeatureConfig<C>>(
+                        override val config: C
+                ) : Inactive<C>
         }
 }

@@ -17,17 +17,24 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.llvg.exec.features
+@file:JvmName("ExeCFeatureConfigUtils")
 
-import net.llvg.exec.features.freecam.FreeCam
-import net.llvg.exec.utils.registry.Registry
+package net.llvg.exec.config
 
-object FeatureManager : Registry<ExeCFeature<*>>(
-        FreeCam
+import cc.polyfrost.oneconfig.config.annotations.SubConfig
+
+fun initializeExeCFeatureConfigs(
+        owner: Any
 ) {
-        init {
-                elements.forEach {
-                        it.initialize()
-                }
+        owner
+        .javaClass
+        .declaredFields
+        .filter {
+                it.getAnnotation(SubConfig::class.java) !== null &&
+                ExeCFeatureConfig::class.java.isAssignableFrom(it.type)
+        }
+        .forEach {
+                it.isAccessible = true
+                (it[owner] as? ExeCFeatureConfig<*>)?.initialize()
         }
 }

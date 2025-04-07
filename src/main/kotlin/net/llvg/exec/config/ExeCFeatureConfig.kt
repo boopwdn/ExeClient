@@ -20,11 +20,9 @@
 package net.llvg.exec.config
 
 import cc.polyfrost.oneconfig.config.elements.SubConfig
-import net.llvg.exec.features.ExeFeature
+import net.llvg.exec.event.post
 
-abstract class ExeFeatureConfig(
-        @Transient private val isOwnerActive: () -> Boolean,
-        @Transient private val feature: ExeFeature,
+abstract class ExeCFeatureConfig<C : ExeCFeatureConfig<C>>(
         name: String,
         configFile: String,
         icon: String? = null,
@@ -37,27 +35,34 @@ abstract class ExeFeatureConfig(
         enabled,
         canToggle
 ) {
-        @Transient
-        private var active = isOwnerActive() && enabled
+        protected abstract val self: C
         
-        fun active(
-        ): Boolean = active
+        protected open fun active(
+        ): Boolean = enabled
+        
+        @Transient
+        @get:JvmName("isActive")
+        var active = false
+                private set
         
         override fun initialize() {
                 super.initialize()
-                feature.initialize()
+                active = active()
+                
+                initializeExeCFeatureConfigs(this)
         }
         
         override fun save() {
                 super.save()
-                val wasActive = active
-                active = isOwnerActive() && enabled
-                if (wasActive != active) with(feature) {
-                        if (active) {
-                                reactive()
+                val active = active()
+                if (active != this.active) {
+                        this.active = active
+                        val event = if (active) {
+                                ExeCFeatureConfigEvent.Reactive.Impl(self)
                         } else {
-                                inactive()
+                                ExeCFeatureConfigEvent.Inactive.Impl(self)
                         }
+                        event.post(wait = false)
                 }
         }
 }

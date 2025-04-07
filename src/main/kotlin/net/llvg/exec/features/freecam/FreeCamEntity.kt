@@ -22,7 +22,6 @@ package net.llvg.exec.features.freecam
 import com.mojang.authlib.GameProfile
 import java.util.UUID
 import kotlin.math.abs
-import net.llvg.exec.config.freecam.FreeCamConfig
 import net.llvg.exec.mixin.inject.InjectAbstractClientPlayer
 import net.llvg.exec.mixin.inject.InjectEntityLivingBase
 import net.llvg.exec.mixin.inject.InjectEntityPlayer
@@ -38,9 +37,9 @@ import net.minecraft.client.network.NetworkPlayerInfo
 import net.minecraft.entity.Entity
 import net.minecraft.network.Packet
 import net.minecraft.util.MathHelper
+import net.minecraft.util.MovementInput
 
-class FreeCamEntity(
-) : EntityPlayerSP(
+class FreeCamEntity : EntityPlayerSP(
         mc,
         world,
         object : NetHandlerPlayClient(
@@ -54,6 +53,8 @@ class FreeCamEntity(
         player.statFileWriter,
 ) {
         init {
+                movementInput = MovementInput()
+                
                 capabilities.allowFlying = true
                 capabilities.isFlying = true
                 
@@ -131,11 +132,11 @@ class FreeCamEntity(
                         motionY -= 1
                 }
                 
-                motionY *= FreeCamConfig.run {
+                motionY *= FreeCam.config.run {
                         if (sprint) vSprintSpeed else vSpeed
                 }
                 
-                val hSpeed = FreeCamConfig.run {
+                val hSpeed = FreeCam.config.run {
                         if (sprint) hSprintSpeed else hSpeed
                 }
                 val faceDirSpeed = hSpeed * movementInput.moveForward
