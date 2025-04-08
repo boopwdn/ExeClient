@@ -32,36 +32,9 @@ object ChatComponentBuildScope {
                 configure: ChatStyle.() -> Unit
         ): IChatComponent = empty withChatStyle configure
         
-        val space: IChatComponent
-                get() = ChatComponentText(" ")
-        
-        @Suppress("UNUSED")
-        fun ChatComponentBuildScope.space(
-                configure: ChatStyle.() -> Unit
-        ): IChatComponent = space withChatStyle configure
-        
-        val endl: IChatComponent
-                get() = ChatComponentText("\n")
-        
-        @Suppress("UNUSED")
-        fun ChatComponentBuildScope.endl(
-                configure: ChatStyle.() -> Unit
-        ): IChatComponent = endl withChatStyle configure
-        
-        fun text(
-                text: String
-        ): IChatComponent = ChatComponentText(text)
-        
-        @Suppress("UNUSED")
-        fun ChatComponentBuildScope.text(
-                text: String,
-                configure: ChatStyle.() -> Unit
-        ): IChatComponent = text(text) withChatStyle configure
-        
-        @Suppress("UNUSED", "UnusedReceiverParameter")
-        fun ChatComponentBuildScope.combine(
-                builder: () -> IChatComponent
-        ): IChatComponent = builder()
+        infix operator fun <C : IChatComponent> C.plus(
+                o: String
+        ): C = apply { appendSibling(ChatComponentText(o)) }
         
         infix operator fun <C : IChatComponent> C.plus(
                 o: IChatComponent
@@ -70,4 +43,12 @@ object ChatComponentBuildScope {
         inline infix operator fun <C : IChatComponent> C.plus(
                 configure: (C) -> Unit
         ): C = apply(configure)
+        
+        inline infix operator fun <C : IChatComponent> C.times(
+                configure: ChatStyle.() -> Unit
+        ): C = withChatStyle(configure)
+        
+        inline infix operator fun String.invoke(
+                configure: ChatStyle.() -> Unit
+        ): IChatComponent = ChatComponentText(this) withChatStyle configure
 }

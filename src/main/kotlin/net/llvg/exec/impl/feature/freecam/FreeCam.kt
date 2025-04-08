@@ -23,14 +23,14 @@ import kotlinx.coroutines.Dispatchers
 import net.llvg.exec.ExeClient
 import net.llvg.exec.api.config.ExeCFeatureConfigEvent
 import net.llvg.exec.api.config.ExeClientConfig
+import net.llvg.exec.api.event.onEvent
+import net.llvg.exec.api.feature.ExeCFeature
 import net.llvg.exec.impl.config.freecam.FreeCamConfig
+import net.llvg.exec.mixin.inject.InjectNetHandlerPlayClient
 import net.llvg.exec.vanilla.event.EntityLivingBaseEvent
 import net.llvg.exec.vanilla.event.PacketEvent
 import net.llvg.exec.vanilla.event.WorldClientEvent
-import net.llvg.exec.api.event.onEvent
-import net.llvg.exec.api.feature.ExeCFeature
-import net.llvg.exec.mixin.inject.InjectNetHandlerPlayClient
-import net.llvg.exec.vanilla.utils.chat_component.buildChatComponent
+import net.llvg.exec.vanilla.utils.chat_component.buildChat
 import net.llvg.exec.vanilla.utils.mc
 import net.llvg.exec.vanilla.utils.player
 import net.llvg.exec.vanilla.utils.world
@@ -47,7 +47,7 @@ object FreeCam : ExeCFeature<FreeCamConfig> {
                         
                         if (config.disableOnDamage && e.entity.health > e.health) {
                                 if (config.sendMessage) ExeClient.send {
-                                        text("You took damage!") {
+                                        "You took damage!" {
                                                 color = EnumChatFormatting.YELLOW
                                         }
                                 }
@@ -59,7 +59,7 @@ object FreeCam : ExeCFeature<FreeCamConfig> {
                 onEvent(dispatcher = Dispatchers.Default) { e: PacketEvent.Server.S43.Pre ->
                         if (config.disableOnSeverCameraChange) {
                                 if (config.sendMessage) ExeClient.send {
-                                        text("Server is trying to change your camera entity!") {
+                                        "Server is trying to change your camera entity!" {
                                                 color = EnumChatFormatting.YELLOW
                                         }
                                 }
@@ -168,17 +168,15 @@ object FreeCam : ExeCFeature<FreeCamConfig> {
         
         private val toggleLock = Any()
         
-        private val MESSAGE_ENABLED = buildChatComponent {
+        private val MESSAGE_ENABLED = buildChat {
                 empty +
-                text("Free Camera") +
-                space +
+                "Free Camera " +
                 ExeCFeature.MESSAGE_ENABLED
         }
         
-        private val MESSAGE_DISABLED = buildChatComponent {
+        private val MESSAGE_DISABLED = buildChat {
                 empty +
-                text("Free Camera") +
-                space +
+                "Free Camera " +
                 ExeCFeature.MESSAGE_DISABLED
         }
         

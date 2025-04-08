@@ -25,7 +25,7 @@ import net.minecraft.util.ChatStyle
 import net.minecraft.util.IChatComponent
 
 @Suppress("UNUSED")
-inline fun buildChatComponent(
+inline fun buildChat(
         builder: ChatComponentBuildScope.() -> IChatComponent
 ): IChatComponent = ChatComponentBuildScope.builder()
 
