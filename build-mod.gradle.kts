@@ -90,6 +90,9 @@ repositories {
         }
         maven("https://repo.polyfrost.org/releases") {
                 name = "Polyfrost Maven"
+                content {
+                        excludeGroup("com\\.github\\.(.)+")
+                }
         }
         maven("https://cursemaven.com") {
                 name = "Curse Maven"
