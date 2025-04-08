@@ -44,10 +44,6 @@ object ChatComponentBuildScope {
                 configure: (C) -> Unit
         ): C = apply(configure)
         
-        inline infix operator fun <C : IChatComponent> C.times(
-                configure: ChatStyle.() -> Unit
-        ): C = withChatStyle(configure)
-        
         inline infix operator fun String.invoke(
                 configure: ChatStyle.() -> Unit
         ): IChatComponent = ChatComponentText(this) withChatStyle configure
