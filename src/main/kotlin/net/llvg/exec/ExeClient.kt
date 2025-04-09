@@ -19,6 +19,7 @@
 
 package net.llvg.exec
 
+import net.llvg.exec.api.command.ExeCCommandManager
 import net.llvg.exec.api.config.ExeClientConfig
 import net.llvg.exec.api.feature.FeatureManager
 import net.llvg.exec.utils.classNameLogger
@@ -36,6 +37,7 @@ object ExeClient {
         fun initialize() {
                 FeatureManager
                 ExeClientConfig
+                ExeCCommandManager
         }
         
         fun send(
