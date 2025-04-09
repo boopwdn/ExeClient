@@ -21,7 +21,7 @@ package net.llvg.exec
 
 import net.llvg.exec.api.command.ExeCCommandManager
 import net.llvg.exec.api.config.ExeClientConfig
-import net.llvg.exec.api.feature.FeatureManager
+import net.llvg.exec.api.feature.ExeCFeatureManager
 import net.llvg.exec.utils.classNameLogger
 import net.llvg.exec.vanilla.utils.chat_component.ChatComponentBuildScope
 import net.llvg.exec.vanilla.utils.chat_component.buildChat
@@ -35,7 +35,7 @@ object ExeClient {
         
         @JvmStatic
         fun initialize() {
-                FeatureManager
+                ExeCFeatureManager
                 ExeClientConfig
                 ExeCCommandManager
         }
