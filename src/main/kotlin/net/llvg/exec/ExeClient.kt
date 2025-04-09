@@ -35,8 +35,8 @@ object ExeClient {
         
         @JvmStatic
         fun initialize() {
-                ExeCFeatureManager
                 ExeClientConfig
+                ExeCFeatureManager
                 ExeCCommandManager
         }
         

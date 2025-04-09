@@ -132,13 +132,11 @@ object FreeCamConfig : ExeCFeatureConfig<FreeCamConfig>(
         
         override fun initialize() {
                 super.initialize()
-                registerKeyBind(
-                        keyToggle,
-                        FreeCam::toggle
-                )
-                registerKeyBind(
-                        keyToggleController,
-                        FreeCam::toggleController
-                )
+                registerKeyBind(keyToggle) {
+                        FreeCam.toggle()
+                }
+                registerKeyBind(keyToggleController) {
+                        FreeCam.toggleController()
+                }
         }
 }
