@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025-2025 Water-OR
+ * Copyright (C) 2025 Water-OR
  *
  * This file is part of ExeClient
  *
@@ -17,7 +17,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.llvg.exec.impl.config.freecam
+package net.llvg.exec.feature.freecam
 
 import cc.polyfrost.oneconfig.config.annotations.Checkbox
 import cc.polyfrost.oneconfig.config.annotations.KeyBind
@@ -25,7 +25,6 @@ import cc.polyfrost.oneconfig.config.annotations.Number
 import cc.polyfrost.oneconfig.config.core.OneKeyBind
 import net.llvg.exec.api.config.ExeCFeatureConfig
 import net.llvg.exec.api.config.ExeClientConfig
-import net.llvg.exec.impl.feature.freecam.FreeCam
 
 object FreeCamConfig : ExeCFeatureConfig<FreeCamConfig>(
         "Free Camera",

@@ -17,7 +17,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.llvg.exec.impl.feature.freecam
+package net.llvg.exec.feature.freecam
 
 import com.mojang.authlib.GameProfile
 import java.util.UUID

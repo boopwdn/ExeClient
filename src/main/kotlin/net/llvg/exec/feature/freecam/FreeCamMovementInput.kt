@@ -17,7 +17,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.llvg.exec.impl.feature.freecam
+package net.llvg.exec.feature.freecam
 
 import net.minecraft.client.settings.GameSettings
 import net.minecraft.util.MovementInput
