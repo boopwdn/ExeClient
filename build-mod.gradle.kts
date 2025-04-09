@@ -60,6 +60,7 @@ loom {
 val shade by configurations.registering
 val modShade by configurations.registering
 
+@Suppress("UnstableApiUsage")
 configurations {
         implementation.extendsFrom(shade)
         modImplementation.extendsFrom(modShade)
@@ -89,6 +90,9 @@ repositories {
         }
         maven("https://repo.polyfrost.org/releases") {
                 name = "Polyfrost Maven"
+                content {
+                        excludeGroup("com\\.github\\.(.)+")
+                }
         }
         maven("https://cursemaven.com") {
                 name = "Curse Maven"
@@ -128,7 +132,7 @@ dependencies {
         runtimeOnly("com.github.boopwdn:EnchAddons:main-SNAPSHOT:dev") {
                 isChanging = true
         }
-        shade("com.github.Water-OR:llvg-utils:1.3")
+        shade("com.github.Water-OR:llvg-utils:1.5.1")
         
         if (platform.isLegacyForge) {
                 compileOnly("org.spongepowered:mixin:0.7.11-SNAPSHOT")
@@ -155,7 +159,7 @@ kotlin {
                 
                 val args = listOf(
                         "-Xjvm-default=all",
-                        "-Xcontext-recievers"
+                        "-Xcontext-receivers"
                 )
                 freeCompilerArgs.addAll(args)
         }

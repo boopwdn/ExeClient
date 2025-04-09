@@ -17,23 +17,19 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-@file:JvmName("ChatComponentUtils")
+package net.llvg.exec.api.command
 
-package net.llvg.exec.vanilla.utils.chat_component
-
-import net.minecraft.util.ChatStyle
 import net.minecraft.util.IChatComponent
 
-@Suppress("UNUSED")
-inline fun buildChat(
-        builder: ChatComponentBuildScope.() -> IChatComponent
-): IChatComponent = ChatComponentBuildScope.builder()
-
-inline fun <C : IChatComponent> C.withChatStyle(
-        chatStyle: ChatStyle,
-        configure: ChatStyle.() -> Unit
-): C = apply { this.chatStyle = chatStyle.apply(configure) }
-
-inline infix fun <C : IChatComponent> C.withChatStyle(
-        configure: ChatStyle.() -> Unit
-): C = withChatStyle(chatStyle, configure)
+interface ExeCCommand {
+        val name: String
+        
+        val usage: IChatComponent
+        
+        fun process(args: Array<String>)
+        
+        fun completeTab(args: Array<String>): List<String>
+        
+        companion object : Comparator<ExeCCommand> by
+                           Comparator.comparing(ExeCCommand::name)
+}

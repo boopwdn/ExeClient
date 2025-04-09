@@ -19,11 +19,12 @@
 
 package net.llvg.exec
 
+import net.llvg.exec.api.command.ExeCCommandManager
 import net.llvg.exec.api.config.ExeClientConfig
 import net.llvg.exec.api.feature.FeatureManager
-import net.llvg.exec.vanilla.utils.chat_component.ChatComponentBuildScope
-import net.llvg.exec.vanilla.utils.chat_component.buildChatComponent
 import net.llvg.exec.utils.classNameLogger
+import net.llvg.exec.vanilla.utils.chat_component.ChatComponentBuildScope
+import net.llvg.exec.vanilla.utils.chat_component.buildChat
 import net.llvg.exec.vanilla.utils.player
 import net.minecraft.util.EnumChatFormatting
 import net.minecraft.util.IChatComponent
@@ -36,25 +37,26 @@ object ExeClient {
         fun initialize() {
                 FeatureManager
                 ExeClientConfig
+                ExeCCommandManager
         }
         
         fun send(
                 message: IChatComponent
         ) {
-                buildChatComponent {
+                buildChat {
                         empty +
-                        combine {
+                        buildChat {
                                 empty {
                                         bold = true
                                         color = EnumChatFormatting.WHITE
                                 } +
-                                text("[") +
-                                text("Exe Client") {
+                                "[" +
+                                "Exe Client" {
                                         color = EnumChatFormatting.AQUA
                                 } +
-                                text("]")
+                                "]"
                         } +
-                        space +
+                        " " +
                         message
                 }.run(player::addChatMessage)
         }
