@@ -41,11 +41,15 @@ inline fun <reified E : ExeCEvent> ExeCEventListenable.onEvent(
                 priority,
                 dispatcher
         ) {
-                action(it.cast())
+                action(cast(it))
         }
 )
 
 @Suppress("UNUSED")
 inline fun <reified E : ExeCEvent> E.post(
         wait: Boolean
-): Unit = ExeCEventManager.post(E::class.java, this, wait)
+): Unit = ExeCEventManager.post(
+        E::class.java,
+        this,
+        wait
+)

@@ -30,35 +30,33 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import net.llvg.loliutils.exception.ValueWrapper
 import org.apache.logging.log4j.LogManager
+
+private typealias EventType = Class<out ExeCEvent>
+private typealias ListenerSet = MutableSet<ExeCEventListener<*>>
 
 object ExeCEventManager : CoroutineScope by CoroutineScope(SupervisorJob()) {
         private val logger = LogManager.getLogger(ExeCEventManager::class.java.simpleName)
         
-        private val normalStorage: MutableMap<Class<out ExeCEvent>, MutableSet<ExeCEventListener<out ExeCEvent>>> =
-                HashMap()
+        private val normalStorage: MutableMap<EventType, ListenerSet> = HashMap()
+        private val forcedStorage: MutableMap<EventType, ListenerSet> = HashMap()
         
-        private val forcedStorage: MutableMap<Class<out ExeCEvent>, MutableSet<ExeCEventListener<out ExeCEvent>>> =
-                HashMap()
+        private val cachedStorages: MutableMap<EventType, List<ListenerSet>> = HashMap()
         
-        private val cachedStorages: MutableMap<Class<out ExeCEvent>, List<MutableSet<ExeCEventListener<out ExeCEvent>>>> =
-                HashMap()
-        
-        private fun <E : ExeCEvent> MutableMap<Class<out ExeCEvent>, MutableSet<ExeCEventListener<out ExeCEvent>>>.getSafe(
-                key: Class<E>
-        ): MutableSet<ExeCEventListener<out ExeCEvent>> = synchronized(this) {
-                getOrPut(key) { TreeSet() }
+        private operator fun MutableMap<EventType, ListenerSet>.invoke(
+                key: EventType
+        ): ListenerSet = synchronized(this) {
+                getOrPut(key, ::TreeSet)
         }
         
         @JvmStatic
-        fun <E : ExeCEvent> register(
-                type: Class<E>,
+        fun register(
+                type: EventType,
                 forced: Boolean,
-                listener: ExeCEventListener<E>
+                listener: ExeCEventListener<*>
         ) {
                 val storage = if (forced) forcedStorage else normalStorage
-                val listeners = storage.getSafe(type)
+                val listeners = storage(type)
                 
                 synchronized(listeners) {
                         listeners.add(listener)
@@ -67,61 +65,58 @@ object ExeCEventManager : CoroutineScope by CoroutineScope(SupervisorJob()) {
         
         @OptIn(ExperimentalCoroutinesApi::class)
         @JvmStatic
-        fun <E : ExeCEvent> post(
-                type: Class<E>,
+        fun post(
+                type: EventType,
                 event: ExeCEvent,
                 wait: Boolean
         ) {
                 if (!type.isInstance(event)) {
                         val exception = IllegalArgumentException(
-                                "event $event(loader=" + event.javaClass.classLoader + ") is not in type $type(loader=" + type.classLoader + ")"
+                                "event $event(loader=${event.javaClass.classLoader}) is not in type $type(loader=${type.classLoader})"
                         )
                         logger.error(exception)
                         throw exception
                 }
                 
                 val jobs: MutableList<Job> = LinkedList()
-                val wrappedEvent = ValueWrapper(event)
                 
-                val cachedStorage = cachedStorages.getOrPut(type) {
-                        val builder = ImmutableList.builder<MutableSet<ExeCEventListener<out ExeCEvent>>>()
-                        builder.add(synchronized(forcedStorage) {
-                                forcedStorage.getSafe(type)
-                        })
-                        var clazz: Class<out ExeCEvent>? = type
-                        while (clazz != null) {
-                                builder.add(synchronized(normalStorage) {
-                                        normalStorage.getSafe(clazz)
-                                })
-                                clazz = clazz.superclass as? Class<out ExeCEvent>
+                val cache = cachedStorages.getOrPut(type) {
+                        ImmutableList
+                        .builder<ListenerSet>()
+                        .apply {
+                                add(forcedStorage(type))
+                                var clazz: EventType? = type
+                                while (clazz !== null) {
+                                        add(normalStorage(clazz))
+                                        @Suppress("UNCHECKED_CAST")
+                                        clazz = clazz.superclass as? EventType
+                                }
                         }
-                        
-                        builder.build()
+                        .build()
                 }
                 
-                val methodTread = Dispatchers.Default.limitedParallelism(1)
+                val methodThread = Dispatchers.Default.limitedParallelism(1)
                 
-                val collect = collector@{ listener: ExeCEventListener<out ExeCEvent> ->
-                        with(listener) {
-                                if (!active) return@collector
-                                if (dispatcher === Dispatchers.Unconfined)
-                                        jobs.add(launch(methodTread) {
-                                                action(wrappedEvent)
-                                        })
-                                else
-                                        jobs.add(launch(dispatcher) {
-                                                action(wrappedEvent)
-                                        })
-                        }
+                val collect = fun ExeCEventListener<*>.() {
+                        if (!active) return
+                        launch(
+                                if (dispatcher === Dispatchers.Unconfined) {
+                                        methodThread
+                                } else {
+                                        dispatcher
+                                }
+                        ) {
+                                action(event)
+                        }.let(jobs::add)
                 }
                 
-                cachedStorage.forEach {
+                cache.forEach {
                         synchronized(it) {
                                 it.forEach(collect)
                         }
                 }
                 
-                if (wait) runBlocking(methodTread) {
+                if (wait) runBlocking(methodThread) {
                         jobs.joinAll()
                 }
         }

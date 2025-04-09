@@ -21,27 +21,27 @@ package net.llvg.exec.api.event
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import net.llvg.loliutils.exception.ValueWrapper
 
 class ExeCEventListener<E : ExeCEvent>(
-        val owner: ExeCEventListenable,
-        val always: Boolean,
-        val priority: Int,
+        private val owner: ExeCEventListenable,
+        private val always: Boolean,
+        private val priority: Int,
         val dispatcher: CoroutineDispatcher,
-        val action: suspend CoroutineScope.(ValueWrapper<ExeCEvent>) -> Unit
+        val action: suspend CoroutineScope.(ExeCEvent) -> Unit
 ) : Comparable<ExeCEventListener<E>> {
         val active: Boolean
                 get() = always || owner.active
         
-        val order = Companion.order++
+        private val order = Companion.order++
         
         override fun compareTo(
                 other: ExeCEventListener<E>
         ): Int = ExeCEventListener.compare(this, other)
         
-        companion object : Comparator<ExeCEventListener<*>> by Comparator
-        .comparingInt(ExeCEventListener<*>::priority)
-        .thenComparingInt(ExeCEventListener<*>::order) {
+        companion object : Comparator<ExeCEventListener<*>> by
+                           Comparator
+                           .comparingInt(ExeCEventListener<*>::priority)
+                           .thenComparingInt(ExeCEventListener<*>::order) {
                 private var order = 0
         }
 }
