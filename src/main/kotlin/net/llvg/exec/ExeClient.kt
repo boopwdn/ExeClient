@@ -45,18 +45,7 @@ object ExeClient {
         ) {
                 buildChat {
                         empty +
-                        buildChat {
-                                empty {
-                                        bold = true
-                                        color = EnumChatFormatting.WHITE
-                                } +
-                                "[" +
-                                "Exe Client" {
-                                        color = EnumChatFormatting.AQUA
-                                } +
-                                "]"
-                        } +
-                        " " +
+                        execPrefix +
                         message
                 }.run(player::addChatMessage)
         }
@@ -65,5 +54,20 @@ object ExeClient {
                 builder: ChatComponentBuildScope.() -> IChatComponent
         ) {
                 send(ChatComponentBuildScope.builder())
+        }
+}
+
+private val execPrefix = buildChat {
+        empty +
+        buildChat {
+                empty {
+                        bold = true
+                        color = EnumChatFormatting.WHITE
+                } +
+                "[" +
+                "Exe Client" {
+                        color = EnumChatFormatting.AQUA
+                } +
+                "] "
         }
 }
