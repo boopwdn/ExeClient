@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025-2025 Water-OR
+ * Copyright (C) 2025 Water-OR
  *
  * This file is part of ExeClient
  *
@@ -22,12 +22,10 @@ package net.llvg.exec.api.event
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 
-class ExeCEventListener<E : ExeCEvent>(
+sealed class ExeCEventListener<E : ExeCEvent>(
         private val owner: ExeCEventListenable,
         private val always: Boolean,
-        private val priority: Int,
-        val dispatcher: CoroutineDispatcher,
-        val action: suspend CoroutineScope.(ExeCEvent) -> Unit
+        private val priority: Int
 ) : Comparable<ExeCEventListener<E>> {
         val active: Boolean
                 get() = always || owner.active
@@ -36,7 +34,30 @@ class ExeCEventListener<E : ExeCEvent>(
         
         override fun compareTo(
                 other: ExeCEventListener<E>
-        ): Int = ExeCEventListener.compare(this, other)
+        ): Int = compare(this, other)
+        
+        class Block<E : ExeCEvent>(
+                owner: ExeCEventListenable,
+                always: Boolean,
+                priority: Int,
+                val action: (E) -> Unit
+        ) : ExeCEventListener<E>(
+                owner,
+                always,
+                priority
+        )
+        
+        class Async<E : ExeCEvent>(
+                owner: ExeCEventListenable,
+                always: Boolean,
+                priority: Int,
+                val dispatcher: CoroutineDispatcher,
+                val action: suspend CoroutineScope.(E) -> Unit
+        ) : ExeCEventListener<E>(
+                owner,
+                always,
+                priority
+        )
         
         companion object : Comparator<ExeCEventListener<*>> by
                            Comparator

@@ -33,5 +33,5 @@ fun postUserHealthChangeEvent(
                 entity,
                 health
         )
-        event.post(wait = true)
+        event.post(true)
 }

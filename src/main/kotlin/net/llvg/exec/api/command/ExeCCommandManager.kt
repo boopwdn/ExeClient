@@ -21,7 +21,6 @@ package net.llvg.exec.api.command
 
 import com.google.common.collect.ImmutableList
 import com.google.common.collect.ImmutableSortedMap
-import java.util.LinkedList
 import net.llvg.exec.ExeClient
 import net.llvg.exec.utils.classNameLogger
 import net.llvg.exec.utils.registry.Registry
@@ -81,7 +80,7 @@ object ExeCCommandManager : Registry<ExeCCommand>(
                 name: String
         ): List<String> = commands
         .keys
-        .filterTo(LinkedList()) {
+        .filter {
                 it.startsWith(name)
         }
         

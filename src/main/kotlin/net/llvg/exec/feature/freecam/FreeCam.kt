@@ -41,7 +41,7 @@ import net.minecraft.util.MovementInputFromOptions
 
 object FreeCam : ExeCFeature<FreeCamConfig> {
         init {
-                onEvent(dispatcher = Dispatchers.Default) { e: EntityLivingBaseEvent.HealthChange.Pre ->
+                onEvent(Dispatchers.Default) { e: EntityLivingBaseEvent.HealthChange.Pre ->
                         if (e.entity !== player) return@onEvent
                         
                         if (FreeCamConfig.disableOnDamage && e.entity.health > e.health) {
@@ -55,7 +55,7 @@ object FreeCam : ExeCFeature<FreeCamConfig> {
                         }
                 }
                 
-                onEvent(dispatcher = Dispatchers.Default) { e: PacketEvent.Server.S43.Pre ->
+                onEvent(Dispatchers.Default) { e: PacketEvent.Server.S43.Pre ->
                         if (FreeCamConfig.disableOnSeverCameraChange) {
                                 if (FreeCamConfig.sendMessage) ExeClient.send {
                                         "Server is trying to change your camera entity!" {
@@ -72,11 +72,11 @@ object FreeCam : ExeCFeature<FreeCamConfig> {
                         }
                 }
                 
-                onEvent(dispatcher = Dispatchers.Default) { _: WorldClientEvent.Load.Pre ->
+                onEvent(Dispatchers.Default) { _: WorldClientEvent.Load.Pre ->
                         disable()
                 }
                 
-                onEvent(dispatcher = Dispatchers.Default) { _: ExeCFeatureConfigEvent.Inactive<FreeCamConfig> ->
+                onEvent(Dispatchers.Default) { _: ExeCFeatureConfigEvent.Inactive<FreeCamConfig> ->
                         disable()
                 }
         }

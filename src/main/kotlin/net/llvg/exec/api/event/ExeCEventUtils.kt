@@ -23,33 +23,49 @@ package net.llvg.exec.api.event
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import net.llvg.loliutils.exception.cast
 
+inline fun <reified E : ExeCEvent> ExeCEventListenable.onEvent(
+        dispatcher: CoroutineDispatcher,
+        forced: Boolean = false,
+        always: Boolean = true,
+        priority: Int = 0,
+        noinline action: suspend CoroutineScope.(E) -> Unit
+): Unit = ExeCEventManager.register(
+        E::class.java,
+        forced,
+        ExeCEventListener.Async(
+                this,
+                always,
+                priority,
+                dispatcher,
+                action
+        )
+)
+
+@Suppress("UNUSED")
 inline fun <reified E : ExeCEvent> ExeCEventListenable.onEvent(
         forced: Boolean = false,
         always: Boolean = true,
         priority: Int = 0,
-        dispatcher: CoroutineDispatcher = Dispatchers.Unconfined,
-        crossinline action: suspend CoroutineScope.(E) -> Unit
+        noinline action: (E) -> Unit
 ): Unit = ExeCEventManager.register(
         E::class.java,
         forced,
-        ExeCEventListener<E>(
+        ExeCEventListener.Block(
                 this,
                 always,
                 priority,
-                dispatcher
-        ) {
-                action(cast(it))
-        }
+                action
+        )
 )
 
 @Suppress("UNUSED")
 inline fun <reified E : ExeCEvent> E.post(
         wait: Boolean
-): Unit = ExeCEventManager.post(
-        E::class.java,
-        this,
-        wait
-)
+) {
+        ExeCEventManager.post(
+                E::class.java,
+                this,
+                wait
+        )
+}

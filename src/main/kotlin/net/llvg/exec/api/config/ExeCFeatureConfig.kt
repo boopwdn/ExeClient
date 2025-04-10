@@ -62,7 +62,7 @@ abstract class ExeCFeatureConfig<C : ExeCFeatureConfig<C>>(
                         } else {
                                 ExeCFeatureConfigEvent.Inactive.Impl(self)
                         }
-                        event.post(wait = false)
+                        event.post(false)
                 }
         }
 }

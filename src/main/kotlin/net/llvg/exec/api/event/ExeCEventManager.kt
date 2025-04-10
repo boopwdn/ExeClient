@@ -20,33 +20,38 @@
 package net.llvg.exec.api.event
 
 import com.google.common.collect.ImmutableList
-import java.util.LinkedList
 import java.util.TreeSet
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import net.llvg.loliutils.exception.cast
 import org.apache.logging.log4j.LogManager
 
 private typealias EventType = Class<out ExeCEvent>
-private typealias ListenerSet = MutableSet<ExeCEventListener<*>>
 
-object ExeCEventManager : CoroutineScope by CoroutineScope(SupervisorJob()) {
+private typealias BlockListener<E> = ExeCEventListener.Block<E>
+private typealias AsyncListener<E> = ExeCEventListener.Async<E>
+private typealias BlockListenerSet = MutableSet<ExeCEventListener.Block<*>>
+private typealias AsyncListenerSet = MutableSet<ExeCEventListener.Async<*>>
+
+object ExeCEventManager {
         private val logger = LogManager.getLogger(ExeCEventManager::class.java.simpleName)
         
-        private val normalStorage: MutableMap<EventType, ListenerSet> = HashMap()
-        private val forcedStorage: MutableMap<EventType, ListenerSet> = HashMap()
+        private val blockNormalStorage: MutableMap<EventType, BlockListenerSet> = HashMap()
+        private val blockForcedStorage: MutableMap<EventType, BlockListenerSet> = HashMap()
+        private val asyncNormalStorage: MutableMap<EventType, AsyncListenerSet> = HashMap()
+        private val asyncForcedStorage: MutableMap<EventType, AsyncListenerSet> = HashMap()
         
-        private val cachedStorages: MutableMap<EventType, List<ListenerSet>> = HashMap()
+        private val cache: MutableMap<EventType, Pair<List<BlockListenerSet>, List<AsyncListenerSet>>> = HashMap()
         
-        private operator fun MutableMap<EventType, ListenerSet>.invoke(
+        private operator fun <L : ExeCEventListener<*>> MutableMap<EventType, MutableSet<L>>.invoke(
                 key: EventType
-        ): ListenerSet = synchronized(this) {
-                getOrPut(key, ::TreeSet)
+        ): MutableSet<L> = synchronized(this) {
+                getOrPut(key) { TreeSet() }
         }
         
         @JvmStatic
@@ -55,21 +60,48 @@ object ExeCEventManager : CoroutineScope by CoroutineScope(SupervisorJob()) {
                 forced: Boolean,
                 listener: ExeCEventListener<*>
         ) {
-                val storage = if (forced) forcedStorage else normalStorage
-                val listeners = storage(type)
-                
-                synchronized(listeners) {
-                        listeners.add(listener)
+                when (listener) {
+                        is BlockListener -> {
+                                val storage = if (forced) blockForcedStorage else blockNormalStorage
+                                val listeners = storage(type)
+                                
+                                synchronized(listeners) {
+                                        listeners.add(listener)
+                                }
+                        }
+                        
+                        is AsyncListener -> {
+                                val storage = if (forced) asyncForcedStorage else asyncNormalStorage
+                                val listeners = storage(type)
+                                
+                                synchronized(listeners) {
+                                        listeners.add(listener)
+                                }
+                        }
                 }
         }
         
-        @OptIn(ExperimentalCoroutinesApi::class)
+        private val scope: CoroutineScope = CoroutineScope(SupervisorJob())
+        
         @JvmStatic
         fun post(
                 type: EventType,
                 event: ExeCEvent,
                 wait: Boolean
         ) {
+                val job = scope.launch {
+                        post(type, event)
+                }
+                
+                if (wait) runBlocking {
+                        job.join()
+                }
+        }
+        
+        private fun CoroutineScope.post(
+                type: EventType,
+                event: ExeCEvent
+        ): Job {
                 if (!type.isInstance(event)) {
                         val exception = IllegalArgumentException(
                                 "event $event(loader=${event.javaClass.classLoader}) is not in type $type(loader=${type.classLoader})"
@@ -77,47 +109,113 @@ object ExeCEventManager : CoroutineScope by CoroutineScope(SupervisorJob()) {
                         logger.error(exception)
                         throw exception
                 }
+                val (blockCache, asyncCache) = cache.getOrPut(type) {
+                        val blockBuilder = ImmutableList.builder<BlockListenerSet>()
+                        val asyncBuilder = ImmutableList.builder<AsyncListenerSet>()
+                        
+                        blockBuilder.add(blockForcedStorage(type))
+                        asyncBuilder.add(asyncForcedStorage(type))
+                        
+                        forEachSuperClass(type) {
+                                blockBuilder.add(blockNormalStorage(it))
+                                asyncBuilder.add(asyncNormalStorage(it))
+                        }
+                        
+                        blockBuilder.build() to asyncBuilder.build()
+                }
                 
-                val jobs: MutableList<Job> = LinkedList()
-                
-                val cache = cachedStorages.getOrPut(type) {
-                        ImmutableList
-                        .builder<ListenerSet>()
-                        .apply {
-                                add(forcedStorage(type))
-                                var clazz: EventType? = type
-                                while (clazz !== null) {
-                                        add(normalStorage(clazz))
-                                        @Suppress("UNCHECKED_CAST")
-                                        clazz = clazz.superclass as? EventType
+                val curr = Dispatchers.Default
+                return launch(curr) {
+                        val jobs: MutableList<Job> = ArrayList()
+                        asyncCache.forEachFlat {
+                                launch(it.dispatcher) {
+                                        try {
+                                                cast<AsyncListener<ExeCEvent>>(it).run {
+                                                        action(event)
+                                                }
+                                        } catch (e: Throwable) {
+                                                logger.info(
+                                                        "An error occur during active async listener {} of event {}",
+                                                        it,
+                                                        type,
+                                                        e
+                                                )
+                                        }
+                                }.let(jobs::add)
+                        }
+                        
+                        blockCache.forEachFlat {
+                                try {
+                                        cast<BlockListener<ExeCEvent>>(it).action(event)
+                                } catch (e: Throwable) {
+                                        logger.info(
+                                                "An error occur during active block listener {} of event {}",
+                                                it,
+                                                type,
+                                                e
+                                        )
                                 }
                         }
-                        .build()
-                }
-                
-                val methodThread = Dispatchers.Default.limitedParallelism(1)
-                
-                val collect = fun ExeCEventListener<*>.() {
-                        if (!active) return
-                        launch(
-                                if (dispatcher === Dispatchers.Unconfined) {
-                                        methodThread
-                                } else {
-                                        dispatcher
-                                }
-                        ) {
-                                action(event)
-                        }.let(jobs::add)
-                }
-                
-                cache.forEach {
-                        synchronized(it) {
-                                it.forEach(collect)
-                        }
-                }
-                
-                if (wait) runBlocking(methodThread) {
+                        
                         jobs.joinAll()
                 }
         }
+}
+
+private fun forEachSuperClass(
+        clazz: Class<out ExeCEvent>,
+        action: (Class<out ExeCEvent>) -> Unit
+) {
+        fun CoroutineScope.forEachInterface(
+                visited: MutableSet<Class<out ExeCEvent>>,
+                clazz: Class<out ExeCEvent>,
+                action: (Class<out ExeCEvent>) -> Unit
+        ): Job? {
+                if (clazz in visited) return null
+                return launch {
+                        val jobs: MutableList<Job> = ArrayList()
+                        
+                        launch {
+                                action(clazz)
+                        }.let(jobs::add)
+                        
+                        clazz.interfaces.forEach {
+                                launch {
+                                        if (ExeCEvent::class.java.isAssignableFrom(it)) forEachInterface(
+                                                visited,
+                                                it.asSubclass(ExeCEvent::class.java),
+                                                action
+                                        )?.join()
+                                }.let(jobs::add)
+                        }
+                        
+                        jobs.joinAll()
+                }
+        }
+        
+        runBlocking {
+                val visited: MutableSet<Class<out ExeCEvent>> = HashSet()
+                
+                var type: Class<out ExeCEvent> = clazz
+                val jobs: MutableList<Job> = ArrayList()
+                
+                while (true) {
+                        launch {
+                                forEachInterface(visited, type, action)?.join()
+                        }.let(jobs::add)
+                        
+                        val supT = type.superclass ?: break
+                        if (ExeCEvent::class.java.isAssignableFrom(supT)) {
+                                type = supT.asSubclass(ExeCEvent::class.java)
+                        } else break
+                }
+                
+                jobs.joinAll()
+        }
+}
+
+private inline fun <L : ExeCEventListener<*>> List<MutableSet<L>>.forEachFlat(
+        action: (L) -> Unit
+) {
+        for (it in this) for (listener in it) action(listener)
 }
