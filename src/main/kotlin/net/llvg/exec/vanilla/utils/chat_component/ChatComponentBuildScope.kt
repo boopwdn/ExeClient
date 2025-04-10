@@ -30,21 +30,26 @@ object ChatComponentBuildScope {
         @Suppress("UNUSED")
         fun ChatComponentBuildScope.empty(
                 configure: ChatStyle.() -> Unit
-        ): IChatComponent = empty withChatStyle configure
+        ): IChatComponent =
+                empty withChatStyle configure
         
         infix operator fun <C : IChatComponent> C.plus(
                 o: String
-        ): C = apply { appendSibling(ChatComponentText(o)) }
+        ): C =
+                apply { appendSibling(ChatComponentText(o)) }
         
         infix operator fun <C : IChatComponent> C.plus(
                 o: IChatComponent
-        ): C = apply { appendSibling(o) }
+        ): C =
+                apply { appendSibling(o) }
         
         inline infix operator fun <C : IChatComponent> C.plus(
                 configure: (C) -> Unit
-        ): C = apply(configure)
+        ): C =
+                apply(configure)
         
         inline infix operator fun String.invoke(
                 configure: ChatStyle.() -> Unit
-        ): IChatComponent = ChatComponentText(this) withChatStyle configure
+        ): IChatComponent =
+                ChatComponentText(this) withChatStyle configure
 }

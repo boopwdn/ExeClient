@@ -37,8 +37,8 @@ abstract class ExeCFeatureConfig<C : ExeCFeatureConfig<C>>(
 ) {
         protected abstract val self: C
         
-        protected open fun active(
-        ): Boolean = enabled
+        protected open fun active(): Boolean =
+                enabled
         
         @Transient
         @get:JvmName("isActive")

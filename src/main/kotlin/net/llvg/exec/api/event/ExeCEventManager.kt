@@ -50,9 +50,10 @@ object ExeCEventManager {
         
         private operator fun <L : ExeCEventListener<*>> MutableMap<EventType, MutableSet<L>>.invoke(
                 key: EventType
-        ): MutableSet<L> = synchronized(this) {
-                getOrPut(key) { TreeSet() }
-        }
+        ): MutableSet<L> =
+                synchronized(this) {
+                        getOrPut(key) { TreeSet() }
+                }
         
         @JvmStatic
         fun register(

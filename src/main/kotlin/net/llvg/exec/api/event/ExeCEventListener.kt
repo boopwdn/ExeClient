@@ -34,7 +34,8 @@ sealed class ExeCEventListener<E : ExeCEvent>(
         
         override fun compareTo(
                 other: ExeCEventListener<E>
-        ): Int = compare(this, other)
+        ): Int =
+                compare(this, other)
         
         class Block<E : ExeCEvent>(
                 owner: ExeCEventListenable,

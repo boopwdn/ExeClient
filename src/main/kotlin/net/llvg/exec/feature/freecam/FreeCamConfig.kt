@@ -33,8 +33,8 @@ object FreeCamConfig : ExeCFeatureConfig<FreeCamConfig>(
         override val self: FreeCamConfig
                 get() = this
         
-        override fun active(
-        ): Boolean = ExeClientConfig.active() && super.active()
+        override fun active(): Boolean =
+                ExeClientConfig.active() && super.active()
         
         @KeyBind(
                 name = "Free Camera Toggle Key",

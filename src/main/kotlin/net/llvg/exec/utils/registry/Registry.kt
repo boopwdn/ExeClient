@@ -25,10 +25,10 @@ import net.llvg.exec.api.event.post
 abstract class Registry<T>(
         vararg initial: T
 ) {
-        protected open fun event(
-        ): InnerRegisterEvent<T> = object : InnerRegisterEvent<T> {
-                override val elements: MutableList<T> = ArrayList()
-        }
+        protected open fun event(): InnerRegisterEvent<T> =
+                object : InnerRegisterEvent<T> {
+                        override val elements: MutableList<T> = ArrayList()
+                }
         
         protected val elements: List<T> = ImmutableList
         .builder<T>()

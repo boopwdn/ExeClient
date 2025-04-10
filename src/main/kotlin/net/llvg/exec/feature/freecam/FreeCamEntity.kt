@@ -70,20 +70,21 @@ class FreeCamEntity : EntityPlayerSP(
                         cast<InjectEntityLivingBase>(player)._activePotionsMap_exec
         }
         
-        override fun getPlayerInfo(
-        ): NetworkPlayerInfo? = cast<InjectAbstractClientPlayer>(player).playerInfo_exec
+        override fun getPlayerInfo(): NetworkPlayerInfo? =
+                cast<InjectAbstractClientPlayer>(player).playerInfo_exec
         
-        override fun canAttackWithItem(
-        ): Boolean = false
+        override fun canAttackWithItem(): Boolean =
+                false
         
         override fun hitByEntity(
                 entityIn: Entity?
-        ): Boolean = false
+        ): Boolean =
+                false
         
         private var forceSpectator = false
         
-        override fun isSpectator(
-        ): Boolean = forceSpectator || super.isSpectator()
+        override fun isSpectator(): Boolean =
+                forceSpectator || super.isSpectator()
         
         override fun onUpdate() {
                 forceSpectator = true
@@ -102,8 +103,8 @@ class FreeCamEntity : EntityPlayerSP(
                 super.setSprinting(false)
         }
         
-        override fun isSprinting(
-        ): Boolean = false
+        override fun isSprinting(): Boolean =
+                false
         
         override fun setSneaking(
                 sneaking: Boolean
@@ -111,8 +112,8 @@ class FreeCamEntity : EntityPlayerSP(
                 super.setSneaking(false)
         }
         
-        override fun isSneaking(
-        ): Boolean = false
+        override fun isSneaking(): Boolean =
+                false
         
         override fun updateEntityActionState() {
                 super.updateEntityActionState()

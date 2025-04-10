@@ -46,11 +46,10 @@ class ExeCTweaker : ITweaker {
                 tweakClasses.add("org.spongepowered.asm.launch.MixinTweaker")
         }
         
-        override fun getLaunchTarget(
-        ): String = throw IllegalStateException("You should not be here!")
+        override fun getLaunchTarget(): String =
+                throw IllegalStateException("You should not be here!")
         
-        override fun getLaunchArguments(
-        ): Array<String> {
+        override fun getLaunchArguments(): Array<String> {
                 addMixinConfig()
                 return arrayOf()
         }

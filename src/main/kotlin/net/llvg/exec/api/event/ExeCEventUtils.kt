@@ -30,17 +30,19 @@ inline fun <reified E : ExeCEvent> ExeCEventListenable.onEvent(
         always: Boolean = true,
         priority: Int = 0,
         noinline action: suspend CoroutineScope.(E) -> Unit
-): Unit = ExeCEventManager.register(
-        E::class.java,
-        forced,
-        ExeCEventListener.Async(
-                this,
-                always,
-                priority,
-                dispatcher,
-                action
+) {
+        ExeCEventManager.register(
+                E::class.java,
+                forced,
+                ExeCEventListener.Async(
+                        this,
+                        always,
+                        priority,
+                        dispatcher,
+                        action
+                )
         )
-)
+}
 
 @Suppress("UNUSED")
 inline fun <reified E : ExeCEvent> ExeCEventListenable.onEvent(
@@ -48,16 +50,18 @@ inline fun <reified E : ExeCEvent> ExeCEventListenable.onEvent(
         always: Boolean = true,
         priority: Int = 0,
         noinline action: (E) -> Unit
-): Unit = ExeCEventManager.register(
-        E::class.java,
-        forced,
-        ExeCEventListener.Block(
-                this,
-                always,
-                priority,
-                action
+) {
+        ExeCEventManager.register(
+                E::class.java,
+                forced,
+                ExeCEventListener.Block(
+                        this,
+                        always,
+                        priority,
+                        action
+                )
         )
-)
+}
 
 @Suppress("UNUSED")
 inline fun <reified E : ExeCEvent> E.post(
