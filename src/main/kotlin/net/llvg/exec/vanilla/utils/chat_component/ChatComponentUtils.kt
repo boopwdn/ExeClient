@@ -27,13 +27,16 @@ import net.minecraft.util.IChatComponent
 @Suppress("UNUSED")
 inline fun buildChat(
         builder: ChatComponentBuildScope.() -> IChatComponent
-): IChatComponent = ChatComponentBuildScope.builder()
+): IChatComponent =
+        ChatComponentBuildScope.builder()
 
 inline fun <C : IChatComponent> C.withChatStyle(
         chatStyle: ChatStyle,
         configure: ChatStyle.() -> Unit
-): C = apply { this.chatStyle = chatStyle.apply(configure) }
+): C =
+        apply { this.chatStyle = chatStyle.apply(configure) }
 
 inline infix fun <C : IChatComponent> C.withChatStyle(
         configure: ChatStyle.() -> Unit
-): C = withChatStyle(chatStyle, configure)
+): C =
+        withChatStyle(chatStyle, configure)

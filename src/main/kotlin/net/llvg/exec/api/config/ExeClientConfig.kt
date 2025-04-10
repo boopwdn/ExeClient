@@ -23,7 +23,7 @@ import cc.polyfrost.oneconfig.config.Config
 import cc.polyfrost.oneconfig.config.annotations.SubConfig
 import cc.polyfrost.oneconfig.config.data.Mod
 import cc.polyfrost.oneconfig.config.data.ModType
-import net.llvg.exec.impl.config.freecam.FreeCamConfig
+import net.llvg.exec.feature.freecam.FreeCamConfig
 import net.llvg.exec.utils.classNameLogger
 
 object ExeClientConfig : Config(

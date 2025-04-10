@@ -19,7 +19,7 @@
 
 package net.llvg.exec.mixin.mixin;
 
-import net.llvg.exec.impl.feature.freecam.FreeCam;
+import net.llvg.exec.feature.freecam.FreeCam;
 import net.llvg.exec.utils.JavaUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.IBlockAccess;

@@ -23,11 +23,10 @@ import net.minecraft.util.ChatComponentStyle
 import net.minecraft.util.IChatComponent
 
 class ChatComponentEmpty : ChatComponentStyle() {
-        override fun getUnformattedTextForChat(
-        ): String? = ""
+        override fun getUnformattedTextForChat(): String =
+                ""
         
-        override fun createCopy(
-        ): IChatComponent? {
+        override fun createCopy(): IChatComponent {
                 val result = ChatComponentEmpty()
                 result.chatStyle = chatStyle.createShallowCopy()
                 siblings.forEach {

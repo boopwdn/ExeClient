@@ -26,9 +26,13 @@ interface ExeCCommand {
         
         val usage: IChatComponent
         
-        fun process(args: Array<String>)
+        fun process(
+                args: Array<String>
+        )
         
-        fun completeTab(args: Array<String>): List<String>
+        fun completeTab(
+                args: Array<String>
+        ): List<String>
         
         companion object : Comparator<ExeCCommand> by
                            Comparator.comparing(ExeCCommand::name)

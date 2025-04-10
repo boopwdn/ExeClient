@@ -17,12 +17,14 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.llvg.exec.impl.feature.freecam
+package net.llvg.exec.feature.freecam
 
 import net.minecraft.client.settings.GameSettings
 import net.minecraft.util.MovementInput
 
-class FreeCamMovementInput(val gameSettings: GameSettings) : MovementInput() {
+class FreeCamMovementInput(
+        private val gameSettings: GameSettings
+) : MovementInput() {
         override fun updatePlayerMoveState() {
                 jump = false
                 if (gameSettings.keyBindJump.isKeyDown) {

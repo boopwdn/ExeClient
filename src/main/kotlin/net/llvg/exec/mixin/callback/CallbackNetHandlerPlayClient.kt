@@ -34,6 +34,6 @@ fun postPacketEventServerS43Pre(
                 handler,
                 packet
         )
-        event.post(wait = true)
+        event.post(true)
         return event.cancelled
 }

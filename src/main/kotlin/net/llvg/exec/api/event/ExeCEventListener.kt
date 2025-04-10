@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025-2025 Water-OR
+ * Copyright (C) 2025 Water-OR
  *
  * This file is part of ExeClient
  *
@@ -21,27 +21,49 @@ package net.llvg.exec.api.event
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import net.llvg.loliutils.exception.ValueWrapper
 
-class ExeCEventListener<E : ExeCEvent>(
-        val owner: ExeCEventListenable,
-        val always: Boolean,
-        val priority: Int,
-        val dispatcher: CoroutineDispatcher,
-        val action: suspend CoroutineScope.(ValueWrapper<ExeCEvent>) -> Unit
+sealed class ExeCEventListener<E : ExeCEvent>(
+        private val owner: ExeCEventListenable,
+        private val always: Boolean,
+        private val priority: Int
 ) : Comparable<ExeCEventListener<E>> {
         val active: Boolean
                 get() = always || owner.active
         
-        val order = Companion.order++
+        private val order = Companion.order++
         
         override fun compareTo(
                 other: ExeCEventListener<E>
-        ): Int = ExeCEventListener.compare(this, other)
+        ): Int =
+                compare(this, other)
         
-        companion object : Comparator<ExeCEventListener<*>> by Comparator
-        .comparingInt(ExeCEventListener<*>::priority)
-        .thenComparingInt(ExeCEventListener<*>::order) {
+        class Block<E : ExeCEvent>(
+                owner: ExeCEventListenable,
+                always: Boolean,
+                priority: Int,
+                val action: (E) -> Unit
+        ) : ExeCEventListener<E>(
+                owner,
+                always,
+                priority
+        )
+        
+        class Async<E : ExeCEvent>(
+                owner: ExeCEventListenable,
+                always: Boolean,
+                priority: Int,
+                val dispatcher: CoroutineDispatcher,
+                val action: suspend CoroutineScope.(E) -> Unit
+        ) : ExeCEventListener<E>(
+                owner,
+                always,
+                priority
+        )
+        
+        companion object : Comparator<ExeCEventListener<*>> by
+                           Comparator
+                           .comparingInt(ExeCEventListener<*>::priority)
+                           .thenComparingInt(ExeCEventListener<*>::order) {
                 private var order = 0
         }
 }

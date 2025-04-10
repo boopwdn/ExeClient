@@ -19,10 +19,10 @@
 
 package net.llvg.exec.api.feature
 
-import net.llvg.exec.impl.feature.freecam.FreeCam
+import net.llvg.exec.feature.freecam.FreeCam
 import net.llvg.exec.utils.registry.Registry
 
-object FeatureManager : Registry<ExeCFeature<*>>(
+object ExeCFeatureManager : Registry<ExeCFeature<*>>(
         FreeCam
 ) {
         init {

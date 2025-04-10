@@ -22,7 +22,7 @@ package net.llvg.exec.preload.vanilla_tweaker
 import cc.polyfrost.oneconfig.loader.stage0.LaunchWrapperTweaker
 import java.io.File
 import net.llvg.exec.utils.classNameLogger
-import net.llvg.loliutils.exception.uncheckedCast
+import net.llvg.loliutils.exception.cast
 import net.minecraft.launchwrapper.ITweaker
 import net.minecraft.launchwrapper.Launch
 import net.minecraft.launchwrapper.LaunchClassLoader
@@ -41,16 +41,15 @@ class ExeCTweaker : ITweaker {
         override fun injectIntoClassLoader(
                 classLoader: LaunchClassLoader
         ) {
-                val tweakClasses: MutableList<String> = Launch.blackboard["TweakClasses"].uncheckedCast()
+                val tweakClasses: MutableList<String> = cast(Launch.blackboard["TweakClasses"])
                 tweakClasses.add(LaunchWrapperTweaker::class.java.name)
                 tweakClasses.add("org.spongepowered.asm.launch.MixinTweaker")
         }
         
-        override fun getLaunchTarget(
-        ): String = throw IllegalStateException("You should not be here!")
+        override fun getLaunchTarget(): String =
+                throw IllegalStateException("You should not be here!")
         
-        override fun getLaunchArguments(
-        ): Array<String> {
+        override fun getLaunchArguments(): Array<String> {
                 addMixinConfig()
                 return arrayOf()
         }

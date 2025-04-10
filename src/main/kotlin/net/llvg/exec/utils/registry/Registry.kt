@@ -20,16 +20,15 @@
 package net.llvg.exec.utils.registry
 
 import com.google.common.collect.ImmutableList
-import java.util.LinkedList
 import net.llvg.exec.api.event.post
 
 abstract class Registry<T>(
         vararg initial: T
 ) {
-        protected open fun event(
-        ): InnerRegisterEvent<T> = object : InnerRegisterEvent<T> {
-                override val elements: MutableList<T> = LinkedList()
-        }
+        protected open fun event(): InnerRegisterEvent<T> =
+                object : InnerRegisterEvent<T> {
+                        override val elements: MutableList<T> = ArrayList()
+                }
         
         protected val elements: List<T> = ImmutableList
         .builder<T>()
@@ -37,7 +36,7 @@ abstract class Registry<T>(
                 add(*initial)
                 
                 val event = event()
-                event.post(wait = true)
+                event.post(true)
                 addAll(event.elements)
         }
         .build()

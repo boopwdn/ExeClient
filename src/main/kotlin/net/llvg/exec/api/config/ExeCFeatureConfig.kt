@@ -37,8 +37,8 @@ abstract class ExeCFeatureConfig<C : ExeCFeatureConfig<C>>(
 ) {
         protected abstract val self: C
         
-        protected open fun active(
-        ): Boolean = enabled
+        protected open fun active(): Boolean =
+                enabled
         
         @Transient
         @get:JvmName("isActive")
@@ -62,7 +62,7 @@ abstract class ExeCFeatureConfig<C : ExeCFeatureConfig<C>>(
                         } else {
                                 ExeCFeatureConfigEvent.Inactive.Impl(self)
                         }
-                        event.post(wait = false)
+                        event.post(false)
                 }
         }
 }

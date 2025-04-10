@@ -31,5 +31,5 @@ fun postWorldClientEventLoadPre(
         val event = WorldClientEvent.Load.Pre.Impl(
                 worldClient
         )
-        event.post(wait = true)
+        event.post(true)
 }

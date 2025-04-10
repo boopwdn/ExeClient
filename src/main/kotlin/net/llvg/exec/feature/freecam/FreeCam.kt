@@ -17,7 +17,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.llvg.exec.impl.feature.freecam
+package net.llvg.exec.feature.freecam
 
 import kotlinx.coroutines.Dispatchers
 import net.llvg.exec.ExeClient
@@ -25,7 +25,6 @@ import net.llvg.exec.api.config.ExeCFeatureConfigEvent
 import net.llvg.exec.api.config.ExeClientConfig
 import net.llvg.exec.api.event.onEvent
 import net.llvg.exec.api.feature.ExeCFeature
-import net.llvg.exec.impl.config.freecam.FreeCamConfig
 import net.llvg.exec.mixin.inject.InjectNetHandlerPlayClient
 import net.llvg.exec.vanilla.event.EntityLivingBaseEvent
 import net.llvg.exec.vanilla.event.PacketEvent
@@ -42,11 +41,11 @@ import net.minecraft.util.MovementInputFromOptions
 
 object FreeCam : ExeCFeature<FreeCamConfig> {
         init {
-                onEvent(dispatcher = Dispatchers.Default) { e: EntityLivingBaseEvent.HealthChange.Pre ->
+                onEvent(Dispatchers.Default) { e: EntityLivingBaseEvent.HealthChange.Pre ->
                         if (e.entity !== player) return@onEvent
                         
-                        if (config.disableOnDamage && e.entity.health > e.health) {
-                                if (config.sendMessage) ExeClient.send {
+                        if (FreeCamConfig.disableOnDamage && e.entity.health > e.health) {
+                                if (FreeCamConfig.sendMessage) ExeClient.send {
                                         "You took damage!" {
                                                 color = EnumChatFormatting.YELLOW
                                         }
@@ -56,9 +55,9 @@ object FreeCam : ExeCFeature<FreeCamConfig> {
                         }
                 }
                 
-                onEvent(dispatcher = Dispatchers.Default) { e: PacketEvent.Server.S43.Pre ->
-                        if (config.disableOnSeverCameraChange) {
-                                if (config.sendMessage) ExeClient.send {
+                onEvent(Dispatchers.Default) { e: PacketEvent.Server.S43.Pre ->
+                        if (FreeCamConfig.disableOnSeverCameraChange) {
+                                if (FreeCamConfig.sendMessage) ExeClient.send {
                                         "Server is trying to change your camera entity!" {
                                                 color = EnumChatFormatting.YELLOW
                                         }
@@ -73,11 +72,11 @@ object FreeCam : ExeCFeature<FreeCamConfig> {
                         }
                 }
                 
-                onEvent(dispatcher = Dispatchers.Default) { _: WorldClientEvent.Load.Pre ->
+                onEvent(Dispatchers.Default) { _: WorldClientEvent.Load.Pre ->
                         disable()
                 }
                 
-                onEvent(dispatcher = Dispatchers.Default) { _: ExeCFeatureConfigEvent.Inactive<FreeCamConfig> ->
+                onEvent(Dispatchers.Default) { _: ExeCFeatureConfigEvent.Inactive<FreeCamConfig> ->
                         disable()
                 }
         }
@@ -89,19 +88,19 @@ object FreeCam : ExeCFeature<FreeCamConfig> {
         
         val allowTogglePerspective: Boolean
                 @[JvmStatic JvmName("allowTogglePerspective")]
-                inline get() = config.allowTogglePerspective
+                inline get() = FreeCamConfig.allowTogglePerspective
         
         val allowCameraInteract: Boolean
                 @[JvmStatic JvmName("allowCameraInteract")]
-                inline get() = config.allowCameraInteract
+                inline get() = FreeCamConfig.allowCameraInteract
         
         val allowPlayerInteract: Boolean
                 @[JvmStatic JvmName("allowPlayerInteract")]
-                inline get() = config.allowPlayerInteract
+                inline get() = FreeCamConfig.allowPlayerInteract
         
         val enableWaterAndLavaOverlay: Boolean
                 @[JvmStatic JvmName("enableWaterAndLavaOverlay")]
-                inline get() = config.enableWaterAndLavaOverlay
+                inline get() = FreeCamConfig.enableWaterAndLavaOverlay
         
         @get:[JvmStatic JvmName("isEnabled")]
         var enabled: Boolean = false
@@ -157,7 +156,7 @@ object FreeCam : ExeCFeature<FreeCamConfig> {
         @Synchronized
         fun toggleController() {
                 if (!enabled) return
-                if (!config.allowToggleController) return
+                if (!FreeCamConfig.allowToggleController) return
                 // lock
                 if (controllingPlayer) {
                         setControlCamera()
@@ -206,7 +205,7 @@ object FreeCam : ExeCFeature<FreeCamConfig> {
                         mc.renderGlobal.setDisplayListEntitiesDirty()
                 }
                 
-                if (config.sendMessage) {
+                if (FreeCamConfig.sendMessage) {
                         ExeClient.send(MESSAGE_ENABLED)
                 }
         }
@@ -236,7 +235,7 @@ object FreeCam : ExeCFeature<FreeCamConfig> {
                         mc.renderGlobal.setDisplayListEntitiesDirty()
                 }
                 
-                if (config.sendMessage) {
+                if (FreeCamConfig.sendMessage) {
                         ExeClient.send(MESSAGE_DISABLED)
                 }
         }
