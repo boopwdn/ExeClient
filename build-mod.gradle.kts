@@ -132,7 +132,7 @@ dependencies {
         runtimeOnly("com.github.boopwdn:EnchAddons:main-SNAPSHOT:dev") {
                 isChanging = true
         }
-        shade("com.github.Water-OR:llvg-utils:1.6")
+        shade("com.github.Water-OR:llvg-utils:1.8")
         
         if (platform.isLegacyForge) {
                 compileOnly("org.spongepowered:mixin:0.7.11-SNAPSHOT")
