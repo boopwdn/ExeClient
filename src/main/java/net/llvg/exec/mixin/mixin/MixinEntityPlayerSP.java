@@ -50,4 +50,11 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer {
                         cir.setReturnValue(true);
                 }
         }
+        
+        @Inject(method = "isUser", at = @At("HEAD"), cancellable = true)
+        private void isUserInject(CallbackInfoReturnable<Boolean> cir) {
+                if (FreeCam.isEnabled()) {
+                        cir.setReturnValue(isEntityEqual(FreeCam.getCamera()));
+                }
+        }
 }

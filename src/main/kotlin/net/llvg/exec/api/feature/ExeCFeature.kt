@@ -21,9 +21,10 @@ package net.llvg.exec.api.feature
 
 import net.llvg.exec.api.config.ExeCFeatureConfig
 import net.llvg.exec.api.event.ExeCEventListenable
-import net.llvg.exec.vanilla.utils.chat_component.withChatStyle
+import net.llvg.exec.vanilla.utils.chat_component.ChatColor
+import net.llvg.exec.vanilla.utils.chat_component.color
+import net.llvg.exec.vanilla.utils.chat_component.style
 import net.minecraft.util.ChatComponentText
-import net.minecraft.util.EnumChatFormatting
 import net.minecraft.util.IChatComponent
 
 interface ExeCFeature<C : ExeCFeatureConfig<C>> : ExeCEventListenable {
@@ -36,14 +37,14 @@ interface ExeCFeature<C : ExeCFeatureConfig<C>> : ExeCEventListenable {
         companion object {
                 val MESSAGE_ENABLED: IChatComponent =
                         ChatComponentText("Enabled")
-                        .withChatStyle {
-                                color = EnumChatFormatting.GREEN
+                        .style {
+                                color(ChatColor.GREEN)
                         }
                 
                 val MESSAGE_DISABLED: IChatComponent =
                         ChatComponentText("Disabled")
-                        .withChatStyle {
-                                color = EnumChatFormatting.RED
+                        .style {
+                                color(ChatColor.RED)
                         }
         }
 }

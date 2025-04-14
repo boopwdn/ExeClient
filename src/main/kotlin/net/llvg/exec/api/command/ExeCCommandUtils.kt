@@ -28,13 +28,14 @@ import net.minecraft.util.IChatComponent
 fun ExeCCommand.sendUsage() {
         ExeClient.send {
                 with(ExeCCommandChatComponentScope) {
-                        empty +
-                        "Following are the usage of command " +
-                        name {
-                                styleCommandName
-                        } +
-                        ": \n" +
-                        usage
+                        of(
+                                empty()
+                                .."Following are the usage of command "
+                                ..name()
+                                .`--style command-name`
+                                ..": \n"
+                                ..usage
+                        )
                 }
         }
 }
@@ -43,13 +44,13 @@ fun ExeCCommand.sendUsage() {
 fun ExeCCommand.sendWrongUsage() {
         ExeClient.send {
                 with(ExeCCommandChatComponentScope) {
-                        empty +
-                        "Incorrect use of command " {
-                                styleWarn
-                        } +
-                        name {
-                                styleCommandName
-                        }
+                        of(
+                                empty()
+                                .."Incorrect use of command "()
+                                .`--style warn`
+                                ..name()
+                                .`--style command-name`
+                        )
                 }
         }
         sendUsage()
@@ -58,15 +59,21 @@ fun ExeCCommand.sendWrongUsage() {
 @Suppress("UNUSED")
 val Map<String, ExeCCommand>.combineUsages: IChatComponent
         get() = buildChat {
-                empty + {
-                        if (isNotEmpty()) {
+                of(
+                        empty()
+                        ..{
+                                if (isEmpty()) return it
+                                
                                 val i = values.iterator()
-                                it + i.next().usage
-                                while (i.hasNext()) {
-                                        it +
-                                        "\n" +
-                                        i.next().usage
-                                }
+                                of(
+                                        it
+                                        ..i.next().usage
+                                )
+                                while (i.hasNext()) of(
+                                        it
+                                        .."\n"
+                                        ..i.next().usage
+                                )
                         }
-                }
+                )
         }

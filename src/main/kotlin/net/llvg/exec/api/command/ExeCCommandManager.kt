@@ -23,14 +23,15 @@ import com.google.common.collect.ImmutableList
 import com.google.common.collect.ImmutableSortedMap
 import net.llvg.exec.ExeClient
 import net.llvg.exec.utils.classNameLogger
+import net.llvg.exec.utils.registry.RegisterEvent
 import net.llvg.exec.utils.registry.Registry
+import net.llvg.exec.vanilla.utils.chat_component.ChatColor
 import net.llvg.exec.vanilla.utils.chat_component.buildChat
 import net.llvg.exec.vanilla.utils.player
 import net.llvg.loliutils.iterator.subArray
 import net.minecraft.command.ICommand
 import net.minecraft.command.ICommandSender
 import net.minecraft.util.BlockPos
-import net.minecraft.util.EnumChatFormatting
 import net.minecraft.util.IChatComponent
 import net.minecraftforge.client.ClientCommandHandler
 
@@ -38,6 +39,17 @@ object ExeCCommandManager : Registry<ExeCCommand>(
         ExeCCommandHelp,
         ExeCCommandThrow
 ) {
+        override fun event(
+                elements: MutableList<ExeCCommand>
+        ): RegisterEvent<ExeCCommand> =
+                Event.Impl {
+                        elements += it
+                }
+        
+        sealed interface Event : RegisterEvent<ExeCCommand> {
+                fun interface Impl : Event
+        }
+        
         init {
                 ClientCommandHandler.instance.registerCommand(ExeCInternalCommand)
         }
@@ -57,21 +69,19 @@ object ExeCCommandManager : Registry<ExeCCommand>(
         .also {
                 if (it === null) ExeClient.send {
                         with(ExeCCommandChatComponentScope) {
-                                empty {
-                                        styleWarn
-                                } +
-                                "No such sub-command starts with " +
-                                name {
-                                        styleCommandName
-                                } +
-                                ", use " +
-                                "/exec" {
-                                        styleCommandText
-                                } +
-                                " " +
-                                "help" {
-                                        styleCommandName
-                                }
+                                of(
+                                        empty()
+                                        .`--style warn`
+                                        .."No such sub-command starts with "
+                                        ..name()
+                                        .`--style command-name`
+                                        ..", use "
+                                        .."/exec"()
+                                        .`--style command-text`
+                                        .." "
+                                        .."help"()
+                                        .`--style command-name`
+                                )
                         }
                 }
         }
@@ -88,15 +98,15 @@ object ExeCCommandManager : Registry<ExeCCommand>(
                 private fun sendUsage() {
                         ExeClient.send {
                                 with(ExeCCommandChatComponentScope) {
-                                        empty +
-                                        "Use " +
-                                        "/exec" {
-                                                styleCommandText
-                                        } +
-                                        " " +
-                                        "help" {
-                                                styleCommandName
-                                        }
+                                        of(
+                                                empty()
+                                                .."Use "
+                                                .."/exec"()
+                                                .`--style command-text`
+                                                .." "
+                                                .."help"()
+                                                .`--style command-name`
+                                        )
                                 }
                         }
                 }
@@ -132,14 +142,14 @@ object ExeCCommandManager : Registry<ExeCCommand>(
                                 logger.info("An error occur during processing command {}", args[0], e)
                                 ExeClient.send {
                                         with(ExeCCommandChatComponentScope) {
-                                                empty {
-                                                        color = EnumChatFormatting.DARK_RED
-                                                } +
-                                                "An error occur during processing command " +
-                                                args[0] {
-                                                        styleCommandName
-                                                } +
-                                                ", check log for more information"
+                                                of(
+                                                        empty()
+                                                        .`--color`(ChatColor.DARK_RED)
+                                                        .."An error occur during processing command "
+                                                        ..args[0]()
+                                                        .`--style command-name`
+                                                        ..", check log for more information"
+                                                )
                                         }
                                 }
                         }
@@ -161,14 +171,14 @@ object ExeCCommandManager : Registry<ExeCCommand>(
                         logger.info("An error occur during completing tab by command {}", args[0], e)
                         ExeClient.send {
                                 with(ExeCCommandChatComponentScope) {
-                                        empty {
-                                                color = EnumChatFormatting.DARK_RED
-                                        } +
-                                        "An error occur during completing tab by command " +
-                                        args[0] {
-                                                styleCommandName
-                                        } +
-                                        ", check log for more information"
+                                        of(
+                                                empty()
+                                                .`--color`(ChatColor.DARK_RED)
+                                                .."An error occur during completing tab by command "
+                                                ..args[0]()
+                                                .`--style command-name`
+                                                ..", check log for more information"
+                                        )
                                 }
                         }
                         emptyList()
@@ -191,44 +201,38 @@ object ExeCCommandManager : Registry<ExeCCommand>(
                 
                 override val usage: IChatComponent = buildChat {
                         with(ExeCCommandChatComponentScope) {
-                                empty + // " - help | Display all known commands"
-                                " " +
-                                "-" {
-                                        styleSplitMark
-                                } +
-                                " " +
-                                "help" {
-                                        styleCommandName
-                                } +
-                                " " +
-                                "|" {
-                                        styleSplitMark
-                                } +
-                                " " +
-                                "Display all known commands" +
-                                "\n" + // " - help <command> | Display usage of command <command>"
-                                " " +
-                                "-" {
-                                        styleSplitMark
-                                } +
-                                " " +
-                                "help" {
-                                        styleCommandName
-                                } +
-                                " " +
-                                "<command>" {
-                                        styleParameter
-                                } +
-                                " " +
-                                "|" {
-                                        styleSplitMark
-                                } +
-                                " " +
-                                "Display usage of command" +
-                                " " +
-                                "<command>" {
-                                        styleParameter
-                                }
+                                of(
+                                        empty() // " - help | Display all known commands"
+                                        .." "
+                                        .."-"()
+                                        .`--style split-mark`
+                                        .." "
+                                        .."help"()
+                                        .`--style command-name`
+                                        .." "
+                                        .."|"()
+                                        .`--style split-mark`
+                                        .." "
+                                        .."Display all known commands"
+                                        .."\n" // " - help <command> | Display usage of command <command>"
+                                        .." "
+                                        .."-"()
+                                        .`--style split-mark`
+                                        .." "
+                                        .."help"()
+                                        .`--style command-name`
+                                        .." "
+                                        .."<command>"()
+                                        .`--style parameter`
+                                        .." "
+                                        .."|"()
+                                        .`--style split-mark`
+                                        .." "
+                                        .."Display usage of command"
+                                        .." "
+                                        .."<command>"()
+                                        .`--style parameter`
+                                )
                         }
                 }
                 
@@ -237,19 +241,19 @@ object ExeCCommandManager : Registry<ExeCCommand>(
                 ) {
                         if (args.isEmpty()) ExeClient.send {
                                 with(ExeCCommandChatComponentScope) {
-                                        empty +
-                                        "Known commands:" +
-                                        {
-                                                for (name in commands.keys) {
-                                                        it +
-                                                        "\n - " {
-                                                                styleSplitMark
-                                                        } +
-                                                        name {
-                                                                styleCommandName
-                                                        }
+                                        of(
+                                                empty()
+                                                .."Known commands:"
+                                                ..{
+                                                        for (name in commands.keys) of(
+                                                                it
+                                                                .."\n - "()
+                                                                .`--style split-mark`
+                                                                ..name()
+                                                                .`--style command-name`
+                                                        )
                                                 }
-                                        }
+                                        )
                                 }
                         } else {
                                 command(args[0])?.sendUsage()
@@ -270,21 +274,20 @@ object ExeCCommandManager : Registry<ExeCCommand>(
                 
                 override val usage: IChatComponent = buildChat {
                         with(ExeCCommandChatComponentScope) {
-                                empty + // " - throw | Throw a runtime-exception"
-                                " " +
-                                "-" {
-                                        styleSplitMark
-                                } +
-                                " " +
-                                "throw" {
-                                        styleCommandName
-                                } +
-                                " " +
-                                "|" {
-                                        styleSplitMark
-                                } +
-                                " " +
-                                "Throw a runtime-exception"
+                                of(
+                                        empty() // " - throw | Throw a runtime-exception"
+                                        .." "
+                                        .."-"()
+                                        .`--style split-mark`
+                                        .." "
+                                        .."throw"()
+                                        .`--style command-name`
+                                        .." "
+                                        .."|"()
+                                        .`--style split-mark`
+                                        .." "
+                                        .."Throw a runtime-exception"
+                                )
                         }
                 }
                 

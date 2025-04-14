@@ -23,33 +23,83 @@ import net.minecraft.util.ChatComponentText
 import net.minecraft.util.ChatStyle
 import net.minecraft.util.IChatComponent
 
+@Suppress("UNUSED", "FunctionName")
 object ChatComponentBuildScope {
-        val empty: IChatComponent
-                get() = ChatComponentEmpty()
+        fun empty(): IChatComponent =
+                ChatComponentEmpty()
         
-        @Suppress("UNUSED")
-        fun ChatComponentBuildScope.empty(
-                configure: ChatStyle.() -> Unit
+        fun of(
+                component: IChatComponent
         ): IChatComponent =
-                empty withChatStyle configure
+                component
         
-        infix operator fun <C : IChatComponent> C.plus(
+        infix operator fun IChatComponent.rangeTo(
                 o: String
-        ): C =
-                apply { appendSibling(ChatComponentText(o)) }
+        ): IChatComponent =
+                rangeTo { it.appendSibling(ChatComponentText(o)) }
         
-        infix operator fun <C : IChatComponent> C.plus(
+        infix operator fun IChatComponent.rangeTo(
                 o: IChatComponent
-        ): C =
-                apply { appendSibling(o) }
+        ): IChatComponent =
+                rangeTo { it.appendSibling(o) }
         
-        inline infix operator fun <C : IChatComponent> C.plus(
-                configure: (C) -> Unit
-        ): C =
+        inline infix operator fun IChatComponent.rangeTo(
+                configure: (IChatComponent) -> Unit
+        ): IChatComponent =
                 apply(configure)
+        
+        operator fun String.invoke(): IChatComponent =
+                ChatComponentText(this)
         
         inline infix operator fun String.invoke(
                 configure: ChatStyle.() -> Unit
         ): IChatComponent =
-                ChatComponentText(this) withChatStyle configure
+                ChatComponentText(this) style configure
+        
+        inline infix operator fun IChatComponent.invoke(
+                configure: ChatStyle.() -> Unit
+        ): IChatComponent =
+                style(configure)
+        
+        infix fun IChatComponent.`--color`(
+                color: ChatColor
+        ): IChatComponent =
+                style {
+                        color(color)
+                }
+        
+        infix fun IChatComponent.`--bold`(
+                bold: Boolean
+        ): IChatComponent =
+                style {
+                        this.bold = bold
+                }
+        
+        infix fun IChatComponent.`--italic`(
+                italic: Boolean
+        ): IChatComponent =
+                style {
+                        this.italic = italic
+                }
+        
+        infix fun IChatComponent.`--strikethrough`(
+                strikethrough: Boolean
+        ): IChatComponent =
+                style {
+                        this.strikethrough = strikethrough
+                }
+        
+        infix fun IChatComponent.`--underlined`(
+                underlined: Boolean
+        ): IChatComponent =
+                style {
+                        this.underlined = underlined
+                }
+        
+        infix fun IChatComponent.`--obfuscated`(
+                obfuscated: Boolean
+        ): IChatComponent =
+                style {
+                        this.obfuscated = obfuscated
+                }
 }

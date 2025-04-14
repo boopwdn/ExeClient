@@ -23,13 +23,10 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 
 sealed class ExeCEventListener<E : ExeCEvent>(
-        private val owner: ExeCEventListenable,
-        private val always: Boolean,
+        val owner: ExeCEventListenable,
+        val always: Boolean,
         private val priority: Int
 ) : Comparable<ExeCEventListener<E>> {
-        val active: Boolean
-                get() = always || owner.active
-        
         private val order = Companion.order++
         
         override fun compareTo(

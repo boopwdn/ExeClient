@@ -21,12 +21,13 @@ package net.llvg.exec
 
 import net.llvg.exec.api.command.ExeCCommandManager
 import net.llvg.exec.api.config.ExeClientConfig
+import net.llvg.exec.api.event.ExeCEventManager
 import net.llvg.exec.api.feature.ExeCFeatureManager
 import net.llvg.exec.utils.classNameLogger
+import net.llvg.exec.vanilla.utils.chat_component.ChatColor
 import net.llvg.exec.vanilla.utils.chat_component.ChatComponentBuildScope
 import net.llvg.exec.vanilla.utils.chat_component.buildChat
 import net.llvg.exec.vanilla.utils.player
-import net.minecraft.util.EnumChatFormatting
 import net.minecraft.util.IChatComponent
 
 object ExeClient {
@@ -35,6 +36,7 @@ object ExeClient {
         
         @JvmStatic
         fun initialize() {
+                ExeCEventManager
                 ExeClientConfig
                 ExeCFeatureManager
                 ExeCCommandManager
@@ -44,9 +46,11 @@ object ExeClient {
                 message: IChatComponent
         ) {
                 buildChat {
-                        empty +
-                        execPrefix +
-                        message
+                        of(
+                                empty()
+                                ..execPrefix
+                                ..message
+                        )
                 }.run(player::addChatMessage)
         }
         
@@ -58,16 +62,16 @@ object ExeClient {
 }
 
 private val execPrefix = buildChat {
-        empty +
-        buildChat {
-                empty {
-                        bold = true
-                        color = EnumChatFormatting.WHITE
-                } +
-                "[" +
-                "Exe Client" {
-                        color = EnumChatFormatting.AQUA
-                } +
-                "] "
-        }
+        of(
+                empty()
+                ..of(
+                        empty()
+                        .`--color`(ChatColor.WHITE)
+                        .`--bold`(true)
+                        .."["
+                        .."Exe Client"()
+                        .`--color`(ChatColor.AQUA)
+                        .."] "
+                )
+        )
 }

@@ -20,11 +20,23 @@
 package net.llvg.exec.api.feature
 
 import net.llvg.exec.feature.freecam.FreeCam
+import net.llvg.exec.utils.registry.RegisterEvent
 import net.llvg.exec.utils.registry.Registry
 
 object ExeCFeatureManager : Registry<ExeCFeature<*>>(
         FreeCam
 ) {
+        override fun event(
+                elements: MutableList<ExeCFeature<*>>
+        ): RegisterEvent<ExeCFeature<*>> =
+                Event.Impl {
+                        elements += it
+                }
+        
+        sealed interface Event : RegisterEvent<ExeCFeature<*>> {
+                fun interface Impl : Event
+        }
+        
         init {
                 elements.forEach {
                         it.initialize()
