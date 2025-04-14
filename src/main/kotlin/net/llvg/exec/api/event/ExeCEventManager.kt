@@ -87,13 +87,15 @@ object ExeCEventManager {
                         val jobs: MutableList<Job> = ArrayList()
                         
                         asyncListeners.traverse {
-                                jobs += launch {
-                                        trigger(it, event)
+                                if (it.always || it.owner.active) {
+                                        jobs += trigger(it, event)
                                 }
                         }
                         
                         blockListeners.traverse {
-                                trigger(it, event)
+                                if (it.always || it.owner.active) {
+                                        trigger(it, event)
+                                }
                         }
                         
                         jobs.joinAll()

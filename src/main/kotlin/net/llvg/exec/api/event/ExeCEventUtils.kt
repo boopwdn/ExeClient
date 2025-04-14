@@ -27,8 +27,8 @@ import kotlinx.coroutines.CoroutineScope
 inline fun <reified E : ExeCEvent> ExeCEventListenable.onEvent(
         dispatcher: CoroutineDispatcher,
         forced: Boolean = false,
-        always: Boolean = true,
         priority: Int = 0,
+        always: Boolean = false,
         noinline action: suspend CoroutineScope.(E) -> Unit
 ) {
         ExeCEventManager.register(
@@ -47,8 +47,8 @@ inline fun <reified E : ExeCEvent> ExeCEventListenable.onEvent(
 @Suppress("UNUSED")
 inline fun <reified E : ExeCEvent> ExeCEventListenable.onEvent(
         forced: Boolean = false,
-        always: Boolean = true,
         priority: Int = 0,
+        always: Boolean = false,
         noinline action: (E) -> Unit
 ) {
         ExeCEventManager.register(
