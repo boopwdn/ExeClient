@@ -23,6 +23,7 @@ import com.google.common.collect.ImmutableList
 import com.google.common.collect.ImmutableSortedMap
 import net.llvg.exec.ExeClient
 import net.llvg.exec.utils.classNameLogger
+import net.llvg.exec.utils.registry.RegisterEvent
 import net.llvg.exec.utils.registry.Registry
 import net.llvg.exec.vanilla.utils.chat_component.buildChat
 import net.llvg.exec.vanilla.utils.player
@@ -38,6 +39,17 @@ object ExeCCommandManager : Registry<ExeCCommand>(
         ExeCCommandHelp,
         ExeCCommandThrow
 ) {
+        override fun event(
+                elements: MutableList<ExeCCommand>
+        ): RegisterEvent<ExeCCommand> =
+                Event.Impl {
+                        elements += it
+                }
+        
+        sealed interface Event : RegisterEvent<ExeCCommand> {
+                fun interface Impl : Event
+        }
+        
         init {
                 ClientCommandHandler.instance.registerCommand(ExeCInternalCommand)
         }

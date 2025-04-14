@@ -73,3 +73,15 @@ inline fun <reified E : ExeCEvent> E.post(
                 wait
         )
 }
+
+@Suppress("UNUSED")
+fun <E : ExeCEvent> E.post(
+        type: Class<out E>,
+        wait: Boolean
+) {
+        ExeCEventManager.post(
+                type,
+                this,
+                wait
+        )
+}

@@ -23,7 +23,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 
 sealed class ExeCEventListener<E : ExeCEvent>(
-        private val owner: ExeCEventListenable,
+        val owner: ExeCEventListenable,
         private val always: Boolean,
         private val priority: Int
 ) : Comparable<ExeCEventListener<E>> {
