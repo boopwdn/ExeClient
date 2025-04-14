@@ -19,34 +19,36 @@
 
 package net.llvg.exec.api.command
 
-import net.minecraft.util.ChatStyle
-import net.minecraft.util.EnumChatFormatting
+import net.llvg.exec.vanilla.utils.chat_component.ChatColor
+import net.llvg.exec.vanilla.utils.chat_component.ChatComponentBuildScope.`--color`
+import net.llvg.exec.vanilla.utils.chat_component.style
+import net.minecraft.util.IChatComponent
 
+@Suppress("ObjectPropertyName")
 object ExeCCommandChatComponentScope {
-        val ChatStyle.styleCommandName: Unit
-                get() {
-                        color = EnumChatFormatting.GOLD
+        val IChatComponent.`--style command-name`: IChatComponent
+                get() = style {
+                        `--color`(ChatColor.GOLD)
                         bold = true
                 }
         
-        val ChatStyle.styleCommandText: Unit
-                get() {
-                        color = EnumChatFormatting.YELLOW
+        val IChatComponent.`--style command-text`: IChatComponent
+                get() = style {
+                        `--color`(ChatColor.YELLOW)
                 }
         
-        val ChatStyle.styleParameter: Unit
-                get() {
-                        color = EnumChatFormatting.LIGHT_PURPLE
+        val IChatComponent.`--style parameter`: IChatComponent
+                get() = style {
+                        `--color`(ChatColor.LIGHT_PURPLE)
                 }
         
-        val ChatStyle.styleSplitMark: Unit
-                get() {
-                        color = EnumChatFormatting.GRAY
+        val IChatComponent.`--style split-mark`: IChatComponent
+                get() = style {
+                        `--color`(ChatColor.GRAY)
                 }
         
-        val ChatStyle.styleWarn: Unit
-                get() {
-                        color = EnumChatFormatting.RED
+        val IChatComponent.`--style warn`: IChatComponent
+                get() = style {
+                        `--color`(ChatColor.RED)
                 }
-        
 }

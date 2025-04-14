@@ -29,13 +29,13 @@ import net.llvg.exec.mixin.inject.InjectNetHandlerPlayClient
 import net.llvg.exec.vanilla.event.EntityLivingBaseEvent
 import net.llvg.exec.vanilla.event.PacketEvent
 import net.llvg.exec.vanilla.event.WorldClientEvent
+import net.llvg.exec.vanilla.utils.chat_component.ChatColor
 import net.llvg.exec.vanilla.utils.chat_component.buildChat
 import net.llvg.exec.vanilla.utils.mc
 import net.llvg.exec.vanilla.utils.player
 import net.llvg.exec.vanilla.utils.world
 import net.llvg.loliutils.exception.cast
 import net.minecraft.entity.Entity
-import net.minecraft.util.EnumChatFormatting
 import net.minecraft.util.MovementInput
 import net.minecraft.util.MovementInputFromOptions
 
@@ -46,9 +46,8 @@ object FreeCam : ExeCFeature<FreeCamConfig> {
                         
                         if (FreeCamConfig.disableOnDamage && e.entity.health > e.health) {
                                 if (FreeCamConfig.sendMessage) ExeClient.send {
-                                        "You took damage!" {
-                                                color = EnumChatFormatting.YELLOW
-                                        }
+                                        "You took damage!"()
+                                        .`--color`(ChatColor.YELLOW)
                                 }
                                 
                                 disable()
@@ -58,9 +57,8 @@ object FreeCam : ExeCFeature<FreeCamConfig> {
                 onEvent(Dispatchers.Default) { e: PacketEvent.Server.S43.Pre ->
                         if (FreeCamConfig.disableOnSeverCameraChange) {
                                 if (FreeCamConfig.sendMessage) ExeClient.send {
-                                        "Server is trying to change your camera entity!" {
-                                                color = EnumChatFormatting.YELLOW
-                                        }
+                                        "Server is trying to change your camera entity!"()
+                                        .`--color`(ChatColor.YELLOW)
                                 }
                                 
                                 disable()
@@ -168,15 +166,19 @@ object FreeCam : ExeCFeature<FreeCamConfig> {
         private val toggleLock = Any()
         
         private val MESSAGE_ENABLED = buildChat {
-                empty +
-                "Free Camera " +
-                ExeCFeature.MESSAGE_ENABLED
+                of(
+                        empty()
+                        .."Free Camera "
+                        ..ExeCFeature.MESSAGE_ENABLED
+                )
         }
         
         private val MESSAGE_DISABLED = buildChat {
-                empty +
-                "Free Camera " +
-                ExeCFeature.MESSAGE_DISABLED
+                of(
+                        empty()
+                        .."Free Camera "
+                        ..ExeCFeature.MESSAGE_DISABLED
+                )
         }
         
         @Synchronized

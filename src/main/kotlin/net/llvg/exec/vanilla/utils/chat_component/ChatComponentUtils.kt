@@ -30,13 +30,19 @@ inline fun buildChat(
 ): IChatComponent =
         ChatComponentBuildScope.builder()
 
-inline fun IChatComponent.withChatStyle(
+inline fun IChatComponent.style(
         chatStyle: ChatStyle,
         configure: ChatStyle.() -> Unit
 ): IChatComponent =
         apply { this.chatStyle = chatStyle.apply(configure) }
 
-inline infix fun IChatComponent.withChatStyle(
+inline infix fun IChatComponent.style(
         configure: ChatStyle.() -> Unit
 ): IChatComponent =
-        withChatStyle(chatStyle, configure)
+        style(chatStyle, configure)
+
+infix fun ChatStyle.color(
+        color: ChatColor
+) {
+        this.color = color.format
+}
