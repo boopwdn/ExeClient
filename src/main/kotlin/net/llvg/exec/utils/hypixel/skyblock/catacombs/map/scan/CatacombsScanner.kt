@@ -17,7 +17,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.llvg.exec.utils.skyblock.catacombs.map.scan
+package net.llvg.exec.utils.hypixel.skyblock.catacombs.map.scan
 
 import java.util.concurrent.locks.ReadWriteLock
 import java.util.concurrent.locks.ReentrantReadWriteLock
@@ -34,8 +34,8 @@ import net.llvg.exec.api.event.ExeCEventListenable
 import net.llvg.exec.api.event.onEvent
 import net.llvg.exec.feature.catacombs_scan.CatacombsScan
 import net.llvg.exec.utils.classNameLogger
-import net.llvg.exec.utils.skyblock.catacombs.map.RoomData
-import net.llvg.exec.utils.skyblock.catacombs.map.RoomType
+import net.llvg.exec.utils.hypixel.skyblock.catacombs.map.RoomData
+import net.llvg.exec.utils.hypixel.skyblock.catacombs.map.RoomType
 import net.llvg.exec.utils.vector.Vec2I
 import net.llvg.exec.vanilla.block.id
 import net.llvg.exec.vanilla.event.WorldClientEvent

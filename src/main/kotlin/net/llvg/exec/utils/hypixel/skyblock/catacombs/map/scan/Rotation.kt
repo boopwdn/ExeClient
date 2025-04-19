@@ -17,15 +17,25 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.llvg.exec.utils.skyblock.catacombs.map.scan
+package net.llvg.exec.utils.hypixel.skyblock.catacombs.map.scan
 
-import net.llvg.exec.utils.skyblock.catacombs.map.RoomData
-import net.minecraft.util.BlockPos
+import net.llvg.exec.utils.vector.Vec2I
 
-data class RoomInfo(
-        val data: RoomData
+enum class Rotation(
+        x: Int,
+        y: Int
 ) {
-        var rotation: Rotation = Rotation.UNKNOWN
-        val entries: MutableSet<RoomEntry> = LinkedHashSet()
-        var corner: BlockPos? = null
+        UNKNOWN(0, 0),
+        NORTH(+1, +1),
+        SOUTH(-1, -1),
+        EAST(+1, -1),
+        WEST(-1, +1);
+        
+        val offset = Vec2I(x, y)
+        
+        companion object {
+                @JvmField
+                val directions: Array<Rotation> =
+                        arrayOf(NORTH, SOUTH, EAST, WEST)
+        }
 }

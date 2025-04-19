@@ -17,7 +17,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.llvg.exec.utils.skyblock.catacombs.map.scan
+package net.llvg.exec.utils.hypixel.skyblock.catacombs.map.scan
 
 import net.llvg.exec.utils.vector.Vec2I
 
