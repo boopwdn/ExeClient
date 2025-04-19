@@ -19,11 +19,13 @@
 
 package net.llvg.exec.api.feature
 
+import net.llvg.exec.feature.catacombs_scan.CatacombsScan
 import net.llvg.exec.feature.freecam.FreeCam
 import net.llvg.exec.utils.registry.RegisterEvent
 import net.llvg.exec.utils.registry.Registry
 
 object ExeCFeatureManager : Registry<ExeCFeature<*>>(
+        CatacombsScan,
         FreeCam
 ) {
         override fun event(

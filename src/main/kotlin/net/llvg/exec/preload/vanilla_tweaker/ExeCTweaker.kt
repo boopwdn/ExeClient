@@ -22,6 +22,9 @@ package net.llvg.exec.preload.vanilla_tweaker
 import cc.polyfrost.oneconfig.loader.stage0.LaunchWrapperTweaker
 import java.io.File
 import net.llvg.exec.utils.classNameLogger
+import net.llvg.exec.utils.delegate.InitOnceRef
+import net.llvg.loliutils.delegate.getValue
+import net.llvg.loliutils.delegate.setValue
 import net.llvg.loliutils.exception.cast
 import net.minecraft.launchwrapper.ITweaker
 import net.minecraft.launchwrapper.Launch
@@ -36,6 +39,7 @@ class ExeCTweaker : ITweaker {
                 assetsDir: File?,
                 profile: String?
         ) {
+                internalGameDir = gameDir ?: File(".").absoluteFile
         }
         
         override fun injectIntoClassLoader(
@@ -71,6 +75,14 @@ class ExeCTweaker : ITweaker {
                 
                 MixinBootstrap.getPlatform().addContainer(location.toURI())
         }
+        
+        companion object {
+                @JvmStatic
+                val gameDir: File
+                        get() = internalGameDir
+        }
 }
+
+private var internalGameDir by InitOnceRef<File>()
 
 private val logger = classNameLogger<ExeCTweaker>()
