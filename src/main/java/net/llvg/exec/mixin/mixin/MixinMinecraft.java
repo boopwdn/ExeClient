@@ -20,7 +20,6 @@
 package net.llvg.exec.mixin.mixin;
 
 import net.llvg.exec.feature.freecam.FreeCam;
-import net.llvg.exec.hypixel.HypixelModApiHelper;
 import net.llvg.exec.mixin.callback.CallbackMinecraft;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
