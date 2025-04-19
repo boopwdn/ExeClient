@@ -29,8 +29,8 @@ import net.llvg.exec.api.command.ExeCCommandChatComponentScope
 import net.llvg.exec.api.command.combineUsages
 import net.llvg.exec.api.command.sendUsage
 import net.llvg.exec.api.command.sendWrongUsage
-import net.llvg.exec.utils.hypixel.skyblock.catacombs.map.scan.CatacombsMap
-import net.llvg.exec.utils.hypixel.skyblock.catacombs.map.scan.CatacombsScanner
+import net.llvg.exec.hypixel.skyblock.catacombs.map.scan.CatacombsMap
+import net.llvg.exec.hypixel.skyblock.catacombs.map.scan.CatacombsScanner
 import net.llvg.exec.vanilla.utils.chat_component.ChatColor
 import net.llvg.exec.vanilla.utils.chat_component.buildChat
 import net.llvg.exec.vanilla.utils.player

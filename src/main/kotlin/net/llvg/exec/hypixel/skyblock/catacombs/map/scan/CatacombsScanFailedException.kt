@@ -17,15 +17,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.llvg.exec.utils.hypixel.skyblock.catacombs.map
+package net.llvg.exec.hypixel.skyblock.catacombs.map.scan
 
-enum class RoomType {
-        NORMAL,
-        PUZZLE,
-        ENTRANCE,
-        FAIRY,
-        BLOOD,
-        MINI_BOSS,
-        TRAP,
-        RARE;
-}
+@Suppress("UNUSED_PARAMETER")
+class CatacombsScanFailedException(e: Throwable) : RuntimeException()

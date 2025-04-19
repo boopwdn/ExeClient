@@ -24,7 +24,7 @@ import net.llvg.exec.api.command.ExeCCommandManager
 import net.llvg.exec.api.config.ExeClientConfig
 import net.llvg.exec.api.event.onEvent
 import net.llvg.exec.api.feature.ExeCFeature
-import net.llvg.exec.utils.hypixel.skyblock.catacombs.map.scan.CatacombsMap
+import net.llvg.exec.hypixel.skyblock.catacombs.map.scan.CatacombsMap
 
 object CatacombsScan : ExeCFeature<CatacombsScanConfig> {
         init {

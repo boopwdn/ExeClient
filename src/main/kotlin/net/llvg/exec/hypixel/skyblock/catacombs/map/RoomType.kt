@@ -17,25 +17,15 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.llvg.exec.utils.hypixel.skyblock.catacombs.map.scan
+package net.llvg.exec.hypixel.skyblock.catacombs.map
 
-import net.llvg.exec.utils.vector.Vec2I
-
-enum class Rotation(
-        x: Int,
-        y: Int
-) {
-        UNKNOWN(0, 0),
-        NORTH(+1, +1),
-        SOUTH(-1, -1),
-        EAST(+1, -1),
-        WEST(-1, +1);
-        
-        val offset = Vec2I(x, y)
-        
-        companion object {
-                @JvmField
-                val directions: Array<Rotation> =
-                        arrayOf(NORTH, SOUTH, EAST, WEST)
-        }
+enum class RoomType {
+        NORMAL,
+        PUZZLE,
+        ENTRANCE,
+        FAIRY,
+        BLOOD,
+        MINI_BOSS,
+        TRAP,
+        RARE;
 }

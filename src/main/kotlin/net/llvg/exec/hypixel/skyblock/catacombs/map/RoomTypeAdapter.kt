@@ -17,7 +17,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.llvg.exec.utils.hypixel.skyblock.catacombs.map
+package net.llvg.exec.hypixel.skyblock.catacombs.map
 
 import com.google.gson.TypeAdapter
 import com.google.gson.stream.JsonReader

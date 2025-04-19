@@ -17,12 +17,15 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.llvg.exec.utils.hypixel.skyblock.catacombs.map.scan
+package net.llvg.exec.hypixel.skyblock.catacombs.map.scan
 
-import net.llvg.exec.utils.vector.Vec2I
+import net.llvg.exec.hypixel.skyblock.catacombs.map.RoomData
+import net.minecraft.util.BlockPos
 
-class RoomEntry(
-        val pos: Vec2I
+data class RoomInfo(
+        val data: RoomData
 ) {
-        var info: RoomInfo? = null
+        var rotation: Rotation = Rotation.UNKNOWN
+        val entries: MutableSet<RoomEntry> = LinkedHashSet()
+        var corner: BlockPos? = null
 }
