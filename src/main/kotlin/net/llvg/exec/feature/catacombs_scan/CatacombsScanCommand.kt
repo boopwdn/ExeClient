@@ -87,6 +87,8 @@ object CatacombsScanCommand : ExeCCommand {
                 if (args.isEmpty()) {
                         sendUsage()
                 } else {
+                        if (!CatacombsScan.active) return
+                        
                         if (CatacombsScan.checkCatacombs()) {
                                 ExeClient.send {
                                         with(ExeCCommandChatComponentScope) {

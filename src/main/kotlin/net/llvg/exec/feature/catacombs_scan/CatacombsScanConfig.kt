@@ -26,8 +26,8 @@ import net.llvg.exec.api.config.ExeClientConfig
 object CatacombsScanConfig : ExeCFeatureConfig<CatacombsScanConfig>(
         "Catacombs Scan",
         "exec-catacombs_scan-config.json",
+        enabled = true,
         canToggle = false,
-        enabled = true
 ) {
         override val self: CatacombsScanConfig
                 get() = this
@@ -37,6 +37,11 @@ object CatacombsScanConfig : ExeCFeatureConfig<CatacombsScanConfig>(
         )
         var onlyInCatacombs: Boolean = true
         
+        @Checkbox(
+                name = "Auto Scan"
+        )
+        var autoScan: Boolean = true
+        
         override fun active(): Boolean =
-                ExeClientConfig.active() && super.active()
+                ExeClientConfig.active()
 }

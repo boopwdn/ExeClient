@@ -26,11 +26,19 @@ import net.llvg.exec.api.event.onEvent
 import net.llvg.exec.api.feature.ExeCFeature
 import net.llvg.exec.hypixel.isInCatacombs
 import net.llvg.exec.hypixel.skyblock.catacombs.map.scan.CatacombsMap
+import net.llvg.exec.hypixel.skyblock.catacombs.map.scan.CatacombsScanner
+import net.llvg.exec.vanilla.event.TickEvent
 
 object CatacombsScan : ExeCFeature<CatacombsScanConfig> {
         init {
                 onEvent(Dispatchers.Default, always = true) { e: ExeCCommandManager.Event ->
                         e register CatacombsScanCommand
+                }
+                
+                onEvent(Dispatchers.Default) { _: TickEvent.Client.Post ->
+                        if (config.autoScan && !checkCatacombs()) {
+                                CatacombsScanner.scan()
+                        }
                 }
         }
         
@@ -39,7 +47,7 @@ object CatacombsScan : ExeCFeature<CatacombsScanConfig> {
         }
         
         fun checkCatacombs(): Boolean =
-                CatacombsScanConfig.onlyInCatacombs && !isInCatacombs
+                config.onlyInCatacombs && !isInCatacombs
         
         override val config: CatacombsScanConfig
                 get() = ExeClientConfig.configCatacombsScan

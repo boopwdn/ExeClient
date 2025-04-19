@@ -73,6 +73,11 @@ public abstract class MixinMinecraft implements IThreadListener, IPlayerUsage {
                 }
         }
         
+        @Inject (method = "runTick", at = @At (value = "INVOKE", target = "Lnet/minecraft/profiler/Profiler;endSection()V", ordinal = 1))
+        private void runTickInject1(CallbackInfo ci) {
+                CallbackMinecraft.postTickEventClientPost();
+        }
+        
         @Inject (method = "loadWorld(Lnet/minecraft/client/multiplayer/WorldClient;Ljava/lang/String;)V", at = @At ("HEAD"))
         private void loadWorldInject(WorldClient worldClientIn, String loadingMessage, CallbackInfo ci) {
                 CallbackMinecraft.postWorldClientEventLoadPre(worldClientIn);
