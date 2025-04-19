@@ -17,29 +17,14 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-@file:[JvmName("CallbackMinecraft") Suppress("FunctionName")]
+@file:JvmName("VectorUtils")
 
-package net.llvg.exec.mixin.callback
+package net.llvg.exec.vanilla.utils.vector
 
-import net.llvg.exec.vanilla.event.WorldClientEvent
-import net.llvg.exec.api.event.post
-import net.llvg.exec.vanilla.event.GameStartEvent
-import net.llvg.exec.vanilla.event.TickEvent
-import net.minecraft.client.multiplayer.WorldClient
+import net.minecraft.util.Vec3i
 
-fun postGameStartEventPost() {
-        GameStartEvent.Post.Impl.post(true)
-}
+operator fun Vec3i.component1(): Int = x
 
-fun postTickEventClientPost() {
-        TickEvent.Client.Post.Impl.post(true)
-}
+operator fun Vec3i.component2(): Int = y
 
-fun postWorldClientEventLoadPre(
-        worldClient: WorldClient?
-) {
-        val event = WorldClientEvent.Load.Pre.Impl(
-                worldClient
-        )
-        event.post(true)
-}
+operator fun Vec3i.component3(): Int = z

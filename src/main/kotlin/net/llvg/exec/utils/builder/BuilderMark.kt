@@ -17,29 +17,20 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-@file:[JvmName("CallbackMinecraft") Suppress("FunctionName")]
+package net.llvg.exec.utils.builder
 
-package net.llvg.exec.mixin.callback
+import kotlin.annotation.AnnotationRetention.*
+import kotlin.annotation.AnnotationTarget.*
 
-import net.llvg.exec.vanilla.event.WorldClientEvent
-import net.llvg.exec.api.event.post
-import net.llvg.exec.vanilla.event.GameStartEvent
-import net.llvg.exec.vanilla.event.TickEvent
-import net.minecraft.client.multiplayer.WorldClient
-
-fun postGameStartEventPost() {
-        GameStartEvent.Post.Impl.post(true)
-}
-
-fun postTickEventClientPost() {
-        TickEvent.Client.Post.Impl.post(true)
-}
-
-fun postWorldClientEventLoadPre(
-        worldClient: WorldClient?
-) {
-        val event = WorldClientEvent.Load.Pre.Impl(
-                worldClient
-        )
-        event.post(true)
-}
+@DslMarker
+@Target(
+        FUNCTION,
+        PROPERTY_GETTER,
+        PROPERTY_SETTER,
+        CLASS,
+        TYPE
+)
+@Retention(
+        RUNTIME
+)
+annotation class BuilderMark

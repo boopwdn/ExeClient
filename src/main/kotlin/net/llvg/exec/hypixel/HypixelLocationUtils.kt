@@ -17,29 +17,17 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-@file:[JvmName("CallbackMinecraft") Suppress("FunctionName")]
+@file:JvmName("HypixelLocationUtils")
 
-package net.llvg.exec.mixin.callback
+package net.llvg.exec.hypixel
 
-import net.llvg.exec.vanilla.event.WorldClientEvent
-import net.llvg.exec.api.event.post
-import net.llvg.exec.vanilla.event.GameStartEvent
-import net.llvg.exec.vanilla.event.TickEvent
-import net.minecraft.client.multiplayer.WorldClient
+import net.hypixel.data.type.GameType
 
-fun postGameStartEventPost() {
-        GameStartEvent.Post.Impl.post(true)
-}
+val isInSkyBlock: Boolean
+        get() = HypixelLocation.serverType === GameType.SKYBLOCK
 
-fun postTickEventClientPost() {
-        TickEvent.Client.Post.Impl.post(true)
-}
+val isInDungeon: Boolean
+        get() = isInSkyBlock && HypixelLocation.mode == "dungeon"
 
-fun postWorldClientEventLoadPre(
-        worldClient: WorldClient?
-) {
-        val event = WorldClientEvent.Load.Pre.Impl(
-                worldClient
-        )
-        event.post(true)
-}
+val isInCatacombs: Boolean // There's only one type of dungeon called catacombs right now
+        get() = isInDungeon

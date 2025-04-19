@@ -19,32 +19,45 @@
 
 package net.llvg.exec
 
+import java.io.File
 import net.llvg.exec.api.command.ExeCCommandManager
 import net.llvg.exec.api.config.ExeClientConfig
 import net.llvg.exec.api.event.ExeCEventManager
 import net.llvg.exec.api.feature.ExeCFeatureManager
+import net.llvg.exec.hypixel.HypixelModApiHelper
+import net.llvg.exec.preload.vanilla_tweaker.ExeCTweaker
 import net.llvg.exec.utils.classNameLogger
 import net.llvg.exec.vanilla.utils.chat_component.ChatColor
 import net.llvg.exec.vanilla.utils.chat_component.ChatComponentBuildScope
 import net.llvg.exec.vanilla.utils.chat_component.buildChat
-import net.llvg.exec.vanilla.utils.player
+import net.llvg.exec.vanilla.utils.mc
 import net.minecraft.util.IChatComponent
 
 object ExeClient {
         @JvmField
         val logger = classNameLogger<ExeClient>()
         
+        @JvmField
+        val directory: File = File(ExeCTweaker.gameDir, "Exe Client")
+        
+        const val MIXIN_ID = "exec"
+        
         @JvmStatic
         fun initialize() {
                 ExeCEventManager
-                ExeClientConfig
                 ExeCFeatureManager
+                ExeClientConfig
                 ExeCCommandManager
+                HypixelModApiHelper
         }
         
         fun send(
                 message: IChatComponent
         ) {
+                val player = mc.thePlayer
+                if (player === null) {
+                        logger.warn("Try to send \"{}\" to player but player is null", message.formattedText)
+                }
                 buildChat {
                         of(
                                 empty()

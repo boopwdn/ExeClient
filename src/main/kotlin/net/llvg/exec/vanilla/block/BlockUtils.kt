@@ -17,29 +17,11 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-@file:[JvmName("CallbackMinecraft") Suppress("FunctionName")]
+@file:JvmName("BlockUtils")
 
-package net.llvg.exec.mixin.callback
+package net.llvg.exec.vanilla.block
 
-import net.llvg.exec.vanilla.event.WorldClientEvent
-import net.llvg.exec.api.event.post
-import net.llvg.exec.vanilla.event.GameStartEvent
-import net.llvg.exec.vanilla.event.TickEvent
-import net.minecraft.client.multiplayer.WorldClient
+import net.minecraft.block.Block
 
-fun postGameStartEventPost() {
-        GameStartEvent.Post.Impl.post(true)
-}
-
-fun postTickEventClientPost() {
-        TickEvent.Client.Post.Impl.post(true)
-}
-
-fun postWorldClientEventLoadPre(
-        worldClient: WorldClient?
-) {
-        val event = WorldClientEvent.Load.Pre.Impl(
-                worldClient
-        )
-        event.post(true)
-}
+val Block.id: Int
+        get() = Block.getIdFromBlock(this)

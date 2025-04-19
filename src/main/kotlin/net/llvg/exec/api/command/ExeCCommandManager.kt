@@ -42,12 +42,18 @@ object ExeCCommandManager : Registry<ExeCCommand>(
         override fun event(
                 elements: MutableList<ExeCCommand>
         ): RegisterEvent<ExeCCommand> =
-                Event.Impl {
-                        elements += it
-                }
+                EventImpl(elements)
         
-        sealed interface Event : RegisterEvent<ExeCCommand> {
-                fun interface Impl : Event
+        interface Event : RegisterEvent<ExeCCommand>
+        
+        private data class EventImpl(
+                private val elements: MutableList<ExeCCommand>
+        ) : Event {
+                override fun register(
+                        element: ExeCCommand
+                ) {
+                        elements += element
+                }
         }
         
         init {
@@ -263,7 +269,7 @@ object ExeCCommandManager : Registry<ExeCCommand>(
                 override fun completeTab(
                         args: Array<String>
                 ): List<String> = if (args.size == 1) {
-                        commandsStartsWith(name)
+                        commandsStartsWith(args[0])
                 } else {
                         emptyList()
                 }

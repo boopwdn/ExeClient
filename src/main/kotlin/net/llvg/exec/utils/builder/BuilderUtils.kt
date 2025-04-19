@@ -17,29 +17,18 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-@file:[JvmName("CallbackMinecraft") Suppress("FunctionName")]
+@file:JvmName("BuilderUtils")
 
-package net.llvg.exec.mixin.callback
+package net.llvg.exec.utils.builder
 
-import net.llvg.exec.vanilla.event.WorldClientEvent
-import net.llvg.exec.api.event.post
-import net.llvg.exec.vanilla.event.GameStartEvent
-import net.llvg.exec.vanilla.event.TickEvent
-import net.minecraft.client.multiplayer.WorldClient
-
-fun postGameStartEventPost() {
-        GameStartEvent.Post.Impl.post(true)
-}
-
-fun postTickEventClientPost() {
-        TickEvent.Client.Post.Impl.post(true)
-}
-
-fun postWorldClientEventLoadPre(
-        worldClient: WorldClient?
-) {
-        val event = WorldClientEvent.Load.Pre.Impl(
-                worldClient
-        )
-        event.post(true)
+@Suppress("UnusedReceiverParameter")
+fun <T> BuilderBase<*>.notNull(
+        value: T?,
+        name: String
+): T {
+        if (value === null) {
+                throw IllegalArgumentException("value [$name] should not be null!")
+        }
+        
+        return value
 }

@@ -17,29 +17,22 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-@file:[JvmName("CallbackMinecraft") Suppress("FunctionName")]
+@file:JvmName("JsonUtils")
 
-package net.llvg.exec.mixin.callback
+package net.llvg.exec.utils.json
 
-import net.llvg.exec.vanilla.event.WorldClientEvent
-import net.llvg.exec.api.event.post
-import net.llvg.exec.vanilla.event.GameStartEvent
-import net.llvg.exec.vanilla.event.TickEvent
-import net.minecraft.client.multiplayer.WorldClient
+import com.google.gson.TypeAdapter
+import com.google.gson.stream.JsonReader
+import com.google.gson.stream.JsonWriter
 
-fun postGameStartEventPost() {
-        GameStartEvent.Post.Impl.post(true)
-}
+inline fun <reified T> JsonReader.nextTyped(
+        adapter: TypeAdapter<T>
+): T =
+        adapter.read(this)
 
-fun postTickEventClientPost() {
-        TickEvent.Client.Post.Impl.post(true)
-}
-
-fun postWorldClientEventLoadPre(
-        worldClient: WorldClient?
+inline fun <reified T> JsonWriter.value(
+        value: T,
+        adapter: TypeAdapter<T>
 ) {
-        val event = WorldClientEvent.Load.Pre.Impl(
-                worldClient
-        )
-        event.post(true)
+        adapter.write(this, value)
 }
