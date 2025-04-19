@@ -23,7 +23,12 @@ package net.llvg.exec.mixin.callback
 
 import net.llvg.exec.vanilla.event.WorldClientEvent
 import net.llvg.exec.api.event.post
+import net.llvg.exec.vanilla.event.GameStartEvent
 import net.minecraft.client.multiplayer.WorldClient
+
+fun postGameStartEventPost() {
+        GameStartEvent.Post.Impl.post(true)
+}
 
 fun postWorldClientEventLoadPre(
         worldClient: WorldClient?

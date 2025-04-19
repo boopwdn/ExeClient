@@ -19,20 +19,52 @@
 
 package net.llvg.exec.hypixel
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.joinAll
+import kotlinx.coroutines.launch
 import net.hypixel.modapi.HypixelModAPI
 import net.hypixel.modapi.packet.EventPacket
+import net.llvg.exec.api.event.ExeCEventListenable
+import net.llvg.exec.api.event.onEvent
+import net.llvg.exec.vanilla.event.GameStartEvent
+import net.llvg.loliutils.exception.cast
 
-object HypixelModApiHelper {
+@Suppress("MemberVisibilityCanBePrivate")
+object HypixelModApiHelper : ExeCEventListenable {
         val hypixelModAPI: HypixelModAPI = HypixelModAPI.getInstance()
+        
+        private val eventPacketListeners: MutableMap<Class<out EventPacket>, MutableList<(EventPacket) -> Unit>> =
+                HashMap()
         
         init {
                 HypixelLocation
+                onEvent(Dispatchers.Default) { _: GameStartEvent.Post ->
+                        val jobs = mutableListOf<Job>()
+                        for ((type, listeners) in eventPacketListeners) jobs += launch {
+                                hypixelModAPI.subscribeToEventPacket(type)
+                                listeners.forEach {
+                                        hypixelModAPI.createHandler(type, it)
+                                }
+                        }
+                        jobs.joinAll()
+                }
+        }
+        
+        fun <P : EventPacket> onPacket(
+                type: Class<P>,
+                action: (P) -> Unit
+        ) {
+                val listeners = eventPacketListeners[type] ?: synchronized(eventPacketListeners) {
+                        eventPacketListeners.getOrPut(type) { ArrayList() }
+                }
+                
+                listeners += { action(cast(it)) }
         }
         
         inline fun <reified P : EventPacket> onPacket(
                 noinline action: (P) -> Unit
         ) {
-                hypixelModAPI.subscribeToEventPacket(P::class.java)
-                hypixelModAPI.createHandler(P::class.java, action)
+                onPacket(P::class.java, action)
         }
 }

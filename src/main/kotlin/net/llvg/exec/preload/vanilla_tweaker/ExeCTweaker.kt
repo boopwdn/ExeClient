@@ -46,8 +46,8 @@ class ExeCTweaker : ITweaker {
                 classLoader: LaunchClassLoader
         ) {
                 val tweakClasses: MutableList<String> = cast(Launch.blackboard["TweakClasses"])
-                tweakClasses.add(LaunchWrapperTweaker::class.java.name)
-                tweakClasses.add("org.spongepowered.asm.launch.MixinTweaker")
+                tweakClasses += LaunchWrapperTweaker::class.java.name
+                tweakClasses += "org.spongepowered.asm.launch.MixinTweaker"
         }
         
         override fun getLaunchTarget(): String =

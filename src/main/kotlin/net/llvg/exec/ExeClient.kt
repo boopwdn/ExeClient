@@ -24,6 +24,7 @@ import net.llvg.exec.api.command.ExeCCommandManager
 import net.llvg.exec.api.config.ExeClientConfig
 import net.llvg.exec.api.event.ExeCEventManager
 import net.llvg.exec.api.feature.ExeCFeatureManager
+import net.llvg.exec.hypixel.HypixelModApiHelper
 import net.llvg.exec.preload.vanilla_tweaker.ExeCTweaker
 import net.llvg.exec.utils.classNameLogger
 import net.llvg.exec.vanilla.utils.chat_component.ChatColor
@@ -47,6 +48,7 @@ object ExeClient {
                 ExeCFeatureManager
                 ExeClientConfig
                 ExeCCommandManager
+                HypixelModApiHelper
         }
         
         fun send(

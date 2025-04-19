@@ -57,13 +57,13 @@ loom {
         mixin.defaultRefmapName = refmap_file
 }
 
-val shade by configurations.registering
-val modShade by configurations.registering
+val allShade by configurations.registering
+
+val shade by configurations.registering { allShade.get().extendsFrom(this) }
 
 @Suppress("UnstableApiUsage")
 configurations {
         implementation.extendsFrom(shade)
-        modImplementation.extendsFrom(modShade)
 }
 
 sourceSets.main {
@@ -76,7 +76,7 @@ repositories {
         maven("https://repo.hypixel.net/repository/Hypixel/") {
                 name = "Hypixel Maven"
                 content {
-                        includeModule("net.hypixel", "mod-api")
+                        includeGroup("net.hypixel")
                 }
         }
         maven("https://jitpack.io") {
@@ -97,7 +97,7 @@ repositories {
         maven("https://repo.polyfrost.org/releases") {
                 name = "Polyfrost Maven"
                 content {
-                        excludeGroup("com\\.github\\.(.)+")
+                        excludeGroupByRegex("com\\.github\\.(.)+")
                 }
         }
         maven("https://cursemaven.com") {
@@ -132,7 +132,7 @@ dependencies {
         compileOnly("cc.polyfrost:oneconfig-1.8.9-forge:0.2.2-alpha223:full")
         compileOnly("cc.polyfrost:oneconfig-loader-launchwrapper:1.0.0-beta17")
         
-        compileOnly("net.hypixel:mod-api:1.0.1")
+        modImplementation("net.hypixel:mod-api-forge:1.0.1.2")
         modRuntimeOnly("curse.maven:in-game-account-switcher-232676:3413259a")
         runtimeOnly("com.github.boopwdn:YqlossClientMixin:master-SNAPSHOT:dev") {
                 isChanging = true
@@ -186,8 +186,13 @@ tasks {
         
         shadowJar {
                 archiveClassifier = "dev"
-                configurations = listOf(shade.get(), modShade.get())
+                configurations = listOf(allShade.get())
                 duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+                
+                relocate(
+                        "net.hypixel.modapi.tweaker.HypixelModAPITweaker",
+                        "net.llvg.exec.preload.vanilla_tweaker.HypixelModAPITweaker"
+                )
         }
         
         remapJar {

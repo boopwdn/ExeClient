@@ -87,6 +87,16 @@ object CatacombsScanCommand : ExeCCommand {
                 if (args.isEmpty()) {
                         sendUsage()
                 } else {
+                        if (CatacombsScan.checkCatacombs()) {
+                                ExeClient.send {
+                                        with(ExeCCommandChatComponentScope) {
+                                                "You are not in catacombs"()
+                                                .`--style warn`
+                                        }
+                                }
+                                return
+                        }
+                        
                         val command = commands[args[0]]
                         
                         if (command === null) {

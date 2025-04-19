@@ -17,26 +17,12 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.llvg.exec.feature.catacombs_scan
+package net.llvg.exec.vanilla.event
 
-import cc.polyfrost.oneconfig.config.annotations.Checkbox
-import net.llvg.exec.api.config.ExeCFeatureConfig
-import net.llvg.exec.api.config.ExeClientConfig
+import net.llvg.exec.api.event.ExeCEvent
 
-object CatacombsScanConfig : ExeCFeatureConfig<CatacombsScanConfig>(
-        "Catacombs Scan",
-        "exec-catacombs_scan-config.json",
-        canToggle = false,
-        enabled = true
-) {
-        override val self: CatacombsScanConfig
-                get() = this
-        
-        @Checkbox(
-                name = "Only In Catacombs"
-        )
-        var onlyInCatacombs: Boolean = true
-        
-        override fun active(): Boolean =
-                ExeClientConfig.active() && super.active()
+interface GameStartEvent : ExeCEvent {
+        interface Post : GameStartEvent {
+                data object Impl : Post
+        }
 }

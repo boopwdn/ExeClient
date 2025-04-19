@@ -24,6 +24,7 @@ import net.llvg.exec.api.command.ExeCCommandManager
 import net.llvg.exec.api.config.ExeClientConfig
 import net.llvg.exec.api.event.onEvent
 import net.llvg.exec.api.feature.ExeCFeature
+import net.llvg.exec.hypixel.isInCatacombs
 import net.llvg.exec.hypixel.skyblock.catacombs.map.scan.CatacombsMap
 
 object CatacombsScan : ExeCFeature<CatacombsScanConfig> {
@@ -36,6 +37,9 @@ object CatacombsScan : ExeCFeature<CatacombsScanConfig> {
         override fun initialize() {
                 CatacombsMap
         }
+        
+        fun checkCatacombs(): Boolean =
+                CatacombsScanConfig.onlyInCatacombs && !isInCatacombs
         
         override val config: CatacombsScanConfig
                 get() = ExeClientConfig.configCatacombsScan

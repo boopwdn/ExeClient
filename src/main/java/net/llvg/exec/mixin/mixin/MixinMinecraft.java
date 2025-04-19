@@ -20,6 +20,7 @@
 package net.llvg.exec.mixin.mixin;
 
 import net.llvg.exec.feature.freecam.FreeCam;
+import net.llvg.exec.hypixel.HypixelModApiHelper;
 import net.llvg.exec.mixin.callback.CallbackMinecraft;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
@@ -39,6 +40,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class MixinMinecraft implements IThreadListener, IPlayerUsage {
         @Shadow
         public GameSettings gameSettings;
+        
+        @Inject (method = "startGame", at = @At ("TAIL"))
+        private void startGameInject(CallbackInfo ci) {
+                CallbackMinecraft.postGameStartEventPost();
+        }
         
         @Inject (method = "clickMouse", at = @At ("HEAD"), cancellable = true)
         private void clickMouseInject(CallbackInfo ci) {
