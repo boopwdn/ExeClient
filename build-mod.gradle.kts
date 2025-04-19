@@ -73,6 +73,12 @@ sourceSets.main {
 repositories {
         mavenLocal()
         mavenCentral()
+        maven("https://repo.hypixel.net/repository/Hypixel/") {
+                name = "Hypixel Maven"
+                content {
+                        includeModule("net.hypixel", "mod-api")
+                }
+        }
         maven("https://jitpack.io") {
                 name = "Jitpack Maven"
                 content {
@@ -126,6 +132,8 @@ dependencies {
         compileOnly("cc.polyfrost:oneconfig-1.8.9-forge:0.2.2-alpha223:full")
         compileOnly("cc.polyfrost:oneconfig-loader-launchwrapper:1.0.0-beta17")
         
+        compileOnly("net.hypixel:mod-api:1.0.1")
+        modRuntimeOnly("curse.maven:in-game-account-switcher-232676:3413259a")
         runtimeOnly("com.github.boopwdn:YqlossClientMixin:master-SNAPSHOT:dev") {
                 isChanging = true
         }
