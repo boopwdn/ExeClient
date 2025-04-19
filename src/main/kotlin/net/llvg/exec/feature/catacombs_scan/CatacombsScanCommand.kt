@@ -51,8 +51,8 @@ object CatacombsScanCommand : ExeCCommand {
                 .apply {
                         arrayOf(
                                 `sub-cmd curr`,
+                                `sub-cmd rescan`,
                                 `sub-cmd reset`,
-                                `sub-cmd rescan`
                         )
                         .forEach {
                                 put(it.name, it)
@@ -181,48 +181,6 @@ private object `sub-cmd curr` : ExeCCommand {
                 emptyList()
 }
 
-private object `sub-cmd reset` : ExeCCommand {
-        override val name: String = "reset"
-        
-        override val usage: IChatComponent = buildChat {
-                with(ExeCCommandChatComponentScope) {
-                        of(
-                                empty() // " - $name $name1 | Reset scan result"
-                                .." "
-                                .."-"()
-                                .`--style split-mark`
-                                .." "
-                                ..CatacombsScanCommand.name()
-                                .`--style command-name`
-                                .." "
-                                ..name()
-                                .`--style command-text`
-                                .." "
-                                .."|"()
-                                .`--style split-mark`
-                                .." "
-                                .."Reset scan result"
-                        )
-                }
-        }
-        
-        override fun process(
-                args: Array<String>
-        ) {
-                CatacombsScanner.afterCurrentScan {
-                        ExeClient.send {
-                                "Reset scan result"()
-                        }
-                        CatacombsMap.reset()
-                }
-        }
-        
-        override fun completeTab(
-                args: Array<String>
-        ): List<String> =
-                emptyList()
-}
-
 private object `sub-cmd rescan` : ExeCCommand {
         override val name: String = "rescan"
         
@@ -286,6 +244,48 @@ private object `sub-cmd rescan` : ExeCCommand {
                                         .`--color`(ChatColor.YELLOW)
                                 )
                         }
+                }
+        }
+        
+        override fun completeTab(
+                args: Array<String>
+        ): List<String> =
+                emptyList()
+}
+
+private object `sub-cmd reset` : ExeCCommand {
+        override val name: String = "reset"
+        
+        override val usage: IChatComponent = buildChat {
+                with(ExeCCommandChatComponentScope) {
+                        of(
+                                empty() // " - $name $name1 | Reset scan result"
+                                .." "
+                                .."-"()
+                                .`--style split-mark`
+                                .." "
+                                ..CatacombsScanCommand.name()
+                                .`--style command-name`
+                                .." "
+                                ..name()
+                                .`--style command-text`
+                                .." "
+                                .."|"()
+                                .`--style split-mark`
+                                .." "
+                                .."Reset scan result"
+                        )
+                }
+        }
+        
+        override fun process(
+                args: Array<String>
+        ) {
+                CatacombsScanner.afterCurrentScan {
+                        ExeClient.send {
+                                "Reset scan result"()
+                        }
+                        CatacombsMap.reset()
                 }
         }
         
