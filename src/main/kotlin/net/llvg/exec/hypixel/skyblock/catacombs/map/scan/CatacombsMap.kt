@@ -19,7 +19,6 @@
 
 package net.llvg.exec.hypixel.skyblock.catacombs.map.scan
 
-import net.llvg.exec.hypixel.skyblock.catacombs.map.RoomData
 import net.llvg.exec.utils.vector.Vec2I
 
 @Suppress("MemberVisibilityCanBePrivate")
@@ -55,8 +54,6 @@ object CatacombsMap {
         val roomInfoSet: MutableSet<RoomInfo> = HashSet()
         
         init {
-                RoomData
-                Rotation
                 CatacombsScanner
         }
         

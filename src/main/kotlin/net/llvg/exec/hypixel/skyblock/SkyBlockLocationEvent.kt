@@ -17,18 +17,21 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.llvg.exec.vanilla.event
+package net.llvg.exec.hypixel.skyblock
 
 import net.llvg.exec.api.event.ExeCEvent
 
-interface TickEvent : ExeCEvent {
-        interface Client : TickEvent {
-                interface Pre : Client {
-                        data object Impl: Pre
-                }
-                
-                interface Post : Client {
-                        data object Impl : Post
-                }
+sealed interface SkyBlockLocationEvent : ExeCEvent {
+        val newLocationName: String
+        
+        companion object {
+                internal fun create(
+                        newLocationName: String
+                ): SkyBlockLocationEvent =
+                        Impl(newLocationName)
         }
 }
+
+private data class Impl(
+        override val newLocationName: String
+) : SkyBlockLocationEvent

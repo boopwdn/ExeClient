@@ -31,6 +31,10 @@ fun postGameStartEventPost() {
         GameStartEvent.Post.Impl.post(true)
 }
 
+fun postTickEventClientPre() {
+        TickEvent.Client.Pre.Impl.post(true)
+}
+
 fun postTickEventClientPost() {
         TickEvent.Client.Post.Impl.post(true)
 }

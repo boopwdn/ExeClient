@@ -17,18 +17,28 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.llvg.exec.vanilla.event
+package net.llvg.exec.hypixel.skyblock.catacombs
 
-import net.llvg.exec.api.event.ExeCEvent
-
-interface TickEvent : ExeCEvent {
-        interface Client : TickEvent {
-                interface Pre : Client {
-                        data object Impl: Pre
+enum class Floor {
+        UNKNOWN,
+        E,
+        F1, F2, F3, F4, F5, F6, F7,
+        M1, M2, M3, M4, M5, M6, M7;
+        
+        val isMasterMode: Boolean = name.startsWith('M')
+        
+        val floor: Int =
+                when (name[0]) {
+                        'E'      -> 0
+                        'F', 'M' -> name[1].digitToInt()
+                        else     -> -1
                 }
+        
+        companion object {
+                @JvmField
+                val floorF = arrayOf(F1, F2, F3, F4, F5, F6, F7)
                 
-                interface Post : Client {
-                        data object Impl : Post
-                }
+                @JvmField
+                val floorM = arrayOf(M1, M2, M3, M4, M5, M6, M7)
         }
 }

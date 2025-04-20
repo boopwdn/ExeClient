@@ -17,18 +17,15 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.llvg.exec.vanilla.event
+@file:JvmName("StringUtils")
 
-import net.llvg.exec.api.event.ExeCEvent
+package net.llvg.exec.utils
 
-interface TickEvent : ExeCEvent {
-        interface Client : TickEvent {
-                interface Pre : Client {
-                        data object Impl: Pre
-                }
-                
-                interface Post : Client {
-                        data object Impl : Post
-                }
-        }
-}
+val mcFormatCodeRegex = Regex("\u00a7[0-9a-fk-or]", RegexOption.IGNORE_CASE)
+
+val String.noMcFormatCode: String
+        get() = mcFormatCodeRegex.replace(this, "")
+
+@Suppress("UNUSED")
+val String.limitAscii: String
+        get() = filter { it.code in 21..126 }

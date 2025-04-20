@@ -22,12 +22,12 @@
 package net.llvg.exec.hypixel
 
 import net.hypixel.data.type.GameType
+import net.hypixel.data.type.ServerType
+
+fun isInServerType(
+        serverType: ServerType
+): Boolean =
+        HypixelLocation.serverType === serverType
 
 val isInSkyBlock: Boolean
-        get() = HypixelLocation.serverType === GameType.SKYBLOCK
-
-val isInDungeon: Boolean
-        get() = isInSkyBlock && HypixelLocation.mode == "dungeon"
-
-val isInCatacombs: Boolean // There's only one type of dungeon called catacombs right now
-        get() = isInDungeon
+        get() = isInServerType(GameType.SKYBLOCK)

@@ -27,6 +27,7 @@ import net.llvg.exec.api.event.ExeCEventListenable
 import net.llvg.exec.api.event.onEvent
 import net.llvg.exec.api.event.post
 import net.llvg.exec.hypixel.event.HypixelApiEvent
+import net.llvg.exec.hypixel.skyblock.SkyBlockLocation
 import net.llvg.exec.vanilla.event.WorldClientEvent
 
 @Suppress("MemberVisibilityCanBePrivate")
@@ -55,6 +56,11 @@ object HypixelLocation : ExeCEventListenable {
         }
         
         init {
+                onEvent(dispatcher = Dispatchers.Default) { _: WorldClientEvent.Load.Pre ->
+                        reset()
+                        HypixelApiEvent.LocationSet.Impl.post(false)
+                }
+                
                 HypixelModApiHelper.onPacket { p: ClientboundLocationPacket ->
                         serverName = p.serverName
                         serverType = p.serverType.getOrNull()
@@ -65,9 +71,6 @@ object HypixelLocation : ExeCEventListenable {
                         HypixelApiEvent.LocationSet.Impl.post(false)
                 }
                 
-                onEvent(dispatcher = Dispatchers.Default) { _: WorldClientEvent.Load.Pre ->
-                        reset()
-                        HypixelApiEvent.LocationSet.Impl.post(false)
-                }
+                SkyBlockLocation
         }
 }

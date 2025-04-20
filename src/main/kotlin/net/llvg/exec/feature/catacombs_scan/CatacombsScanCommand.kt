@@ -29,6 +29,8 @@ import net.llvg.exec.api.command.ExeCCommandChatComponentScope
 import net.llvg.exec.api.command.combineUsages
 import net.llvg.exec.api.command.sendUsage
 import net.llvg.exec.api.command.sendWrongUsage
+import net.llvg.exec.hypixel.skyblock.catacombs.CatacombsInfo
+import net.llvg.exec.hypixel.skyblock.catacombs.Floor
 import net.llvg.exec.hypixel.skyblock.catacombs.map.scan.CatacombsMap
 import net.llvg.exec.hypixel.skyblock.catacombs.map.scan.CatacombsScanner
 import net.llvg.exec.vanilla.utils.chat_component.ChatColor
@@ -51,6 +53,7 @@ object CatacombsScanCommand : ExeCCommand {
                 .apply {
                         arrayOf(
                                 `sub-cmd curr`,
+                                `sub-cmd floor`,
                                 `sub-cmd rescan`,
                                 `sub-cmd reset`,
                         )
@@ -89,7 +92,7 @@ object CatacombsScanCommand : ExeCCommand {
                 } else {
                         if (!CatacombsScan.active) return
                         
-                        if (CatacombsScan.checkCatacombs()) {
+                        if (CatacombsScan.checkInCatacombs()) {
                                 ExeClient.send {
                                         with(ExeCCommandChatComponentScope) {
                                                 "You are not in catacombs"()
@@ -179,6 +182,57 @@ private object `sub-cmd curr` : ExeCCommand {
                 args: Array<String>
         ): List<String> =
                 emptyList()
+}
+
+private object `sub-cmd floor` : ExeCCommand {
+        override val name: String = "floor"
+        
+        override val usage: IChatComponent = buildChat {
+                with(ExeCCommandChatComponentScope) {
+                        of(
+                                empty() // " - $name $name1 | Display name of current floor"
+                                .." "
+                                .."-"()
+                                .`--style split-mark`
+                                .." "
+                                ..CatacombsScanCommand.name()
+                                .`--style command-name`
+                                .." "
+                                ..`sub-cmd floor`.name()
+                                .`--style command-text`
+                                .." "
+                                .."|"()
+                                .`--style split-mark`
+                                .." "
+                                .."Display name of current floor"
+                        )
+                }
+        }
+        
+        override fun process(
+                args: Array<String>
+        ) {
+                ExeClient.send {
+                        of(
+                                empty()
+                                .."Current floor "
+                                ..CatacombsInfo.floor.run {
+                                        val color: ChatColor =
+                                                if (this === Floor.UNKNOWN) {
+                                                        ChatColor.DARK_RED
+                                                } else if (isMasterMode) ChatColor.RED else ChatColor.GREEN
+                                        name()
+                                        .`--color`(color)
+                                }
+                        )
+                }
+        }
+        
+        override fun completeTab(
+                args: Array<String>
+        ): List<String> =
+                emptyList()
+        
 }
 
 private object `sub-cmd rescan` : ExeCCommand {

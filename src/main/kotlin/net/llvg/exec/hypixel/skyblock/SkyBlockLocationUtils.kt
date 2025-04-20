@@ -17,18 +17,17 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.llvg.exec.vanilla.event
+@file:JvmName("SkyBlockLocationUtils")
 
-import net.llvg.exec.api.event.ExeCEvent
+package net.llvg.exec.hypixel.skyblock
 
-interface TickEvent : ExeCEvent {
-        interface Client : TickEvent {
-                interface Pre : Client {
-                        data object Impl: Pre
-                }
-                
-                interface Post : Client {
-                        data object Impl : Post
-                }
-        }
-}
+import net.llvg.exec.hypixel.HypixelLocation
+import net.llvg.exec.hypixel.isInSkyBlock
+
+const val SKY_BLOCK_LOCATION_PREFIX = " ⏣ "
+
+val isInDungeon: Boolean
+        get() = isInSkyBlock && HypixelLocation.mode == "dungeon"
+
+val isInCatacombs: Boolean // There's only one type of dungeon called catacombs right now
+        get() = isInDungeon

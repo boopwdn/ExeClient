@@ -64,7 +64,7 @@ object CatacombsScanner : ExeCEventListenable {
                 get() = roomScanJob !== null
         
         fun scan(): Job? {
-                if (CatacombsScan.checkCatacombs()) return null
+                if (CatacombsScan.checkInCatacombs()) return null
                 
                 roomScanLock.readLock().withLock {
                         if (roomScanning) return null
@@ -97,7 +97,7 @@ object CatacombsScanner : ExeCEventListenable {
         fun afterCurrentScan(
                 action: (Throwable?) -> Unit
         ) {
-                if (CatacombsScan.checkCatacombs()) return
+                if (CatacombsScan.checkInCatacombs()) return
                 
                 roomScanLock.readLock().withLock {
                         roomScanJob

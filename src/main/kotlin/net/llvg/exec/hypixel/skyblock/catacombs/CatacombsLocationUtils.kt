@@ -17,18 +17,20 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.llvg.exec.vanilla.event
+@file:JvmName("CatacombsLocationUtils")
 
-import net.llvg.exec.api.event.ExeCEvent
+package net.llvg.exec.hypixel.skyblock.catacombs
 
-interface TickEvent : ExeCEvent {
-        interface Client : TickEvent {
-                interface Pre : Client {
-                        data object Impl: Pre
+import net.llvg.exec.hypixel.skyblock.isInCatacombs
+import net.llvg.exec.vanilla.utils.mc
+
+val isInCatacombsBoss: Boolean
+        get() = isInCatacombs && mc.thePlayer?.run {
+                when (CatacombsInfo.floor.floor) {
+                        1       -> posX > -71 && posZ > -39
+                        2, 3, 4 -> posX > -39 && posZ > -39
+                        5, 6    -> posX > -39 && posZ > -7
+                        7       -> posX > -7 && posZ > -7
+                        else    -> false
                 }
-                
-                interface Post : Client {
-                        data object Impl : Post
-                }
-        }
-}
+        } ?: false
