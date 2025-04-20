@@ -92,10 +92,20 @@ object CatacombsScanCommand : ExeCCommand {
                 } else {
                         if (!CatacombsScan.active) return
                         
-                        if (CatacombsScan.checkInCatacombs()) {
+                        if (!CatacombsScan.checkInCatacombs()) {
                                 ExeClient.send {
                                         with(ExeCCommandChatComponentScope) {
                                                 "You are not in catacombs"()
+                                                .`--style warn`
+                                        }
+                                }
+                                return
+                        }
+                        
+                        if (!CatacombsScan.checkNotInBoss()) {
+                                ExeClient.send {
+                                        with(ExeCCommandChatComponentScope) {
+                                                "You are in catacombs boss"()
                                                 .`--style warn`
                                         }
                                 }

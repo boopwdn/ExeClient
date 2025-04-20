@@ -38,6 +38,11 @@ object CatacombsScanConfig : ExeCFeatureConfig<CatacombsScanConfig>(
         var onlyInCatacombs: Boolean = true
         
         @Checkbox(
+                name = "Only Not In Boss"
+        )
+        var onlyNotInBoss: Boolean = true
+        
+        @Checkbox(
                 name = "Auto Scan"
         )
         var autoScan: Boolean = true

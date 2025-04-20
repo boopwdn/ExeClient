@@ -24,9 +24,9 @@ import net.llvg.exec.api.command.ExeCCommandManager
 import net.llvg.exec.api.config.ExeClientConfig
 import net.llvg.exec.api.event.onEvent
 import net.llvg.exec.api.feature.ExeCFeature
-import net.llvg.exec.hypixel.isInCatacombs
-import net.llvg.exec.hypixel.skyblock.catacombs.map.scan.CatacombsMap
+import net.llvg.exec.hypixel.skyblock.catacombs.isInCatacombsBoss
 import net.llvg.exec.hypixel.skyblock.catacombs.map.scan.CatacombsScanner
+import net.llvg.exec.hypixel.skyblock.isInCatacombs
 import net.llvg.exec.vanilla.event.TickEvent
 
 object CatacombsScan : ExeCFeature<CatacombsScanConfig> {
@@ -36,18 +36,19 @@ object CatacombsScan : ExeCFeature<CatacombsScanConfig> {
                 }
                 
                 onEvent(Dispatchers.Default) { _: TickEvent.Client.Post ->
-                        if (config.autoScan && !checkCatacombs()) {
+                        if (config.autoScan) {
                                 CatacombsScanner.scan()
                         }
                 }
         }
         
-        override fun initialize() {
-                CatacombsMap
-        }
+        override fun initialize() {}
         
-        fun checkCatacombs(): Boolean =
-                config.onlyInCatacombs && !isInCatacombs
+        fun checkInCatacombs(): Boolean =
+                !config.onlyInCatacombs || isInCatacombs
+        
+        fun checkNotInBoss(): Boolean =
+                !config.onlyNotInBoss || !isInCatacombsBoss
         
         override val config: CatacombsScanConfig
                 get() = ExeClientConfig.configCatacombsScan
