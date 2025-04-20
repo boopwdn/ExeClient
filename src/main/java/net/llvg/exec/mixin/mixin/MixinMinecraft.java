@@ -40,6 +40,11 @@ public abstract class MixinMinecraft implements IThreadListener, IPlayerUsage {
         @Shadow
         public GameSettings gameSettings;
         
+        @Inject (method = "startGame", at = @At ("TAIL"))
+        private void startGameInject(CallbackInfo ci) {
+                CallbackMinecraft.postGameStartEventPost();
+        }
+        
         @Inject (method = "clickMouse", at = @At ("HEAD"), cancellable = true)
         private void clickMouseInject(CallbackInfo ci) {
                 if (FreeCam.isEnabled()) {
@@ -66,6 +71,16 @@ public abstract class MixinMinecraft implements IThreadListener, IPlayerUsage {
                 if (FreeCam.isEnabled() && !FreeCam.allowTogglePerspective()) {
                         gameSettings.thirdPersonView = 0;
                 }
+        }
+        
+        @Inject (method = "runTick", at = @At (value = "INVOKE", target = "Lnet/minecraft/profiler/Profiler;startSection(Ljava/lang/String;)V", ordinal = 0))
+        private void runTickInject1(CallbackInfo ci) {
+                CallbackMinecraft.postTickEventClientPre();
+        }
+        
+        @Inject (method = "runTick", at = @At (value = "INVOKE", target = "Lnet/minecraft/profiler/Profiler;endSection()V", ordinal = 1))
+        private void runTickInject2(CallbackInfo ci) {
+                CallbackMinecraft.postTickEventClientPost();
         }
         
         @Inject (method = "loadWorld(Lnet/minecraft/client/multiplayer/WorldClient;Ljava/lang/String;)V", at = @At ("HEAD"))

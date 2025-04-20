@@ -17,31 +17,18 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.llvg.exec.api.feature
+package net.llvg.exec.vanilla.event
 
-import net.llvg.exec.feature.catacombs_scan.CatacombsScan
-import net.llvg.exec.feature.freecam.FreeCam
-import net.llvg.exec.utils.registry.RegisterEvent
-import net.llvg.exec.utils.registry.Registry
+import net.llvg.exec.api.event.ExeCEvent
 
-object ExeCFeatureManager : Registry<ExeCFeature<*>>(
-        CatacombsScan,
-        FreeCam
-) {
-        override fun event(
-                elements: MutableList<ExeCFeature<*>>
-        ): RegisterEvent<ExeCFeature<*>> =
-                Event.Impl {
-                        elements += it
+interface TickEvent : ExeCEvent {
+        interface Client : TickEvent {
+                interface Pre : Client {
+                        data object Impl: Pre
                 }
-        
-        sealed interface Event : RegisterEvent<ExeCFeature<*>> {
-                fun interface Impl : Event
-        }
-        
-        init {
-                elements.forEach {
-                        it.initialize()
+                
+                interface Post : Client {
+                        data object Impl : Post
                 }
         }
 }

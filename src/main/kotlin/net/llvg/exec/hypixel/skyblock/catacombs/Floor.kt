@@ -17,31 +17,28 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.llvg.exec.api.feature
+package net.llvg.exec.hypixel.skyblock.catacombs
 
-import net.llvg.exec.feature.catacombs_scan.CatacombsScan
-import net.llvg.exec.feature.freecam.FreeCam
-import net.llvg.exec.utils.registry.RegisterEvent
-import net.llvg.exec.utils.registry.Registry
-
-object ExeCFeatureManager : Registry<ExeCFeature<*>>(
-        CatacombsScan,
-        FreeCam
-) {
-        override fun event(
-                elements: MutableList<ExeCFeature<*>>
-        ): RegisterEvent<ExeCFeature<*>> =
-                Event.Impl {
-                        elements += it
+enum class Floor {
+        UNKNOWN,
+        E,
+        F1, F2, F3, F4, F5, F6, F7,
+        M1, M2, M3, M4, M5, M6, M7;
+        
+        val isMasterMode: Boolean = name.startsWith('M')
+        
+        val floor: Int =
+                when (name[0]) {
+                        'E'      -> 0
+                        'F', 'M' -> name[1].digitToInt()
+                        else     -> -1
                 }
         
-        sealed interface Event : RegisterEvent<ExeCFeature<*>> {
-                fun interface Impl : Event
-        }
-        
-        init {
-                elements.forEach {
-                        it.initialize()
-                }
+        companion object {
+                @JvmField
+                val floorF = arrayOf(F1, F2, F3, F4, F5, F6, F7)
+                
+                @JvmField
+                val floorM = arrayOf(M1, M2, M3, M4, M5, M6, M7)
         }
 }

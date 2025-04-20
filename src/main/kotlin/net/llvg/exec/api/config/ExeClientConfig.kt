@@ -23,6 +23,7 @@ import cc.polyfrost.oneconfig.config.Config
 import cc.polyfrost.oneconfig.config.annotations.SubConfig
 import cc.polyfrost.oneconfig.config.data.Mod
 import cc.polyfrost.oneconfig.config.data.ModType
+import net.llvg.exec.feature.catacombs_scan.CatacombsScanConfig
 import net.llvg.exec.feature.freecam.FreeCamConfig
 import net.llvg.exec.utils.classNameLogger
 
@@ -36,6 +37,10 @@ object ExeClientConfig : Config(
 ) {
         @Transient
         private val logger = classNameLogger<ExeClientConfig>()
+        
+        @SubConfig
+        val configCatacombsScan =
+                CatacombsScanConfig
         
         @SubConfig
         val configFreeCamera =
