@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Water-OR
+ * Copyright (C) 2025-2025 Water-OR
  *
  * This file is part of ExeClient
  *
@@ -19,9 +19,15 @@
 
 @file:JvmName("BlockUtils")
 
-package net.llvg.exec.vanilla.block
+package net.llvg.exec.vanilla.utils.block
 
 import net.minecraft.block.Block
+import net.minecraft.block.state.IBlockState
 
+@Suppress("UNUSED")
 val Block.id: Int
         get() = Block.getIdFromBlock(this)
+
+@Suppress("UNUSED")
+val IBlockState.meta: Int
+        get() = block.getMetaFromState(this)

@@ -37,7 +37,7 @@ import net.llvg.exec.utils.classNameLogger
 import net.llvg.exec.hypixel.skyblock.catacombs.map.RoomData
 import net.llvg.exec.hypixel.skyblock.catacombs.map.RoomType
 import net.llvg.exec.utils.vector.Vec2I
-import net.llvg.exec.vanilla.block.id
+import net.llvg.exec.vanilla.utils.block.id
 import net.llvg.exec.vanilla.event.WorldClientEvent
 import net.llvg.exec.vanilla.utils.chat_component.ChatColor
 import net.llvg.exec.vanilla.utils.mc
