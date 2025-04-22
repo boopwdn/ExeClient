@@ -23,14 +23,14 @@ import cc.polyfrost.oneconfig.config.annotations.Checkbox
 import net.llvg.exec.api.config.ExeCFeatureConfig
 import net.llvg.exec.api.config.ExeClientConfig
 
-object CatacombsScanConfig : ExeCFeatureConfig<CatacombsScanConfig>(
+object CatacombsScanConfig : ExeCFeatureConfig(
         "Catacombs Scan",
         "exec-catacombs_scan-config.json",
         enabled = true,
         canToggle = false,
 ) {
-        override val self: CatacombsScanConfig
-                get() = this
+        override fun active(): Boolean =
+                ExeClientConfig.active()
         
         @Checkbox(
                 name = "Only In Catacombs"
@@ -46,7 +46,4 @@ object CatacombsScanConfig : ExeCFeatureConfig<CatacombsScanConfig>(
                 name = "Auto Scan"
         )
         var autoScan: Boolean = true
-        
-        override fun active(): Boolean =
-                ExeClientConfig.active()
 }

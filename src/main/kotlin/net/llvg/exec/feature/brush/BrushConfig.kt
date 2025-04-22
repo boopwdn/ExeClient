@@ -21,14 +21,21 @@ package net.llvg.exec.feature.brush
 
 import net.llvg.exec.api.config.ExeCFeatureConfig
 import net.llvg.exec.api.config.ExeClientConfig
+import net.llvg.exec.api.event.ExeCEvent
+import net.llvg.exec.api.event.post
 
-object BrushConfig : ExeCFeatureConfig<BrushConfig>(
+object BrushConfig : ExeCFeatureConfig(
         "Brush",
         "exec-brush-config.json"
 ) {
-        override val self: BrushConfig
-                get() = this
-        
         override fun active(): Boolean =
                 ExeClientConfig.active() && super.active()
+        
+        override fun inactive() {
+                Inactive.Impl.post(true)
+        }
+        
+        sealed interface Inactive : ExeCEvent {
+                data object Impl : Inactive
+        }
 }

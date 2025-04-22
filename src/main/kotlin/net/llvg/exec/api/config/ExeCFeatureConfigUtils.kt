@@ -35,6 +35,6 @@ fun initializeExeCFeatureConfigs(
         }
         .forEach {
                 it.isAccessible = true
-                (it[owner] as? ExeCFeatureConfig<*>)?.initialize()
+                (it[owner] as? ExeCFeatureConfig)?.initialize()
         }
 }

@@ -27,7 +27,7 @@ import net.llvg.exec.vanilla.utils.chat_component.style
 import net.minecraft.util.ChatComponentText
 import net.minecraft.util.IChatComponent
 
-interface ExeCFeature<C : ExeCFeatureConfig<C>> : ExeCEventListenable {
+interface ExeCFeature<C : ExeCFeatureConfig> : ExeCEventListenable {
         fun initialize()
         
         val config: C

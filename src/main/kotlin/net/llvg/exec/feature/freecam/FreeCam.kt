@@ -21,7 +21,6 @@ package net.llvg.exec.feature.freecam
 
 import kotlinx.coroutines.Dispatchers
 import net.llvg.exec.ExeClient
-import net.llvg.exec.api.config.ExeCFeatureConfigEvent
 import net.llvg.exec.api.config.ExeClientConfig
 import net.llvg.exec.api.event.onEvent
 import net.llvg.exec.api.feature.ExeCFeature
@@ -74,7 +73,7 @@ object FreeCam : ExeCFeature<FreeCamConfig> {
                         disable()
                 }
                 
-                onEvent(Dispatchers.Default) { _: ExeCFeatureConfigEvent.Inactive<FreeCamConfig> ->
+                onEvent(Dispatchers.Default) { _: FreeCamConfig.Inactive ->
                         disable()
                 }
         }
@@ -83,6 +82,13 @@ object FreeCam : ExeCFeature<FreeCamConfig> {
         
         override val config: FreeCamConfig
                 get() = ExeClientConfig.configFreeCamera
+        
+        override val active: Boolean
+                get() = config.active && enabled
+        
+        @get:[JvmStatic JvmName("isEnabled")]
+        var enabled: Boolean = false
+                private set
         
         val allowTogglePerspective: Boolean
                 @[JvmStatic JvmName("allowTogglePerspective")]
@@ -99,13 +105,6 @@ object FreeCam : ExeCFeature<FreeCamConfig> {
         val enableWaterAndLavaOverlay: Boolean
                 @[JvmStatic JvmName("enableWaterAndLavaOverlay")]
                 inline get() = FreeCamConfig.enableWaterAndLavaOverlay
-        
-        @get:[JvmStatic JvmName("isEnabled")]
-        var enabled: Boolean = false
-                private set
-        
-        override val active: Boolean
-                get() = config.active && enabled
         
         @get:JvmStatic
         var camera: FreeCamEntity? = null

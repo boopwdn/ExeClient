@@ -25,16 +25,24 @@ import cc.polyfrost.oneconfig.config.annotations.Number
 import cc.polyfrost.oneconfig.config.core.OneKeyBind
 import net.llvg.exec.api.config.ExeCFeatureConfig
 import net.llvg.exec.api.config.ExeClientConfig
+import net.llvg.exec.api.event.ExeCEvent
+import net.llvg.exec.api.event.post
 
-object FreeCamConfig : ExeCFeatureConfig<FreeCamConfig>(
+object FreeCamConfig : ExeCFeatureConfig(
         "Free Camera",
         "exec-free_camera-config.json"
 ) {
-        override val self: FreeCamConfig
-                get() = this
         
         override fun active(): Boolean =
                 ExeClientConfig.active() && super.active()
+        
+        override fun inactive() {
+                Inactive.Impl.post(true)
+        }
+        
+        sealed interface Inactive : ExeCEvent {
+                data object Impl : Inactive
+        }
         
         @KeyBind(
                 name = "Free Camera Toggle Key",
