@@ -20,7 +20,10 @@
 package net.llvg.exec.vanilla.event
 
 import net.llvg.exec.api.event.ExeCEvent
+import net.llvg.exec.api.event.ExeCEventCancellable
+import net.minecraft.block.state.IBlockState
 import net.minecraft.client.multiplayer.WorldClient
+import net.minecraft.util.BlockPos
 
 interface WorldClientEvent : ExeCEvent {
         val worldClient: WorldClient?
@@ -30,6 +33,22 @@ interface WorldClientEvent : ExeCEvent {
                         data class Impl(
                                 override val worldClient: WorldClient?
                         ) : Pre
+                }
+        }
+        
+        interface BlockChangeByServer : WorldClientEvent {
+                override val worldClient: WorldClient
+                
+                val pos: BlockPos
+                
+                val state: IBlockState
+                
+                interface Pre : BlockChangeByServer, ExeCEventCancellable {
+                        data class Impl(
+                                override val worldClient: WorldClient,
+                                override val pos: BlockPos,
+                                override val state: IBlockState
+                        ) : ExeCEventCancellable.Impl(), Pre
                 }
         }
 }

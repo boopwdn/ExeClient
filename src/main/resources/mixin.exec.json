@@ -14,7 +14,8 @@
         "MixinMinecraft",
         "MixinNetHandlerPlayClient",
         "MixinRenderManager",
-        "MixinRenderPlayer"
+        "MixinRenderPlayer",
+        "MixinWorldClient"
     ],
     "mixins": [
         "MixinEntity",

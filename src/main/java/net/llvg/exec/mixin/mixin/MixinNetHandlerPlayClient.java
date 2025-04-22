@@ -43,17 +43,23 @@ public abstract class MixinNetHandlerPlayClient implements INetHandlerPlayClient
         
         @Inject (method = "handleMultiBlockChange", at = @At (value = "INVOKE_ASSIGN", target = "Lnet/minecraft/network/PacketThreadUtil;checkThreadAndEnqueue(Lnet/minecraft/network/Packet;Lnet/minecraft/network/INetHandler;Lnet/minecraft/util/IThreadListener;)V"), cancellable = true)
         private void handleMultiBlockChangeInject(S22PacketMultiBlockChange packetIn, CallbackInfo ci) {
-                if (postPacketEventServerS22Pre(cast(this), packetIn)) ci.cancel();
+                if (postPacketEventServerS22Pre(cast(this), packetIn)) {
+                        ci.cancel();
+                }
         }
         
         @Inject (method = "handleBlockChange", at = @At (value = "INVOKE_ASSIGN", target = "Lnet/minecraft/network/PacketThreadUtil;checkThreadAndEnqueue(Lnet/minecraft/network/Packet;Lnet/minecraft/network/INetHandler;Lnet/minecraft/util/IThreadListener;)V"), cancellable = true)
         private void handleBlockChangeInject(S23PacketBlockChange packetIn, CallbackInfo ci) {
-                if (postPacketEventServerS23Pre(cast(this), packetIn)) ci.cancel();
+                if (postPacketEventServerS23Pre(cast(this), packetIn)) {
+                        ci.cancel();
+                }
         }
         
         @Inject (method = "handleCamera", at = @At (value = "INVOKE_ASSIGN", target = "Lnet/minecraft/network/PacketThreadUtil;checkThreadAndEnqueue(Lnet/minecraft/network/Packet;Lnet/minecraft/network/INetHandler;Lnet/minecraft/util/IThreadListener;)V"), cancellable = true)
         private void handleCameraInject(S43PacketCamera packetIn, CallbackInfo ci) {
-                if (postPacketEventServerS43Pre(cast(this), packetIn)) ci.cancel();
+                if (postPacketEventServerS43Pre(cast(this), packetIn)) {
+                        ci.cancel();
+                }
         }
         
         @Unique
