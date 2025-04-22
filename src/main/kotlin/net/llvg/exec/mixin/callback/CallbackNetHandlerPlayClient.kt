@@ -24,7 +24,31 @@ package net.llvg.exec.mixin.callback
 import net.llvg.exec.api.event.postAndCheckCancel
 import net.llvg.exec.vanilla.event.PacketEvent
 import net.minecraft.network.play.INetHandlerPlayClient
+import net.minecraft.network.play.server.S22PacketMultiBlockChange
+import net.minecraft.network.play.server.S23PacketBlockChange
 import net.minecraft.network.play.server.S43PacketCamera
+
+fun postPacketEventServerS22Pre(
+        handler: INetHandlerPlayClient,
+        packet: S22PacketMultiBlockChange
+): Boolean {
+        val event = PacketEvent.Server.S22.Pre.Impl(
+                handler,
+                packet
+        )
+        return event.postAndCheckCancel
+}
+
+fun postPacketEventServerS23Pre(
+        handler: INetHandlerPlayClient,
+        packet: S23PacketBlockChange
+): Boolean {
+        val event = PacketEvent.Server.S23.Pre.Impl(
+                handler,
+                packet
+        )
+        return event.postAndCheckCancel
+}
 
 fun postPacketEventServerS43Pre(
         handler: INetHandlerPlayClient,

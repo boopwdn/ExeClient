@@ -19,12 +19,12 @@
 
 package net.llvg.exec.mixin.mixin;
 
-import net.llvg.exec.mixin.callback.CallbackNetHandlerPlayClient;
 import net.llvg.exec.mixin.inject.InjectNetHandlerPlayClient;
-import net.llvg.loliutils.exception.TypeCast;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.network.play.INetHandlerPlayClient;
+import net.minecraft.network.play.server.S22PacketMultiBlockChange;
+import net.minecraft.network.play.server.S23PacketBlockChange;
 import net.minecraft.network.play.server.S43PacketCamera;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -33,16 +33,27 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import static net.llvg.exec.mixin.callback.CallbackNetHandlerPlayClient.*;
+import static net.llvg.loliutils.exception.TypeCast.cast;
+
 @Mixin (NetHandlerPlayClient.class)
 public abstract class MixinNetHandlerPlayClient implements INetHandlerPlayClient, InjectNetHandlerPlayClient {
         @Shadow
         private WorldClient clientWorldController;
         
-        @Inject (method = "handleCamera", at = @At ("HEAD"), cancellable = true)
+        @Inject (method = "handleMultiBlockChange", at = @At (value = "INVOKE_ASSIGN", target = "Lnet/minecraft/network/PacketThreadUtil;checkThreadAndEnqueue(Lnet/minecraft/network/Packet;Lnet/minecraft/network/INetHandler;Lnet/minecraft/util/IThreadListener;)V"), cancellable = true)
+        private void handleMultiBlockChangeInject(S22PacketMultiBlockChange packetIn, CallbackInfo ci) {
+                if (postPacketEventServerS22Pre(cast(this), packetIn)) ci.cancel();
+        }
+        
+        @Inject (method = "handleBlockChange", at = @At (value = "INVOKE_ASSIGN", target = "Lnet/minecraft/network/PacketThreadUtil;checkThreadAndEnqueue(Lnet/minecraft/network/Packet;Lnet/minecraft/network/INetHandler;Lnet/minecraft/util/IThreadListener;)V"), cancellable = true)
+        private void handleBlockChangeInject(S23PacketBlockChange packetIn, CallbackInfo ci) {
+                if (postPacketEventServerS23Pre(cast(this), packetIn)) ci.cancel();
+        }
+        
+        @Inject (method = "handleCamera", at = @At (value = "INVOKE_ASSIGN", target = "Lnet/minecraft/network/PacketThreadUtil;checkThreadAndEnqueue(Lnet/minecraft/network/Packet;Lnet/minecraft/network/INetHandler;Lnet/minecraft/util/IThreadListener;)V"), cancellable = true)
         private void handleCameraInject(S43PacketCamera packetIn, CallbackInfo ci) {
-                if (CallbackNetHandlerPlayClient.postPacketEventServerS43Pre(TypeCast.cast(this), packetIn)) {
-                        ci.cancel();
-                }
+                if (postPacketEventServerS43Pre(cast(this), packetIn)) ci.cancel();
         }
         
         @Unique

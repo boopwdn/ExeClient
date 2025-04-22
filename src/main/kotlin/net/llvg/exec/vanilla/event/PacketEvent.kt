@@ -24,6 +24,8 @@ import net.llvg.exec.api.event.ExeCEventCancellable
 import net.minecraft.network.INetHandler
 import net.minecraft.network.Packet
 import net.minecraft.network.play.INetHandlerPlayClient
+import net.minecraft.network.play.server.S22PacketMultiBlockChange
+import net.minecraft.network.play.server.S23PacketBlockChange
 import net.minecraft.network.play.server.S43PacketCamera
 
 interface PacketEvent : ExeCEvent {
@@ -35,6 +37,28 @@ interface PacketEvent : ExeCEvent {
                 override val handler: INetHandlerPlayClient
                 
                 override val packet: Packet<INetHandlerPlayClient>
+                
+                interface S22 : Server {
+                        override val packet: S22PacketMultiBlockChange
+                        
+                        interface Pre : S22, ExeCEventCancellable {
+                                data class Impl(
+                                        override val handler: INetHandlerPlayClient,
+                                        override val packet: S22PacketMultiBlockChange
+                                ) : ExeCEventCancellable.Impl(), Pre
+                        }
+                }
+                
+                interface S23 : Server {
+                        override val packet: S23PacketBlockChange
+                        
+                        interface Pre : S23, ExeCEventCancellable {
+                                data class Impl(
+                                        override val handler: INetHandlerPlayClient,
+                                        override val packet: S23PacketBlockChange
+                                ) : ExeCEventCancellable.Impl(), Pre
+                        }
+                }
                 
                 interface S43 : Server {
                         override val packet: S43PacketCamera
