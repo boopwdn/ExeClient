@@ -24,4 +24,6 @@ import net.minecraft.entity.Entity
 
 interface EntityEvent : ExeCEvent {
         val entity: Entity
+        
+        operator fun component1(): Entity
 }

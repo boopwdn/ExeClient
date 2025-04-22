@@ -28,6 +28,8 @@ import net.minecraft.util.BlockPos
 interface WorldClientEvent : ExeCEvent {
         val worldClient: WorldClient?
         
+        operator fun component1(): WorldClient?
+        
         interface Load : WorldClientEvent {
                 interface Pre : Load {
                         data class Impl(
@@ -42,6 +44,10 @@ interface WorldClientEvent : ExeCEvent {
                 val pos: BlockPos
                 
                 val state: IBlockState
+                
+                override fun component1(): WorldClient
+                operator fun component2(): BlockPos
+                operator fun component3(): IBlockState
                 
                 interface Pre : BlockChangeByServer, ExeCEventCancellable {
                         data class Impl(

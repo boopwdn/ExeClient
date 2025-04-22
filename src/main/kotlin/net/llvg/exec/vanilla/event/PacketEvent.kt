@@ -33,13 +33,21 @@ interface PacketEvent : ExeCEvent {
         
         val packet: Packet<out INetHandler>
         
+        operator fun component1(): INetHandler
+        operator fun component2(): Packet<out INetHandler>
+        
         interface Server : PacketEvent {
                 override val handler: INetHandlerPlayClient
                 
-                override val packet: Packet<INetHandlerPlayClient>
+                override val packet: Packet<out INetHandlerPlayClient>
+                
+                override fun component1(): INetHandlerPlayClient
+                override fun component2(): Packet<out INetHandlerPlayClient>
                 
                 interface S22 : Server {
                         override val packet: S22PacketMultiBlockChange
+                        
+                        override fun component2(): S22PacketMultiBlockChange
                         
                         interface Pre : S22, ExeCEventCancellable {
                                 data class Impl(
@@ -52,6 +60,8 @@ interface PacketEvent : ExeCEvent {
                 interface S23 : Server {
                         override val packet: S23PacketBlockChange
                         
+                        override fun component2(): S23PacketBlockChange
+                        
                         interface Pre : S23, ExeCEventCancellable {
                                 data class Impl(
                                         override val handler: INetHandlerPlayClient,
@@ -62,6 +72,8 @@ interface PacketEvent : ExeCEvent {
                 
                 interface S43 : Server {
                         override val packet: S43PacketCamera
+                        
+                        override fun component2(): S43PacketCamera
                         
                         interface Pre : S43, ExeCEventCancellable {
                                 data class Impl(

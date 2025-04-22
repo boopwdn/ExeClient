@@ -24,8 +24,12 @@ import net.minecraft.entity.EntityLivingBase
 interface EntityLivingBaseEvent : EntityEvent {
         override val entity: EntityLivingBase
         
+        override fun component1(): EntityLivingBase
+        
         interface HealthChange : EntityLivingBaseEvent {
                 val health: Float
+                
+                operator fun component2(): Float
                 
                 interface Pre : HealthChange {
                         data class Impl(
