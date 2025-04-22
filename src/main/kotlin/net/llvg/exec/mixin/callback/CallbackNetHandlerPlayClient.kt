@@ -21,8 +21,8 @@
 
 package net.llvg.exec.mixin.callback
 
+import net.llvg.exec.api.event.postAndCheckCancel
 import net.llvg.exec.vanilla.event.PacketEvent
-import net.llvg.exec.api.event.post
 import net.minecraft.network.play.INetHandlerPlayClient
 import net.minecraft.network.play.server.S43PacketCamera
 
@@ -34,6 +34,5 @@ fun postPacketEventServerS43Pre(
                 handler,
                 packet
         )
-        event.post(true)
-        return event.cancelled
+        return event.postAndCheckCancel
 }

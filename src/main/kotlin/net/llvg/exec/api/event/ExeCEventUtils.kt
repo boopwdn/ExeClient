@@ -24,6 +24,7 @@ package net.llvg.exec.api.event
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 
+@Suppress("UNUSED")
 inline fun <reified E : ExeCEvent> ExeCEventListenable.onEvent(
         dispatcher: CoroutineDispatcher,
         forced: Boolean = false,
@@ -67,16 +68,12 @@ inline fun <reified E : ExeCEvent> ExeCEventListenable.onEvent(
 inline fun <reified E : ExeCEvent> E.post(
         wait: Boolean
 ) {
-        ExeCEventManager.post(
-                E::class.java,
-                this,
-                wait
-        )
+        post(E::class.java, wait)
 }
 
 @Suppress("UNUSED")
 fun <E : ExeCEvent> E.post(
-        type: Class<out E>,
+        type: Class<out ExeCEvent>,
         wait: Boolean
 ) {
         ExeCEventManager.post(
@@ -84,4 +81,20 @@ fun <E : ExeCEvent> E.post(
                 this,
                 wait
         )
+}
+
+@Suppress("UNUSED")
+inline val <reified E : ExeCEventCancellable> E.postAndCheckCancel: Boolean
+        get() = postAndCheckCancel(E::class.java)
+
+@Suppress("UNUSED")
+fun <E : ExeCEventCancellable> E.postAndCheckCancel(
+        type: Class<out ExeCEvent>
+): Boolean {
+        ExeCEventManager.post(
+                type,
+                this,
+                true
+        )
+        return cancelled
 }
